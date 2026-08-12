@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Nailong Joki</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="admin-header">
+    <i class="fa-solid fa-user-shield"></i> PANEL ADMIN - NAILONG JOKI
+  </div>
+
+  <div class="page-content">
+    <h3 style="margin-bottom:12px;color:#ffd700;">Tambah Pesanan Manual</h3>
+    
+    <div class="form-section">
+      <label>Kode Antrian</label>
+      <input type="text" id="admKode" placeholder="RJ-2026-XXXX (kosongkan = auto)">
+      
+      <label>Nama</label>
+      <input type="text" id="admNama" placeholder="Nama customer">
+      
+      <label>WhatsApp</label>
+      <input type="text" id="admWA" placeholder="08xxxxxxxxxx">
+      
+      <label>Total</label>
+      <input type="text" id="admTotal" placeholder="Rp 5.000">
+      
+      <label>Status</label>
+      <select id="admStatus">
+        <option value="Belum Bayar">Belum Bayar</option>
+        <option value="Proses">Proses</option>
+        <option value="Sukses">Sukses</option>
+      </select>
+      
+      <button class="btn-buat" style="margin-top:12px;" onclick="tambahOrderAdmin()">
+        <i class="fa-solid fa-plus"></i> Tambah Pesanan
+      </button>
+    </div>
+
+    <h3 style="margin:24px 0 12px;color:#ffd700;">Daftar Pesanan</h3>
+    <div id="listOrders"></div>
+  </div>
+
+  <script src="telegram.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

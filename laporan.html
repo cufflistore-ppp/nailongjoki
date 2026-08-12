@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan - Nailong Joki</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="top-notif" id="topNotif"></div>
+
+  <div class="page-content">
+    <a href="index.html" class="back"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+    <div class="badge">BANTUAN TRANSAKSI</div>
+    <h2 style="margin-bottom:6px;">Laporan transaksi</h2>
+    <p style="color:#aaa;font-size:13px;margin-bottom:16px;">Kirim kendala pesanan dan pantau hasil peninjauan dari admin.</p>
+
+    <div class="info-small">
+      <i class="fa-solid fa-shield"></i> Maksimal 3 laporan per perangkat dalam satu hari. Seluruh teks dan foto laporan dihapus permanen oleh sistem 3 hari setelah laporan dikirim.
+    </div>
+
+    <div id="formLaporan">
+      <label>Nomor Pesanan</label>
+      <input type="text" id="noPesanan" placeholder="RJ-2026-0001">
+
+      <label>Judul Laporan</label>
+      <input type="text" id="judulLaporan" placeholder="Contoh: Pembayaran belum terkonfirmasi">
+
+      <label>Deskripsi</label>
+      <textarea id="deskripsiLaporan" rows="4" placeholder="Jelaskan kendala transaksi secara lengkap..."></textarea>
+
+      <label>Foto Pendukung (opsional, maksimal 3)</label>
+      <input type="file" id="fotoLaporan" accept="image/*" multiple style="margin-bottom:10px;">
+
+      <button class="btn-kirim" onclick="kirimLaporan()">
+        <i class="fa-solid fa-paper-plane"></i> Kirim Laporan
+      </button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="joki.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+    <a href="#" class="nav-item"><i class="fa-solid fa-video"></i><span>Video FS</span></a>
+    <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
+    <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
+  </nav>
+
+  <script src="telegram.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

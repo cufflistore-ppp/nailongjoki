@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Paket Joki Kontak - Nailong Joki</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="top-notif" id="topNotif"></div>
+
+  <header class="header">
+    <div class="brand">
+      <img src="logo.png" alt="Nailong Joki" class="logo" onerror="this.style.background='#ffd700'">
+      <div>
+        <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
+        <p>Pusat Layanan Nailong Joki</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <div class="badge">JASA JOKI KONTAK</div>
+    <h2 class="page-title">Paket Joki Kontak.</h2>
+    <p class="page-desc">Pilih paket dinamis dari admin, isi data promo, lalu bayar dari website.</p>
+
+    <div class="warning-box">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <div class="marquee">
+        <span>KANG JOKI KONTAK DILARANG ORDER JOKI KONTAK DI SINI. JIKA KETAHUAN, PERMANENT BAN! &nbsp;&nbsp;&nbsp; KANG JOKI KONTAK DILARANG ORDER JOKI KONTAK DI SINI. JIKA KETAHUAN, PERMANENT BAN!</span>
+      </div>
+    </div>
+
+    <!-- Paket 1 Hari -->
+    <div class="paket-card">
+      <div class="paket-label">1 HARI</div>
+      <h3>Joki 1 hari</h3>
+      <p>Layanan joki kontak selama 1 hari.</p>
+      <ul>
+        <li><i class="fa-solid fa-circle-check"></i> Order langsung dari website</li>
+        <li><i class="fa-solid fa-circle-check"></i> Status dapat dipantau</li>
+      </ul>
+      <div class="harga">Rp 5.000</div>
+      <button class="btn-pesan" onclick="openOrder(1)">Pesan Paket</button>
+    </div>
+
+    <!-- Paket 2 Hari -->
+    <div class="paket-card">
+      <div class="paket-label">2 HARI</div>
+      <h3>Joki 2 Hari</h3>
+      <p>Layanan joki kontak selama 2 hari.</p>
+      <ul>
+        <li><i class="fa-solid fa-circle-check"></i> Order langsung dari website</li>
+        <li><i class="fa-solid fa-circle-check"></i> Status dapat dipantau</li>
+      </ul>
+      <div class="harga">Rp 10.000</div>
+      <button class="btn-pesan" onclick="openOrder(2)">Pesan Paket</button>
+    </div>
+  </div>
+
+  <!-- Form Order -->
+  <div id="orderForm" class="order-form hidden">
+    <div class="order-header">
+      <img src="logo.png" class="order-logo" onerror="this.style.background='#ffd700'">
+      <div>
+        <h3>Joki Kontak</h3>
+        <p>Nailong Joki · <span class="tag">Proses Cepat</span> · <span class="tag aman">Aman</span></p>
+      </div>
+    </div>
+
+    <div class="warning-box red">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <div class="marquee">
+        <span>KANG JOKI KONTAK DILARANG ORDER JOKI KONTAK DI SINI! &nbsp;&nbsp;&nbsp; KANG JOKI KONTAK DILARANG ORDER JOKI KONTAK DI SINI!</span>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h4><span class="step">1</span> Data Customer</h4>
+      
+      <label>Nama (Store/JB)</label>
+      <input type="text" id="nama" placeholder="Nama Store kamu" required>
+
+      <label>Nomor WhatsApp</label>
+      <input type="tel" id="wa" placeholder="08xxxxxxxxxx" required>
+
+      <label>Catatan (Format Teks Push Kontak)</label>
+      <p style="font-size:12px; color:#ffd700; margin:4px 0 8px;">
+        * Tinggal ganti <b>NAMA STORE</b> dan nomor WhatsApp saja. Jangan hapus formatnya.
+      </p>
+      <textarea id="catatan" rows="7">SV BUYER FRESH NAILONG🔥
+
+SV ; NAMA STORE
+Wa.me/628…
+
+#NAMBAH VIEW SW + KONTAK + SELLER + BUYYER + DLL 🌤️🌈</textarea>
+    </div>
+
+    <div class="form-section">
+      <h4><span class="step">2</span> Include Paket</h4>
+      <div class="addon" onclick="toggleAddon(this, 5000)">
+        <span>+ 1hari</span>
+        <span class="addon-price">+Rp 5.000</span>
+        <button class="btn-pilih">Pilih</button>
+      </div>
+      <div class="addon" onclick="toggleAddon(this, 10000)">
+        <span>Video Facecam (rekomendasi)</span>
+        <span class="addon-price">+Rp 10.000</span>
+        <button class="btn-pilih">Pilih</button>
+      </div>
+      <div class="addon" onclick="toggleAddon(this, 15000)">
+        <span>Video Facecam</span>
+        <span class="addon-price">+Rp 15.000</span>
+        <button class="btn-pilih">Pilih</button>
+      </div>
+      <div class="addon" onclick="toggleAddon(this, 10000)">
+        <span>Video Rekomendasi</span>
+        <span class="addon-price">+Rp 10.000</span>
+        <button class="btn-pilih">Pilih</button>
+      </div>
+      <div class="addon" onclick="toggleAddon(this, 20000)">
+        <span>Prioritas Antrian</span>
+        <span class="addon-price">+Rp 20.000</span>
+        <button class="btn-pilih">Pilih</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h4><span class="step">3</span> Pembayaran</h4>
+      <div class="qris-box">
+        <i class="fa-solid fa-qrcode"></i> QRIS
+        <p>Bayar dengan QRIS lalu upload bukti pembayaran.</p>
+      </div>
+
+      <label style="margin-top:14px;">Upload Bukti Transfer (TF)</label>
+      <input type="file" id="buktiTF" accept="image/*" style="margin-top:6px;">
+    </div>
+
+    <div class="ringkasan">
+      <h4>Ringkasan Order</h4>
+      <div class="row"><span>Joki Kontak</span><span>Paket</span><span id="hargaPaket">Rp 5.000</span></div>
+      <div class="row total"><span>Total</span><span id="totalHarga">Rp 5.000</span></div>
+      <button class="btn-buat" onclick="buatPesanan()">Buat Pesanan</button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="joki.html" class="nav-item active"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+    <a href="#" class="nav-item"><i class="fa-solid fa-video"></i><span>Video FS</span></a>
+    <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
+    <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
+  </nav>
+
+  <script src="telegram.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
