@@ -4,33 +4,29 @@
 
 Cara pakai:
 1. Extract semua file ke folder hosting / localhost
-2. Ganti file logo.png dengan logo kamu sendiri
-3. Buka index.html di browser
+2. Ganti logo.png, nailong.png, qris.png
+3. Buka index.html
 
-Halaman yang tersedia:
-- index.html     → Beranda
-- joki.html      → Order Joki Kontak
-- antrian.html   → Pantau antrian
-- tentang.html   → Tentang
-- laporan.html   → Kirim laporan
-- admin.html     → Panel Admin (RAHASIA - jangan di-link)
+Halaman:
+- index.html       → Beranda
+- joki.html        → Daftar paket joki (dinamis via joki-produk.js)
+- detail.html      → Detail paket
+- pesan.html       → Form pemesanan
+- pembayaran.html  → QRIS + konfirmasi bayar
+- antrian.html     → Pantau antrian
+- tentang.html     → Tentang
+- laporan.html     → Kirim laporan
+- admin.html       → Panel Admin (rahasia)
 
-Fitur:
-✓ Tema kuning (Nailong Joki)
-✓ Notifikasi order berjalan di atas
-✓ Warning text bergeser (marquee)
-✓ Format teks push kontak otomatis
-✓ Kirim order + foto TF ke Telegram
-✓ Panel admin untuk ubah status (Proses / Sukses)
-✓ Status update juga dikirim ke Telegram
+Alur order:
+joki.html → detail.html → pesan.html → pembayaran.html
 
-Telegram Bot sudah dikonfigurasi:
-- Token & Chat ID sudah terisi
-- Setiap order masuk otomatis ke Telegram kamu
+Tambah paket baru:
+Edit file joki-produk.js (array paketJoki)
+atau di console browser: tambahPaket({label:"7 HARI", judul:"Joki 7 Hari", harga:30000})
 
-Catatan:
-- admin.html tidak muncul di menu website
-- Akses admin hanya lewat URL langsung: /admin.html
-- Data order disimpan di localStorage browser
+Peringatan marquee: "TIDAK DILAYANI" (bukan permanent ban)
+Video FS sudah dihapus dari menu.
 
+Telegram sudah terkonfigurasi (token + chat id).
 ========================================

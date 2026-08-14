@@ -18,7 +18,7 @@ const produk = [
     img: "logo.png"
   },
   {
-    judul: "Video FS Cinematik",
+    judul: "Paket Premium Kontak",
     harga: "Rp 30.000",
     status: "TERSEDIA",
     img: "logo.png"

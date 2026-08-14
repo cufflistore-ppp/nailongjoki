@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Pembayaran QRIS - Nailong Joki</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .pay-container {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .pay-card {
+      background: #2a2200;
+      border: 1px solid #3d3200;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+    .pay-card h2 {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .pay-card .kode {
+      background: #1a1500;
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 8px;
+      color: #ffd700;
+      font-weight: 700;
+      font-size: 14px;
+      margin: 10px 0;
+    }
+    .qris-box-big {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0;
+      display: inline-block;
+    }
+    .qris-box-big img {
+      width: 220px;
+      height: 220px;
+      object-fit: contain;
+      display: block;
+    }
+    .qris-placeholder {
+      width: 220px;
+      height: 220px;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      border-radius: 8px;
+    }
+    .qris-placeholder i {
+      font-size: 48px;
+      margin-bottom: 8px;
+      color: #555;
+    }
+    .total-bayar {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffd700;
+      margin: 12px 0;
+    }
+    .info-bayar {
+      font-size: 12px;
+      color: #aaa;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .btn-konfirmasi {
+      width: 100%;
+      background: linear-gradient(90deg, #ffd700, #daa520);
+      color: #1a1500;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .btn-konfirmasi:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .btn-upload {
+      width: 100%;
+      background: #3d3200;
+      color: #ffd700;
+      border: 1px solid #ffd700;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .status-box {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #1a1500;
+      border: 1px solid #3d3200;
+      font-size: 13px;
+      display: none;
+    }
+    .status-box.show { display: block; }
+    .status-box.success {
+      border-color: #00aa00;
+      color: #7fff00;
+    }
+  </style>
+</head>
+<body>
+<header class="header">
+    <div class="brand">
+      <img src="logo.png" alt="Nailong Joki" class="logo" onerror="this.style.background='#ffd700'">
+      <div>
+        <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
+        <p>Pembayaran QRIS</p>
+      </div>
+    </div>
+  </header>
+  <!-- Notif (hanya muncul jika ada order real) -->
+  <div class="top-notif" id="topNotif" style="display:none;"></div>
+
+
+  <div class="pay-container">
+    <div class="pay-card">
+      <h2>Scan QRIS untuk Bayar</h2>
+      <p style="font-size:13px;color:#aaa;">Order kamu sudah dibuat</p>
+      
+      <div class="kode" id="kodeOrder">RJ-2026-0000</div>
+      
+      <div class="total-bayar" id="totalBayar">Rp 5.000</div>
+
+      <!-- QRIS Image -->
+      <div class="qris-box-big">
+        <!-- Ganti src di bawah dengan gambar QRIS kamu -->
+        <img src="qris.png" alt="QRIS Nailong Joki" id="qrisImg"
+             onerror="this.style.display='none'; document.getElementById('qrisFallback').style.display='flex';">
+        <div class="qris-placeholder" id="qrisFallback" style="display:none;">
+          <i class="fa-solid fa-qrcode"></i>
+          <div style="font-size:13px;font-weight:600;">QRIS Nailong Joki</div>
+          <div style="font-size:11px;margin-top:4px;">Ganti file qris.png</div>
+        </div>
+      </div>
+
+      <p class="info-bayar">
+        1. Scan QRIS di atas menggunakan e-wallet / m-banking<br>
+        2. Pastikan nominal sesuai<br>
+        3. Setelah transfer, upload bukti & klik konfirmasi
+      </p>
+
+      <label style="text-align:left;display:block;margin-bottom:6px;font-size:12px;color:#aaa;">
+        Upload Bukti Transfer (opsional tapi disarankan)
+      </label>
+      <input type="file" id="buktiBayar" accept="image/*" style="margin-bottom:8px;">
+
+      <button class="btn-konfirmasi" id="btnKonfirmasi" onclick="konfirmasiPembayaran()">
+        <i class="fa-solid fa-check-circle"></i> Saya Sudah Bayar
+      </button>
+
+      <div class="status-box" id="statusBox">
+        ✅ Konfirmasi terkirim ke admin.<br>
+        Status masih <b>Belum Bayar</b> sampai admin verifikasi.<br>
+        Kamu bisa pantau di halaman Antrian.
+      </div>
+    </div>
+
+    <p style="text-align:center;margin-top:16px;font-size:12px;color:#888;">
+      Ada kendala? <a href="laporan.html" style="color:#ffd700;">Kirim Laporan</a>
+    </p>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="joki.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+    <a href="joki.html" class="nav-item">
+      <i class="fa-solid fa-box"></i>
+      <span>Produk</span>
+    </a>
+    <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
+    <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
+  </nav>
+
+  <script src="telegram.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // Ambil data order dari localStorage (order terakhir)
+    function loadOrderData() {
+      const orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
+      if (orders.length > 0) {
+        const last = orders[0];
+        document.getElementById("kodeOrder").textContent = last.kode;
+        document.getElementById("totalBayar").textContent = last.total;
+        window.currentOrder = last;
+      } else {
+        // Fallback dari URL param
+        const params = new URLSearchParams(window.location.search);
+        const kode = params.get("kode") || "RJ-2026-0000";
+        const total = params.get("total") || "Rp 5.000";
+        document.getElementById("kodeOrder").textContent = kode;
+        document.getElementById("totalBayar").textContent = total;
+        window.currentOrder = { kode, total, nama: "-", wa: "-" };
+      }
+    }
+
+    async function konfirmasiPembayaran() {
+      const btn = document.getElementById("btnKonfirmasi");
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...';
+
+      const order = window.currentOrder || {};
+      const fileInput = document.getElementById("buktiBayar");
+
+      // Kirim notifikasi ke Telegram (status tetap Belum Bayar)
+      const pesan = `
+💳 <b>KONFIRMASI PEMBAYARAN</b>
+
+Customer mengklaim sudah bayar.
+
+🆔 Kode: <code>${order.kode || "-"}</code>
+👤 Nama: ${order.nama || "-"}
+📱 WA: ${order.wa || "-"}
+💰 Total: <b>${order.total || "-"}</b>
+
+📊 Status tetap: <b>Belum Bayar</b>
+(Admin silakan cek & ubah status manual)
+
+⏰ ${new Date().toLocaleString("id-ID")}
+      `.trim();
+
+      if (typeof kirimTelegram === "function") {
+        await kirimTelegram(pesan);
+      }
+
+      // Kirim foto bukti jika ada
+      if (fileInput && fileInput.files[0] && typeof kirimFotoTelegram === "function") {
+        await kirimFotoTelegram(
+          fileInput.files[0],
+          `Bukti Bayar - ${order.kode}\nNama: ${order.nama || "-"}\nTotal: ${order.total || "-"}`
+        );
+      }
+
+      // Tampilkan status
+      document.getElementById("statusBox").classList.add("show", "success");
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Konfirmasi Terkirim';
+      
+      // Tidak mengubah status di localStorage → tetap "Belum Bayar"
+    }
+
+    document.addEventListener("DOMContentLoaded", loadOrderData);
+  </script>
+</body>
+</html>

@@ -2,9 +2,8 @@ function loadAntrianFromStorage() {
   const orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
   return orders.map((o, i) => ({
     no: i + 1,
-    kode: o.kode,
     nama: o.nama.length > 8 ? o.nama.substring(0, 2) + "********" : o.nama,
-    jenis: (o.paket || "Joki Kontak") + " - " + (o.status || "Belum Bayar"),
+    jenis: (o.paket || "Joki Kontak") + " · " + (o.status || "Belum Bayar"),
     status: o.status === "Sukses" ? "SELESAI" : (o.status === "Proses" ? "PROSES" : "MASUK ANTRIAN")
   }));
 }
@@ -15,13 +14,13 @@ function renderAntrian() {
 
   let data = loadAntrianFromStorage();
 
-  // Kalau kosong, tampilkan contoh
+  // Kalau kosong, tampilkan contoh (tanpa kode RJ)
   if (data.length === 0) {
     data = [
-      { no: 5, kode: "RJ-2026-4926", nama: "Ci*********", jenis: "Joki 1 Hari - Joki Kontak", status: "MASUK ANTRIAN" },
-      { no: 6, kode: "RJ-2026-5011", nama: "Ga*", jenis: "Joki 2 Hari - Joki Kontak", status: "MASUK ANTRIAN" },
-      { no: 7, kode: "RJ-2026-5066", nama: "Ar*********", jenis: "Joki 2 Hari - Joki Kontak", status: "PROSES" },
-      { no: 8, kode: "RJ-2026-5155", nama: "Wj*********", jenis: "Joki 1 Hari - Joki Kontak", status: "MASUK ANTRIAN" }
+      { no: 5, nama: "Ci*********", jenis: "Joki 1 Hari · Joki Kontak", status: "MASUK ANTRIAN" },
+      { no: 6, nama: "Ga*", jenis: "Joki 2 Hari · Joki Kontak", status: "MASUK ANTRIAN" },
+      { no: 7, nama: "Ar*********", jenis: "Joki 2 Hari · Joki Kontak", status: "PROSES" },
+      { no: 8, nama: "Wj*********", jenis: "Joki 1 Hari · Joki Kontak", status: "MASUK ANTRIAN" }
     ];
   }
 
@@ -30,8 +29,8 @@ function renderAntrian() {
       <div style="display:flex;align-items:center;">
         <div class="num">#${item.no}</div>
         <div class="info">
-          <strong>${item.kode}</strong>
-          <small>${item.nama} · ${item.jenis}</small>
+          <strong>${item.nama}</strong>
+          <small>${item.jenis}</small>
         </div>
       </div>
       <span class="status-badge">${item.status}</span>

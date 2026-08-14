@@ -1,38 +1,56 @@
-// ========== TOP NOTIF ==========
-const names = ["Roxy", "Andi", "Budi", "Citra", "Dewi", "Eko", "Fajar", "Gita", "Hadi", "Indra", "Joko", "Kartika", "Lina", "Mira", "Nina", "Putri", "Rizki", "Sari"];
-const layanan = ["Joki Kontak", "Joki 1 Hari", "Joki 2 Hari", "Video FS", "Prioritas"];
-const hargaList = [5000, 10000, 15000, 7000, 20000, 30000];
-
-function randomItem(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
+// ========== TOP NOTIF (hanya muncul jika ada order real) ==========
 function formatRupiah(n) {
+  if (typeof n === "string" && n.includes("Rp")) return n;
   return "Rp " + Number(n).toLocaleString("id-ID");
 }
 
-function generateNotif() {
-  const name = randomItem(names);
-  const shortName = name.substring(0, 1) + "****";
-  const price = randomItem(hargaList);
-  const svc = randomItem(layanan);
-  const mins = Math.floor(Math.random() * 55) + 1;
-  const timeText = mins + " menit lalu";
+function getRecentOrdersForNotif() {
+  const orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
+  return orders.slice(0, 5); // ambil 5 order terbaru
+}
 
+function generateNotifFromOrder(order) {
+  if (!order) return "";
+  const shortName = (order.nama || "A").substring(0, 1) + "****";
+  const price = order.total || "Rp 5.000";
+  const svc = order.paket || "Joki Kontak";
+  // hitung menit lalu dari waktu order
+  let timeText = "baru saja";
+  try {
+    // waktu disimpan sebagai string lokal, kita pakai "baru saja" saja
+    timeText = "baru saja";
+  } catch(e) {}
   return `<div class="notif-item">
     <span class="notif-icon">🛒</span>
-    <span class="notif-text"><b>Beli</b> · ${shortName}. · <b>${formatRupiah(price)}</b> · ${svc} · <span class="time">${timeText}</span></span>
+    <span class="notif-text"><b>Beli</b> · ${shortName}. · <b>${price}</b> · ${svc} · <span class="time">${timeText}</span></span>
   </div>`;
 }
 
 function updateTopNotif() {
   const el = document.getElementById("topNotif");
-  if (el) el.innerHTML = generateNotif();
+  if (!el) return;
+
+  const recent = getRecentOrdersForNotif();
+  if (recent.length === 0) {
+    // Tidak ada order → sembunyikan notif
+    el.style.display = "none";
+    el.innerHTML = "";
+    return;
+  }
+
+  el.style.display = "block";
+  // Tampilkan order terbaru, berganti setiap beberapa detik
+  const idx = Math.floor(Date.now() / 8000) % recent.length;
+  el.innerHTML = generateNotifFromOrder(recent[idx]);
 }
 
-updateTopNotif();
-setInterval(updateTopNotif, 9000);
+// Jalankan saat load & setiap 8 detik
+document.addEventListener("DOMContentLoaded", function() {
+  updateTopNotif();
+  setInterval(updateTopNotif, 8000);
+});
 
+// ========== ORDER FORM ==========
 // ========== ORDER FORM ==========
 let baseHarga = 5000;
 let addonTotal = 0;
@@ -83,7 +101,9 @@ async function buatPesanan() {
   }
 
   const total = document.getElementById("totalHarga")?.textContent || "Rp 5.000";
-  const kode = "RJ-2026-" + Math.floor(1000 + Math.random() * 9000);
+  const rand = Math.floor(1000 + Math.random() * 9000);
+  const timePart = String(Date.now()).slice(-3);
+  const kode = `RJ-2026-${rand}${timePart}`;
 
   const order = {
     kode,
@@ -115,13 +135,13 @@ async function buatPesanan() {
     );
   }
 
-  alert(`✅ Pesanan berhasil dibuat!\n\nKode Antrian: ${kode}\nNama: ${nama}\nTotal: ${total}\n\nData sudah dikirim ke admin via Telegram.`);
-
-  // Reset
+  // Reset form fields
   document.getElementById("nama").value = "";
   document.getElementById("wa").value = "";
   if (fileInput) fileInput.value = "";
-  // catatan tetap dibiarkan berisi template
+
+  // Redirect ke halaman pembayaran QRIS
+  window.location.href = `pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(total)}`;
 }
 
 // ========== LAPORAN ==========

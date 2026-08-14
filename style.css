@@ -14,6 +14,8 @@ body {
 
 /* Top Notif */
 .top-notif {
+  margin: 0 12px 8px;
+  border-radius: 8px;
   background: #2a2200;
   padding: 8px 12px;
   font-size: 12px;
@@ -66,11 +68,36 @@ body {
   margin: 12px;
   background: linear-gradient(135deg, #ffd700, #b8860b);
   border-radius: 12px;
-  padding: 16px;
+  padding: 14px 16px;
   color: #1a1500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  overflow: hidden;
+  min-height: 100px;
 }
-.banner h2 { font-size: 18px; font-weight: 800; }
-.banner p { font-weight: 700; margin: 4px 0; }
+.banner-content {
+  flex: 1;
+  min-width: 0;
+}
+.banner h2 { font-size: 17px; font-weight: 800; line-height: 1.2; }
+.banner p { font-weight: 700; margin: 4px 0; font-size: 13px; }
+.banner small { font-size: 11px; opacity: 0.85; }
+.banner-image {
+  flex-shrink: 0;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.banner-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+}
 
 /* Menu Grid */
 .menu-grid {

@@ -8,13 +8,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Top Notification Bar -->
-  <div class="top-notif" id="topNotif">
-    <div class="notif-item">
-      <span class="notif-icon">🛒</span>
-      <span class="notif-text"><b>Beli</b> · J. · <b>Rp 5.000</b> · Joki Kontak · <span class="time">30 menit lalu</span></span>
-    </div>
-  </div>
+</div>
 
   <!-- Header -->
   <header class="header">
@@ -34,17 +28,20 @@
       <p>TINGKATKAN STATUS VIEWS ANDA</p>
       <small>dengan order joki kontak di nailongjoki.online</small>
     </div>
+    <div class="banner-image">
+      <img src="nailong.png" alt="Nailong" onerror="this.style.display='none'">
+    </div>
   </div>
+  <!-- Notif di bawah banner (hanya muncul jika ada order) -->
+  <div class="top-notif" id="topNotif" style="display:none;"></div>
+
+
 
   <!-- Menu Grid -->
   <div class="menu-grid">
     <a href="joki.html" class="menu-item">
       <i class="fa-solid fa-shield-halved"></i>
       <span>Joki Kontak</span>
-    </a>
-    <a href="#" class="menu-item">
-      <i class="fa-solid fa-video"></i>
-      <span>Video FS</span>
     </a>
     <a href="#" class="menu-item">
       <i class="fa-solid fa-box"></i>
@@ -83,9 +80,9 @@
       <i class="fa-solid fa-shield-halved"></i>
       <span>Joki</span>
     </a>
-    <a href="#" class="nav-item">
-      <i class="fa-solid fa-video"></i>
-      <span>Video FS</span>
+    <a href="joki.html" class="nav-item">
+      <i class="fa-solid fa-box"></i>
+      <span>Produk</span>
     </a>
     <a href="index.html" class="nav-item active">
       <i class="fa-solid fa-house"></i>

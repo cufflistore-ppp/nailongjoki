@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Pesan Paket - Nailong Joki</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <img src="logo.png" alt="Nailong Joki" class="logo" onerror="this.style.background='#ffd700'">
+      <div>
+        <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
+        <p>Form Pemesanan</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="top-notif" id="topNotif" style="display:none;"></div>
+
+  <div class="page-content">
+    <a href="joki.html" class="back"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+
+    <div class="order-header" style="margin-bottom:16px;">
+      <img src="logo.png" class="order-logo" onerror="this.style.background='#ffd700'">
+      <div>
+        <h3 id="paketJudul">Joki Kontak</h3>
+        <p>Nailong Joki · <span class="tag">Proses Cepat</span> · <span class="tag aman">Aman</span></p>
+      </div>
+    </div>
+
+    <div class="warning-box red">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <div class="marquee">
+        <span>KANG JOKI KONTAK DILARANG ORDER. JIKA KETAHUAN TIDAK DILAYANI! &nbsp;&nbsp;&nbsp; KANG JOKI KONTAK DILARANG ORDER. JIKA KETAHUAN TIDAK DILAYANI!</span>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h4><span class="step">1</span> Data Customer</h4>
+      
+      <label>Nama (Store/JB)</label>
+      <input type="text" id="nama" placeholder="Nama Store kamu" required>
+
+      <label>Nomor WhatsApp</label>
+      <input type="tel" id="wa" placeholder="08xxxxxxxxxx" required>
+
+      <label>Catatan (Format Teks Push Kontak)</label>
+      <p style="font-size:12px; color:#ffd700; margin:4px 0 8px;">
+        * Tinggal ganti <b>NAMA STORE</b> dan nomor WhatsApp saja. Jangan hapus formatnya.
+      </p>
+      <textarea id="catatan" rows="7">SV BUYER FRESH NAILONG🔥
+
+SV ; NAMA STORE
+Wa.me/628…
+
+#NAMBAH VIEW SW + KONTAK + SELLER + BUYYER + DLL 🌤️🌈</textarea>
+    </div>
+
+    <div class="form-section">
+      <h4><span class="step">2</span> Include Paket</h4>
+      <div class="addon" onclick="toggleAddon(this, 5000)">
+        <span>+ 1hari</span>
+        <span class="addon-price">+Rp 5.000</span>
+        <button class="btn-pilih" type="button">Pilih</button>
+      </div>
+      <div class="addon" onclick="toggleAddon(this, 10000)">
+        <span>Video Facecam (rekomendasi)</span>
+        <span class="addon-price">+Rp 10.000</span>
+        <button class="btn-pilih" type="button">Pilih</button>
+      </div>
+      <div class="addon" onclick="toggleAddon(this, 15000)">
+        <span>Video Facecam</span>
+        <span class="addon-price">+Rp 15.000</span>
+        <button class="btn-pilih" type="button">Pilih</button>
+      </div>
+      <div class="addon" onclick="toggleAddon(this, 20000)">
+        <span>Prioritas Antrian</span>
+        <span class="addon-price">+Rp 20.000</span>
+        <button class="btn-pilih" type="button">Pilih</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h4><span class="step">3</span> Pembayaran</h4>
+      <div class="qris-box">
+        <i class="fa-solid fa-qrcode"></i> QRIS
+        <p>Setelah buat pesanan kamu akan diarahkan ke halaman bayar.</p>
+      </div>
+      <label style="margin-top:14px;">Upload Bukti Transfer (opsional di sini)</label>
+      <input type="file" id="buktiTF" accept="image/*" style="margin-top:6px;">
+    </div>
+
+    <div class="ringkasan">
+      <h4>Ringkasan Order</h4>
+      <div class="row"><span id="namaPaketRow">Joki Kontak</span><span>Paket</span><span id="hargaPaket">Rp 5.000</span></div>
+      <div class="row total"><span>Total</span><span id="totalHarga">Rp 5.000</span></div>
+      <button class="btn-buat" onclick="buatPesanan()">Buat Pesanan</button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="joki.html" class="nav-item active"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+    <a href="joki.html" class="nav-item"><i class="fa-solid fa-box"></i><span>Produk</span></a>
+    <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
+    <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
+  </nav>
+
+  <script src="joki-produk.js"></script>
+  <script src="telegram.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // Set harga dasar dari paket yang dipilih
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof loadPaketFromStorage === "function") loadPaketFromStorage();
+
+      const params = new URLSearchParams(window.location.search);
+      const id = parseInt(params.get("id") || "1", 10);
+      const paket = (typeof paketJoki !== "undefined") ? paketJoki.find(p => p.id === id) : null;
+
+      if (paket) {
+        baseHarga = paket.harga;
+        document.getElementById("paketJudul").textContent = paket.judul;
+        document.getElementById("namaPaketRow").textContent = paket.judul;
+        document.getElementById("hargaPaket").textContent = "Rp " + Number(paket.harga).toLocaleString("id-ID");
+        if (typeof updateTotal === "function") updateTotal();
+      }
+    });
+  </script>
+</body>
+</html>

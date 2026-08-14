@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Detail Paket - Nailong Joki</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <img src="logo.png" alt="Nailong Joki" class="logo" onerror="this.style.background='#ffd700'">
+      <div>
+        <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
+        <p>Detail Paket</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="top-notif" id="topNotif" style="display:none;"></div>
+
+  <div class="page-content">
+    <a href="joki.html" class="back"><i class="fa-solid fa-arrow-left"></i> Kembali ke Paket</a>
+
+    <div id="detailPaket">
+      <!-- diisi JS -->
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="joki.html" class="nav-item active"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+    <a href="joki.html" class="nav-item"><i class="fa-solid fa-box"></i><span>Produk</span></a>
+    <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
+    <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
+  </nav>
+
+  <script src="joki-produk.js"></script>
+  <script src="script.js"></script>
+  <script>
+    function loadDetail() {
+      const params = new URLSearchParams(window.location.search);
+      const id = parseInt(params.get("id") || "1", 10);
+      
+      // pastikan paket sudah load
+      if (typeof loadPaketFromStorage === "function") loadPaketFromStorage();
+      
+      const paket = (typeof paketJoki !== "undefined") 
+        ? paketJoki.find(p => p.id === id) 
+        : null;
+
+      const el = document.getElementById("detailPaket");
+      if (!paket) {
+        el.innerHTML = "<p style='color:#aaa;'>Paket tidak ditemukan. <a href='joki.html' style='color:#ffd700;'>Kembali</a></p>";
+        return;
+      }
+
+      const formatRp = (n) => "Rp " + Number(n).toLocaleString("id-ID");
+
+      el.innerHTML = `
+        <div class="badge">JASA JOKI KONTAK</div>
+        <div class="paket-card" style="margin-top:12px;">
+          <div class="paket-label">${paket.label}</div>
+          <h3 style="font-size:22px;">${paket.judul}</h3>
+          <p>${paket.deskripsi}</p>
+          <ul style="margin:14px 0;">
+            ${paket.fitur.map(f => `<li><i class="fa-solid fa-circle-check"></i> ${f}</li>`).join("")}
+          </ul>
+          <div class="harga" style="font-size:26px;">${formatRp(paket.harga)}</div>
+          <a href="pesan.html?id=${paket.id}" class="btn-pesan" style="display:block;text-align:center;text-decoration:none;margin-top:12px;">
+            Pesan Sekarang
+          </a>
+        </div>
+
+        <div class="info-box" style="margin:16px 0 0;">
+          <h4>Cara order</h4>
+          <p>1. Klik <b>Pesan Sekarang</b><br>
+          2. Isi nama store & nomor WhatsApp<br>
+          3. Bayar via QRIS<br>
+          4. Konfirmasi pembayaran<br>
+          5. Pantau status di Antrian</p>
+        </div>
+      `;
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(loadDetail, 50);
+    });
+  </script>
+</body>
+</html>
