@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Detail Produk - Nailong Joki</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .produk-detail-img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      height: auto;
+      max-height: none;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 12px;
+      background: #3d3200;
+      margin-bottom: 14px;
+      display: block;
+    }
+    .produk-detail-card {
+      background: #2a2200;
+      border: 1px solid #3d3200;
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .produk-detail-card h2 {
+      font-size: 20px;
+      margin: 8px 0;
+    }
+    .produk-status {
+      display: inline-block;
+      background: #1a3d00;
+      color: #7fff00;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+    }
+    .produk-harga-big {
+      font-size: 26px;
+      font-weight: 800;
+      color: #ffd700;
+      margin: 12px 0;
+    }
+    .fitur-list {
+      list-style: none;
+      margin: 12px 0;
+    }
+    .fitur-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #3d3200;
+      font-size: 13px;
+      color: #ccc;
+    }
+    .fitur-list li i {
+      color: #ffd700;
+      margin-right: 8px;
+    }
+    .fitur-list li:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <img src="logo.png" alt="Nailong Joki" class="logo" onerror="this.style.background='#ffd700'">
+      <div>
+        <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
+        <p>Detail Produk Digital</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="top-notif" id="topNotif" style="display:none;"></div>
+
+  <div class="page-content">
+    <a href="index.html" class="back"><i class="fa-solid fa-arrow-left"></i> Kembali ke Home</a>
+
+    <div id="detailProduk">
+      <p style="color:#aaa;text-align:center;">Memuat produk...</p>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="joki.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+    <a href="index.html" class="nav-item"><i class="fa-solid fa-box"></i><span>Produk</span></a>
+    <a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
+    <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
+  </nav>
+
+  <script src="produk.js"></script>
+  <script src="script.js"></script>
+  <script>
+    function loadDetailProduk() {
+      const params = new URLSearchParams(window.location.search);
+      const id = parseInt(params.get("id") || "1", 10);
+
+      // reload dari storage
+      try {
+        const saved = localStorage.getItem("nailong_produk");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length) {
+            produk.length = 0;
+            parsed.forEach(p => produk.push(p));
+          }
+        }
+      } catch (e) {}
+
+      const item = produk.find(p => p.id === id);
+      const el = document.getElementById("detailProduk");
+
+      if (!item) {
+        el.innerHTML = "<p style='color:#aaa;'>Produk tidak ditemukan. <a href='index.html' style='color:#ffd700;'>Kembali</a></p>";
+        return;
+      }
+
+      const harga = "Rp " + Number(item.harga).toLocaleString("id-ID");
+
+      el.innerHTML = `
+        <div class="badge">PRODUK DIGITAL</div>
+        <div class="produk-detail-card" style="margin-top:12px;">
+          <img src="${item.img}" alt="${item.judul}" class="produk-detail-img" onerror="this.style.background='#3d3200'">
+          <span class="produk-status">${item.status}</span>
+          <h2>${item.judul}</h2>
+          <p style="font-size:13px;color:#bbb;line-height:1.5;">${item.deskripsi || ""}</p>
+          
+          <div class="produk-harga-big">${harga}</div>
+
+          <h4 style="font-size:14px;margin-top:8px;color:#ffd700;">Yang kamu dapat:</h4>
+          <ul class="fitur-list">
+            ${(item.fitur || []).map(f => `<li><i class="fa-solid fa-check"></i> ${f}</li>`).join("")}
+          </ul>
+
+          <a href="pesan.html?type=produk&id=${item.id}" class="btn-pesan" style="display:block;text-align:center;text-decoration:none;margin-top:16px;">
+            Pesan Produk Ini
+          </a>
+        </div>
+
+        <div class="info-box" style="margin-top:16px;">
+          <h4>Bedanya dengan Joki?</h4>
+          <p style="font-size:12px;color:#bbb;">
+            <b>Produk Digital</b> = file / jasa sekali beli, dikirim setelah bayar.<br>
+            <b>Joki Kontak</b> = layanan push kontak berdurasi (1 hari, 2 hari, dst).
+          </p>
+        </div>
+      `;
+    }
+
+    document.addEventListener("DOMContentLoaded", loadDetailProduk);
+  </script>
+</body>
+</html>

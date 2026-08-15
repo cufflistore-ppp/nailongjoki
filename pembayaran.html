@@ -37,14 +37,17 @@
       background: #fff;
       border-radius: 12px;
       padding: 16px;
-      margin: 16px 0;
+      margin: 16px auto;
       display: inline-block;
+      min-width: 240px;
+      min-height: 240px;
     }
-    .qris-box-big img {
+    .qris-box-big img, .qris-box-big canvas {
       width: 220px;
       height: 220px;
       object-fit: contain;
       display: block;
+      margin: 0 auto;
     }
     .qris-placeholder {
       width: 220px;
@@ -56,6 +59,7 @@
       justify-content: center;
       color: #333;
       border-radius: 8px;
+      margin: 0 auto;
     }
     .qris-placeholder i {
       font-size: 48px;
@@ -66,7 +70,27 @@
       font-size: 24px;
       font-weight: 800;
       color: #ffd700;
+      margin: 12px 0 4px;
+    }
+    .rincian {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .timer-box {
+      background: #1a1500;
+      border: 1px solid #ffd700;
+      border-radius: 10px;
+      padding: 10px 14px;
       margin: 12px 0;
+      font-size: 14px;
+      color: #ffd700;
+      font-weight: 600;
+    }
+    .timer-box.expired {
+      border-color: #ff4444;
+      color: #ff6666;
     }
     .info-bayar {
       font-size: 12px;
@@ -89,6 +113,19 @@
     .btn-konfirmasi:disabled {
       opacity: 0.6;
       cursor: not-allowed;
+    }
+    .btn-regenerate {
+      width: 100%;
+      background: #3d3200;
+      color: #ffd700;
+      border: 1px solid #ffd700;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+      display: none;
     }
     .btn-upload {
       width: 100%;
@@ -116,6 +153,13 @@
       border-color: #00aa00;
       color: #7fff00;
     }
+    .expired-msg {
+      display: none;
+      color: #ff6666;
+      font-size: 13px;
+      margin: 10px 0;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -124,13 +168,11 @@
       <img src="logo.png" alt="Nailong Joki" class="logo" onerror="this.style.background='#ffd700'">
       <div>
         <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
-        <p>Pembayaran QRIS</p>
+        <p>Pembayaran QRIS Otomatis</p>
       </div>
     </div>
   </header>
-  <!-- Notif (hanya muncul jika ada order real) -->
   <div class="top-notif" id="topNotif" style="display:none;"></div>
-
 
   <div class="pay-container">
     <div class="pay-card">
@@ -139,24 +181,33 @@
       
       <div class="kode" id="kodeOrder">RJ-2026-0000</div>
       
-      <div class="total-bayar" id="totalBayar">Rp 5.000</div>
+      <div class="total-bayar" id="totalBayar">Rp 0</div>
+      <div class="rincian" id="rincianBayar">
+        Subtotal: Rp 0<br>
+        Biaya Admin: Rp 0
+      </div>
 
-      <!-- QRIS Image -->
-      <div class="qris-box-big">
-        <!-- Ganti src di bawah dengan gambar QRIS kamu -->
-        <img src="qris.png" alt="QRIS Nailong Joki" id="qrisImg"
-             onerror="this.style.display='none'; document.getElementById('qrisFallback').style.display='flex';">
-        <div class="qris-placeholder" id="qrisFallback" style="display:none;">
+      <!-- Timer -->
+      <div class="timer-box" id="timerBox">
+        <i class="fa-solid fa-clock"></i> Sisa waktu: <span id="timerText">15:00</span>
+      </div>
+      <div class="expired-msg" id="expiredMsg">
+        ⏰ QRIS sudah kedaluwarsa. Silakan generate ulang.
+      </div>
+
+      <!-- QRIS Image / Canvas -->
+      <div class="qris-box-big" id="qrisContainer">
+        <div class="qris-placeholder" id="qrisPlaceholder">
           <i class="fa-solid fa-qrcode"></i>
-          <div style="font-size:13px;font-weight:600;">QRIS Nailong Joki</div>
-          <div style="font-size:11px;margin-top:4px;">Ganti file qris.png</div>
+          <div style="font-size:13px;font-weight:600;">Memuat QRIS...</div>
         </div>
       </div>
 
-      <p class="info-bayar">
+      <p class="info-bayar" id="infoBayar">
         1. Scan QRIS di atas menggunakan e-wallet / m-banking<br>
-        2. Pastikan nominal sesuai<br>
-        3. Setelah transfer, upload bukti & klik konfirmasi
+        2. Nominal sudah terisi otomatis (termasuk admin)<br>
+        3. Setelah transfer, upload bukti & klik konfirmasi<br>
+        4. QRIS hanya berlaku selama waktu di atas
       </p>
 
       <label style="text-align:left;display:block;margin-bottom:6px;font-size:12px;color:#aaa;">
@@ -166,6 +217,10 @@
 
       <button class="btn-konfirmasi" id="btnKonfirmasi" onclick="konfirmasiPembayaran()">
         <i class="fa-solid fa-check-circle"></i> Saya Sudah Bayar
+      </button>
+
+      <button class="btn-regenerate" id="btnRegenerate" onclick="regenerateQris()">
+        <i class="fa-solid fa-rotate"></i> Generate QRIS Baru
       </button>
 
       <div class="status-box" id="statusBox">
@@ -191,25 +246,180 @@
     <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
   </nav>
 
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script src="telegram.js"></script>
   <script src="script.js"></script>
+  <script src="qris-helper.js"></script>
   <script>
-    // Ambil data order dari localStorage (order terakhir)
+    let currentOrder = null;
+    let timerInterval = null;
+    let currentQrisString = null;
+
+    function formatRupiah(n) {
+      return "Rp " + Number(n).toLocaleString("id-ID");
+    }
+
     function loadOrderData() {
       const orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
-      if (orders.length > 0) {
-        const last = orders[0];
-        document.getElementById("kodeOrder").textContent = last.kode;
-        document.getElementById("totalBayar").textContent = last.total;
-        window.currentOrder = last;
-      } else {
-        // Fallback dari URL param
-        const params = new URLSearchParams(window.location.search);
-        const kode = params.get("kode") || "RJ-2026-0000";
+      const params = new URLSearchParams(window.location.search);
+      const kodeParam = params.get("kode");
+
+      let order = null;
+      if (kodeParam) {
+        order = orders.find(o => o.kode === kodeParam) || null;
+      }
+      if (!order && orders.length > 0) {
+        order = orders[0];
+      }
+
+      if (!order) {
+        // Fallback dari URL
         const total = params.get("total") || "Rp 5.000";
-        document.getElementById("kodeOrder").textContent = kode;
-        document.getElementById("totalBayar").textContent = total;
-        window.currentOrder = { kode, total, nama: "-", wa: "-" };
+        order = {
+          kode: kodeParam || "RJ-2026-0000",
+          total: total,
+          nama: "-",
+          wa: "-",
+          status: "Belum Bayar"
+        };
+      }
+
+      // Pastikan ada expiresAt & finalAmount
+      if (!order.expiresAt) {
+        const enriched = window.QRISHelper.createOrderWithExpiry(order);
+        Object.assign(order, enriched);
+        // Update di localStorage
+        const idx = orders.findIndex(o => o.kode === order.kode);
+        if (idx >= 0) {
+          orders[idx] = order;
+          localStorage.setItem("nailong_orders", JSON.stringify(orders));
+        }
+      }
+
+      currentOrder = order;
+      window.currentOrder = order;
+
+      document.getElementById("kodeOrder").textContent = order.kode;
+
+      const subtotal = window.QRISHelper.parseRupiah(order.total);
+      const admin = order.adminFee || window.QRISHelper.ADMIN_FEE;
+      const finalAmt = order.finalAmount || (subtotal + admin);
+
+      document.getElementById("totalBayar").textContent = formatRupiah(finalAmt);
+      document.getElementById("rincianBayar").innerHTML =
+        `Subtotal: ${formatRupiah(subtotal)}<br>Biaya Admin: ${formatRupiah(admin)}`;
+
+      // Generate & tampilkan QRIS
+      generateAndShowQris(finalAmt);
+      startTimer();
+    }
+
+    function generateAndShowQris(amount) {
+      try {
+        const staticQris = window.QRISHelper.STATIC_QRIS;
+        if (!staticQris || staticQris.includes("ABCD")) {
+          // Placeholder masih default → tampilkan peringatan
+          document.getElementById("qrisContainer").innerHTML = `
+            <div class="qris-placeholder">
+              <i class="fa-solid fa-exclamation-triangle" style="color:#ff9800;"></i>
+              <div style="font-size:12px;font-weight:600;color:#333;padding:8px;text-align:center;">
+                Ganti STATIC_QRIS di file qris-helper.js<br>dengan string QRIS merchant kamu
+              </div>
+            </div>`;
+          return;
+        }
+
+        currentQrisString = window.QRISHelper.makeDynamicQris(staticQris, amount);
+        const container = document.getElementById("qrisContainer");
+        container.innerHTML = ""; // clear
+        const canvasWrap = document.createElement("div");
+        canvasWrap.id = "qrisCanvas";
+        container.appendChild(canvasWrap);
+
+        window.QRISHelper.renderQrisToElement(currentQrisString, "qrisCanvas", 220);
+      } catch (e) {
+        console.error(e);
+        document.getElementById("qrisContainer").innerHTML = `
+          <div class="qris-placeholder">
+            <i class="fa-solid fa-exclamation-circle" style="color:#f44336;"></i>
+            <div style="font-size:12px;color:#333;">Gagal generate QRIS<br>${e.message}</div>
+          </div>`;
+      }
+    }
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+
+      const timerBox = document.getElementById("timerBox");
+      const timerText = document.getElementById("timerText");
+      const expiredMsg = document.getElementById("expiredMsg");
+      const btnRegen = document.getElementById("btnRegenerate");
+      const qrisBox = document.getElementById("qrisContainer");
+      const infoBayar = document.getElementById("infoBayar");
+
+      function tick() {
+        if (!currentOrder || !currentOrder.expiresAt) return;
+
+        const remaining = currentOrder.expiresAt - Date.now();
+        if (remaining <= 0) {
+          // Expired
+          timerBox.classList.add("expired");
+          timerText.textContent = "00:00";
+          expiredMsg.style.display = "block";
+          btnRegen.style.display = "block";
+          qrisBox.style.opacity = "0.35";
+          qrisBox.style.pointerEvents = "none";
+          infoBayar.innerHTML = "QRIS sudah kedaluwarsa. Klik tombol di bawah untuk generate ulang.";
+          currentOrder.qrisExpired = true;
+          // Update localStorage
+          updateOrderInStorage(currentOrder);
+          clearInterval(timerInterval);
+          return;
+        }
+
+        const mins = Math.floor(remaining / 60000);
+        const secs = Math.floor((remaining % 60000) / 1000);
+        timerText.textContent = `${String(mins).padStart(2,"0")}:${String(secs).padStart(2,"0")}`;
+      }
+
+      tick();
+      timerInterval = setInterval(tick, 1000);
+    }
+
+    function regenerateQris() {
+      if (!currentOrder) return;
+
+      // Buat expires baru
+      const now = Date.now();
+      currentOrder.expiresAt = now + (window.QRISHelper.QRIS_EXPIRE_MINUTES * 60 * 1000);
+      currentOrder.qrisExpired = false;
+      currentOrder.createdAt = now;
+
+      // Reset UI
+      document.getElementById("timerBox").classList.remove("expired");
+      document.getElementById("expiredMsg").style.display = "none";
+      document.getElementById("btnRegenerate").style.display = "none";
+      document.getElementById("qrisContainer").style.opacity = "1";
+      document.getElementById("qrisContainer").style.pointerEvents = "auto";
+      document.getElementById("infoBayar").innerHTML = `
+        1. Scan QRIS di atas menggunakan e-wallet / m-banking<br>
+        2. Nominal sudah terisi otomatis (termasuk admin)<br>
+        3. Setelah transfer, upload bukti & klik konfirmasi<br>
+        4. QRIS hanya berlaku selama waktu di atas`;
+
+      const finalAmt = currentOrder.finalAmount || window.QRISHelper.getFinalAmount(currentOrder.total);
+      generateAndShowQris(finalAmt);
+      startTimer();
+      updateOrderInStorage(currentOrder);
+    }
+
+    function updateOrderInStorage(order) {
+      let orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
+      const idx = orders.findIndex(o => o.kode === order.kode);
+      if (idx >= 0) {
+        orders[idx] = order;
+        localStorage.setItem("nailong_orders", JSON.stringify(orders));
       }
     }
 
@@ -218,10 +428,18 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...';
 
-      const order = window.currentOrder || {};
+      const order = currentOrder || {};
       const fileInput = document.getElementById("buktiBayar");
+      const finalAmt = order.finalAmount || window.QRISHelper.getFinalAmount(order.total);
 
-      // Kirim notifikasi ke Telegram (status tetap Belum Bayar)
+      // Cek expired
+      if (order.expiresAt && Date.now() > order.expiresAt) {
+        alert("QRIS sudah kedaluwarsa. Silakan generate ulang dulu.");
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check-circle"></i> Saya Sudah Bayar';
+        return;
+      }
+
       const pesan = `
 💳 <b>KONFIRMASI PEMBAYARAN</b>
 
@@ -230,7 +448,8 @@ Customer mengklaim sudah bayar.
 🆔 Kode: <code>${order.kode || "-"}</code>
 👤 Nama: ${order.nama || "-"}
 📱 WA: ${order.wa || "-"}
-💰 Total: <b>${order.total || "-"}</b>
+💰 Total (termasuk admin): <b>${formatRupiah(finalAmt)}</b>
+📌 Biaya Admin: ${formatRupiah(order.adminFee || window.QRISHelper.ADMIN_FEE)}
 
 📊 Status tetap: <b>Belum Bayar</b>
 (Admin silakan cek & ubah status manual)
@@ -242,19 +461,15 @@ Customer mengklaim sudah bayar.
         await kirimTelegram(pesan);
       }
 
-      // Kirim foto bukti jika ada
       if (fileInput && fileInput.files[0] && typeof kirimFotoTelegram === "function") {
         await kirimFotoTelegram(
           fileInput.files[0],
-          `Bukti Bayar - ${order.kode}\nNama: ${order.nama || "-"}\nTotal: ${order.total || "-"}`
+          `Bukti Bayar - ${order.kode}\nNama: ${order.nama || "-"}\nTotal: ${formatRupiah(finalAmt)}`
         );
       }
 
-      // Tampilkan status
       document.getElementById("statusBox").classList.add("show", "success");
       btn.innerHTML = '<i class="fa-solid fa-check"></i> Konfirmasi Terkirim';
-      
-      // Tidak mengubah status di localStorage → tetap "Belum Bayar"
     }
 
     document.addEventListener("DOMContentLoaded", loadOrderData);

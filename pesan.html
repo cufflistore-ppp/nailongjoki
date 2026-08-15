@@ -111,22 +111,55 @@ Wa.me/628…
 
   <script src="joki-produk.js"></script>
   <script src="telegram.js"></script>
+  <script src="qris-helper.js"></script>
   <script src="script.js"></script>
+  <script src="produk.js"></script>
   <script>
-    // Set harga dasar dari paket yang dipilih
+    // Support Joki (default) dan Produk Digital
     document.addEventListener("DOMContentLoaded", function() {
-      if (typeof loadPaketFromStorage === "function") loadPaketFromStorage();
-
       const params = new URLSearchParams(window.location.search);
+      const type = params.get("type") || "joki";
       const id = parseInt(params.get("id") || "1", 10);
-      const paket = (typeof paketJoki !== "undefined") ? paketJoki.find(p => p.id === id) : null;
 
-      if (paket) {
-        baseHarga = paket.harga;
-        document.getElementById("paketJudul").textContent = paket.judul;
-        document.getElementById("namaPaketRow").textContent = paket.judul;
-        document.getElementById("hargaPaket").textContent = "Rp " + Number(paket.harga).toLocaleString("id-ID");
-        if (typeof updateTotal === "function") updateTotal();
+      if (type === "produk") {
+        // Load produk digital
+        try {
+          const saved = localStorage.getItem("nailong_produk");
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length) {
+              produk.length = 0;
+              parsed.forEach(p => produk.push(p));
+            }
+          }
+        } catch(e) {}
+
+        const item = (typeof produk !== "undefined") ? produk.find(p => p.id === id) : null;
+        if (item) {
+          baseHarga = item.harga;
+          document.getElementById("paketJudul").textContent = item.judul;
+          document.getElementById("namaPaketRow").textContent = item.judul;
+          document.getElementById("hargaPaket").textContent = "Rp " + Number(item.harga).toLocaleString("id-ID");
+          // Sembunyikan addon joki (opsional)
+          const addonSection = document.querySelectorAll(".form-section")[1];
+          if (addonSection) addonSection.style.display = "none";
+          if (typeof updateTotal === "function") updateTotal();
+          window.orderPaketName = item.judul;
+          window.orderType = "Produk Digital";
+        }
+      } else {
+        // Joki
+        if (typeof loadPaketFromStorage === "function") loadPaketFromStorage();
+        const paket = (typeof paketJoki !== "undefined") ? paketJoki.find(p => p.id === id) : null;
+        if (paket) {
+          baseHarga = paket.harga;
+          document.getElementById("paketJudul").textContent = paket.judul;
+          document.getElementById("namaPaketRow").textContent = paket.judul;
+          document.getElementById("hargaPaket").textContent = "Rp " + Number(paket.harga).toLocaleString("id-ID");
+          if (typeof updateTotal === "function") updateTotal();
+          window.orderPaketName = paket.judul;
+          window.orderType = "Joki Kontak";
+        }
       }
     });
   </script>

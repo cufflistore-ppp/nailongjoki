@@ -105,16 +105,30 @@ async function buatPesanan() {
   const timePart = String(Date.now()).slice(-3);
   const kode = `RJ-2026-${rand}${timePart}`;
 
-  const order = {
+  let order = {
     kode,
     nama,
     wa,
     catatan,
     total,
-    paket: "Joki Kontak",
+    paket: (window.orderPaketName || window.orderType || "Joki Kontak"),
     status: "Belum Bayar",
     waktu: new Date().toLocaleString("id-ID")
   };
+
+  // Enrich dengan admin fee + expiresAt (jika qris-helper sudah load)
+  if (typeof window.QRISHelper !== "undefined" && window.QRISHelper.createOrderWithExpiry) {
+    order = window.QRISHelper.createOrderWithExpiry(order);
+  } else {
+    // Fallback manual
+    const adminFee = 1000;
+    const subtotal = Number(String(total).replace(/[^\d]/g, "")) || 0;
+    order.adminFee = adminFee;
+    order.finalAmount = subtotal + adminFee;
+    order.createdAt = Date.now();
+    order.expiresAt = Date.now() + (15 * 60 * 1000);
+    order.qrisExpired = false;
+  }
 
   // Simpan ke localStorage
   let orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
