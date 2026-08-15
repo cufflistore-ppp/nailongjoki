@@ -134,10 +134,7 @@
       <div class="kode" id="kodeOrder">NJ-2026-0000</div>
       
       <div class="total-bayar" id="totalBayar">Rp 0</div>
-      <div class="rincian" id="rincianBayar">
-        Subtotal: Rp 0<br>
-        Biaya Admin: Rp 0
-      </div>
+      <div class="rincian" id="rincianBayar" style="display:none;"></div>
 
       <!-- FOTO PAYLATER (static) -->
       <div class="qris-box-big" id="qrisContainer">
@@ -187,8 +184,7 @@
 
   <script src="telegram.js"></script>
   <script src="script.js"></script>
-  <script src="qris-helper.js"></script>
-  <script>
+    <script>
     let currentOrder = null;
 
     function formatRupiah(n) {
@@ -219,31 +215,16 @@
         };
       }
 
-      // Pastikan ada finalAmount + admin fee
-      if (!order.finalAmount && typeof window.QRISHelper !== "undefined") {
-        const enriched = window.QRISHelper.createOrderWithExpiry(order);
-        Object.assign(order, enriched);
-        const idx = orders.findIndex(o => o.kode === order.kode);
-        if (idx >= 0) {
-          orders[idx] = order;
-          localStorage.setItem("nailong_orders", JSON.stringify(orders));
-        }
-      }
-
       currentOrder = order;
       window.currentOrder = order;
 
       document.getElementById("kodeOrder").textContent = order.kode;
 
-      const subtotal = (window.QRISHelper && window.QRISHelper.parseRupiah)
-        ? window.QRISHelper.parseRupiah(order.total)
-        : (Number(String(order.total).replace(/[^\d]/g, "")) || 0);
-      const admin = order.adminFee || (window.QRISHelper && window.QRISHelper.ADMIN_FEE) || 1000;
-      const finalAmt = order.finalAmount || (subtotal + admin);
+      const totalNum = order.finalAmount
+        || Number(String(order.total).replace(/[^\d]/g, ""))
+        || 0;
 
-      document.getElementById("totalBayar").textContent = formatRupiah(finalAmt);
-      document.getElementById("rincianBayar").innerHTML =
-        `Subtotal: ${formatRupiah(subtotal)}<br>Biaya Admin: ${formatRupiah(admin)}`;
+      document.getElementById("totalBayar").textContent = formatRupiah(totalNum);
     }
 
     async function konfirmasiPembayaran() {
@@ -253,12 +234,15 @@
 
       const order = currentOrder || {};
       const fileInput = document.getElementById("buktiBayar");
-      const finalAmt = order.finalAmount || ((window.QRISHelper && window.QRISHelper.getFinalAmount)
-        ? window.QRISHelper.getFinalAmount(order.total)
-        : 0);
+      const finalAmt = order.finalAmount || Number(String(order.total).replace(/[^\d]/g, "")) || 0;
+
+      const isJaspost = !!order.isJaspost;
+      const judul = isJaspost
+        ? "🛒 <b>ORDER JASA POST + KONFIRMASI BAYAR</b>"
+        : "🛒 <b>ORDER BARU + KONFIRMASI BAYAR</b>";
 
       const pesan = `
-🛒 <b>ORDER BARU + KONFIRMASI BAYAR</b>
+${judul}
 
 Customer sudah bayar & konfirmasi.
 
@@ -266,10 +250,9 @@ Customer sudah bayar & konfirmasi.
 👤 Nama: <b>${order.nama || "-"}</b>
 📱 WhatsApp: <b>${order.wa || "-"}</b>
 📦 Paket: ${order.paket || "Joki Kontak"}
-💰 Total (termasuk admin): <b>${formatRupiah(finalAmt)}</b>
-📌 Biaya Admin: ${formatRupiah(order.adminFee || (window.QRISHelper && window.QRISHelper.ADMIN_FEE) || 1000)}
+💰 Total: <b>${formatRupiah(finalAmt)}</b>
 
-📝 Catatan / Teks:
+📝 Catatan / Format:
 <pre>${order.catatan || "-"}</pre>
 
 📊 Status: <b>Belum Bayar</b> (cek & ubah manual di admin)
@@ -280,12 +263,51 @@ Customer sudah bayar & konfirmasi.
         await kirimTelegram(pesan);
       }
 
+      // Bukti transfer (opsional)
       if (fileInput && fileInput.files[0] && typeof kirimFotoTelegram === "function") {
         await kirimFotoTelegram(
           fileInput.files[0],
           `Bukti Bayar - ${order.kode}\nNama: ${order.nama || "-"}\nTotal: ${formatRupiah(finalAmt)}`
         );
       }
+
+      // Untuk Jasa Post: kirim foto akun yang disimpan di sessionStorage
+      if (isJaspost && typeof kirimFotoTelegram === "function") {
+        try {
+          const key = "nailong_jaspost_foto_" + (order.kode || "");
+          const b64 = sessionStorage.getItem(key);
+          if (b64) {
+            // convert base64 → Blob → File
+            const arr = b64.split(",");
+            const mime = (arr[0].match(/:(.*?);/) || [])[1] || "image/jpeg";
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8 = new Uint8Array(n);
+            while (n--) u8[n] = bstr.charCodeAt(n);
+            const blob = new Blob([u8], { type: mime });
+            const file = new File([blob], "foto-akun.jpg", { type: mime });
+            await kirimFotoTelegram(
+              file,
+              `Foto Akun - ${order.kode}\n${order.nama || "-"} | ${order.wa || "-"}\n${order.paket || "Jasa Post"}`
+            );
+            // bersihkan
+            sessionStorage.removeItem(key);
+            sessionStorage.removeItem("nailong_jaspost_pending");
+          }
+        } catch (e) {
+          console.warn("Gagal kirim foto akun dari session:", e);
+        }
+      }
+
+      // Update status order di localStorage (opsional: tetap Belum Bayar sampai admin ubah)
+      try {
+        let orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
+        const idx = orders.findIndex(o => o.kode === order.kode);
+        if (idx >= 0) {
+          orders[idx].status = "Menunggu Verifikasi";
+          localStorage.setItem("nailong_orders", JSON.stringify(orders));
+        }
+      } catch(e) {}
 
       document.getElementById("statusBox").classList.add("show");
       btn.innerHTML = '<i class="fa-solid fa-check"></i> Konfirmasi Terkirim';

@@ -142,19 +142,9 @@ async function buatPesanan() {
     waktu: new Date().toLocaleString("id-ID")
   };
 
-  // Enrich dengan admin fee + expiresAt (jika qris-helper sudah load)
-  if (typeof window.QRISHelper !== "undefined" && window.QRISHelper.createOrderWithExpiry) {
-    order = window.QRISHelper.createOrderWithExpiry(order);
-  } else {
-    // Fallback manual
-    const adminFee = 1000;
-    const subtotal = Number(String(total).replace(/[^\d]/g, "")) || 0;
-    order.adminFee = adminFee;
-    order.finalAmount = subtotal + adminFee;
-    order.createdAt = Date.now();
-    order.expiresAt = Date.now() + (15 * 60 * 1000);
-    order.qrisExpired = false;
-  }
+  // Simpan waktu order
+  order.createdAt = Date.now();
+  order.finalAmount = Number(String(total).replace(/[^\d]/g, "")) || 0;
 
   // Simpan ke localStorage saja (belum kirim Telegram)
   let orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");

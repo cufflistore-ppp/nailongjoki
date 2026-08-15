@@ -160,8 +160,8 @@ Wa.me/628…
         </div>
 
         <label style="margin-top:14px;">Foto Akun (wajib)</label>
-        <p class="field-hint">Ambil foto / screenshot akun yang mau dipost, lalu kirim ke admin via bot.</p>
-        <input type="file" id="fotoAkun" accept="image/*" capture="environment">
+        <p class="field-hint">Pilih foto / screenshot akun dari galeri. Foto akan dikirim ke admin setelah kamu konfirmasi pembayaran.</p>
+        <input type="file" id="fotoAkun" accept="image/*">
         <img id="fotoPreview" class="foto-preview" alt="Preview foto akun">
       </div>
     </div>
@@ -183,8 +183,7 @@ Wa.me/628…
 
   <script src="joki-produk.js"></script>
   <script src="telegram.js"></script>
-  <script src="qris-helper.js"></script>
-  <script src="script.js"></script>
+    <script src="script.js"></script>
   <script src="produk.js"></script>
   <script>
     // Preview foto akun
@@ -273,11 +272,11 @@ Wa.me/628…
       }
     });
 
-    // Override / extend buatPesanan agar support form jaspost + kirim foto
+    // Override / extend buatPesanan agar support form jaspost
+    // Foto + format hanya dikirim ke Telegram SETELAH konfirmasi bayar
     const originalBuatPesanan = window.buatPesanan;
     window.buatPesanan = async function() {
       if (window.isJaspost) {
-        // Ambil data dari form jaspost
         const jualcari = document.getElementById("jp_jualcari")?.value?.trim() || "";
         const nomer = document.getElementById("jp_nomer")?.value?.trim() || "";
         const nama = document.getElementById("jp_nama")?.value?.trim() || "";
@@ -289,15 +288,14 @@ Wa.me/628…
         const fotoInput = document.getElementById("fotoAkun");
 
         if (!jualcari || !nomer || !nama || !item) {
-          alert("Lengkapi field wajib: JUAL/CARI, NOMER, NAMA, dan ITEM/AKUN.");
+          showNiceAlert("Lengkapi field wajib: JUAL/CARI, NOMER, NAMA, dan ITEM/AKUN.");
           return;
         }
         if (!fotoInput || !fotoInput.files || !fotoInput.files[0]) {
-          alert("Wajib upload / ambil foto akun terlebih dahulu.");
+          showNiceAlert("Wajib pilih foto akun dari galeri terlebih dahulu.");
           return;
         }
 
-        // Susun teks format sesuai template
         const catatan = `🫣_JASA POST FREE/GRATIS PM AJA NAILONG_
 *FORMAT JASPOST BY 《CUFFLI》*
 \`BUKAN AKUN ADMIN\`
@@ -311,7 +309,7 @@ Wa.me/628…
 - *Mc/Admin* : ${mc}
 😶PEMBERITAHUAN : GUNAKAN JASA ADMIN / MC AGAR TERHINDAR DARI PENIPUAN`;
 
-        // Isi field tersembunyi agar original logic bisa baca (nama & wa)
+        // Isi field agar logic lain bisa baca
         const namaEl = document.getElementById("nama");
         const waEl = document.getElementById("wa");
         const catatanEl = document.getElementById("catatan");
@@ -319,7 +317,6 @@ Wa.me/628…
         if (waEl) waEl.value = nomer;
         if (catatanEl) catatanEl.value = catatan;
 
-        // Buat order dulu (pakai logic existing)
         const total = document.getElementById("totalHarga")?.textContent || "Rp 0";
         const rand = Math.floor(1000 + Math.random() * 9000);
         const timePart = String(Date.now()).slice(-3);
@@ -337,53 +334,34 @@ Wa.me/628…
           isJaspost: true
         };
 
-        if (typeof window.QRISHelper !== "undefined" && window.QRISHelper.createOrderWithExpiry) {
-          order = window.QRISHelper.createOrderWithExpiry(order);
-        } else {
-          const adminFee = 1000;
-          const subtotal = Number(String(total).replace(/[^\d]/g, "")) || 0;
-          order.adminFee = adminFee;
-          order.finalAmount = subtotal + adminFee;
-          order.createdAt = Date.now();
-          order.expiresAt = Date.now() + (15 * 60 * 1000);
-          order.qrisExpired = false;
-        }
+        order.createdAt = Date.now();
+        order.finalAmount = Number(String(total).replace(/[^\d]/g, "")) || 0;
 
-        // Simpan order
+        // Simpan order (belum kirim Telegram)
         let orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
         orders.unshift(order);
         localStorage.setItem("nailong_orders", JSON.stringify(orders));
 
-        // Kirim teks format + foto akun ke Telegram SEKARANG
+        // Simpan foto sebagai base64 di sessionStorage agar bisa dikirim setelah bayar
         try {
-          const pesanTelegram = `
-🛒 <b>ORDER JASA POST AKUN - PENDING BAYAR</b>
-
-🆔 Kode: <code>${kode}</code>
-📦 Paket: ${order.paket}
-💰 Total: <b>${total}</b>
-
-📝 Format JASPOST:
-<pre>${catatan}</pre>
-
-⏰ ${order.waktu}
-          `.trim();
-
-          if (typeof kirimTelegram === "function") {
-            await kirimTelegram(pesanTelegram);
-          }
-          if (typeof kirimFotoTelegram === "function" && fotoInput.files[0]) {
-            await kirimFotoTelegram(
-              fotoInput.files[0],
-              `Foto Akun - ${kode}\n${nama} | ${nomer}\n${order.paket}`
-            );
-          }
+          const file = fotoInput.files[0];
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            try {
+              sessionStorage.setItem("nailong_jaspost_foto_" + kode, e.target.result);
+              sessionStorage.setItem("nailong_jaspost_pending", kode);
+            } catch (err) {
+              console.warn("Foto terlalu besar untuk sessionStorage", err);
+            }
+            window.location.href = `pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(total)}`;
+          };
+          reader.onerror = function() {
+            window.location.href = `pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(total)}`;
+          };
+          reader.readAsDataURL(file);
         } catch (err) {
-          console.error("Gagal kirim ke Telegram:", err);
+          window.location.href = `pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(total)}`;
         }
-
-        // Redirect ke pembayaran (sama seperti biasa)
-        window.location.href = `pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(total)}`;
         return;
       }
 
@@ -392,6 +370,15 @@ Wa.me/628…
         return originalBuatPesanan();
       }
     };
+
+    // Nice alert helper (fallback if not defined yet)
+    function showNiceAlert(msg) {
+      if (typeof window.showSiteModal === "function") {
+        window.showSiteModal(msg);
+      } else {
+        alert(msg);
+      }
+    }
   </script>
 </body>
 </html>
