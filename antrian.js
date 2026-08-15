@@ -52,7 +52,7 @@ function cekStatus() {
   if (found) {
     alert(`Status untuk ${found.kode}:\n\nNama: ${found.nama}\nStatus: ${found.status}\nTotal: ${found.total}\nWaktu: ${found.waktu}`);
   } else {
-    alert("Nomor order tidak ditemukan.\nPastikan kode benar (contoh: RJ-2026-1234)");
+    alert("Nomor order tidak ditemukan.\nPastikan kode benar (contoh: NJ-2026-1234)");
   }
 }
 

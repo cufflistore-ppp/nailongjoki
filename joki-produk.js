@@ -30,10 +30,54 @@ const paketJoki = [
     harga: 15000,
     fitur: [
       "Order langsung dari website",
-      "Status dapat dipantau",
-      "Prioritas lebih tinggi"
+      "Status dapat dipantau"
     ]
-  }
+  },
+  {
+    id: 4,
+    label: "4 HARI",
+    judul: "Joki 4 Hari",
+    deskripsi: "Layanan joki kontak selama 4 hari.",
+    harga: 25000,
+    fitur: [
+      "Order langsung dari website",
+      "Status dapat dipantau"
+    ]
+  },
+    {
+    id: 5,
+    label: "perminggu",
+    judul: "Joki peinggu",
+    deskripsi: "Layanan joki kontak selama 7 hari.",
+    harga: 88000,
+    fitur: [
+      "Order langsung dari website",
+      "Status dapat dipantau"
+    ]
+  },
+    {
+    id: 6,
+    label: "perbulan",
+    judul: "Joki perbulan",
+    deskripsi: "Layanan joki kontak selama 1 bulan.",
+    harga: 400000,
+    fitur: [
+      "Order langsung dari website",
+      "Status dapat dipantau"
+    ]
+  },
+    {
+    id: 7,
+    label: "Permanent",
+    judul: "Joki Permanent",
+    deskripsi: "Layanan joki kontak selama nya....",
+    harga: 900000,
+    fitur: [
+      "Order langsung dari website",
+      "Status dapat dipantau",
+      "Prioritas tertinggi"
+    ]
+  },
 ];
 
 function formatRp(n) {

@@ -19,22 +19,41 @@ body {
   background: #2a2200;
   padding: 8px 12px;
   font-size: 12px;
-  border-bottom: 1px solid #3d3200;
+  border: 1px solid #3d3200;
   overflow: hidden;
-  white-space: nowrap;
+  position: relative;
 }
 .notif-item {
   display: flex;
   align-items: center;
   gap: 6px;
-  animation: slide 14s linear infinite;
+  padding-right: 28px;
+}
+.notif-text {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .notif-text b { color: #ffd700; }
 .time { color: #aaa; }
-
-@keyframes slide {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+.notif-close {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.notif-close:hover {
+  color: #ffd700;
+  background: #3d3200;
 }
 
 /* Header */

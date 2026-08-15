@@ -4,25 +4,44 @@ function formatRupiah(n) {
   return "Rp " + Number(n).toLocaleString("id-ID");
 }
 
+function isNotifHidden() {
+  return localStorage.getItem("nailong_notif_hidden") === "1";
+}
+
+function hideAllNotif() {
+  localStorage.setItem("nailong_notif_hidden", "1");
+  const el = document.getElementById("topNotif");
+  if (el) {
+    el.style.display = "none";
+    el.innerHTML = "";
+  }
+}
+
 function getRecentOrdersForNotif() {
   const orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
-  return orders.slice(0, 5); // ambil 5 order terbaru
+  // Hanya order real (punya kode NJ)
+  return orders.filter(o => o && o.kode && String(o.kode).startsWith("NJ-")).slice(0, 5);
 }
 
 function generateNotifFromOrder(order) {
   if (!order) return "";
   const shortName = (order.nama || "A").substring(0, 1) + "****";
-  const price = order.total || "Rp 5.000";
+  const price = order.total || order.finalAmount || "Rp 5.000";
+  const priceText = typeof price === "number" ? formatRupiah(price) : price;
   const svc = order.paket || "Joki Kontak";
-  // hitung menit lalu dari waktu order
   let timeText = "baru saja";
   try {
-    // waktu disimpan sebagai string lokal, kita pakai "baru saja" saja
-    timeText = "baru saja";
+    if (order.createdAt) {
+      const diffMin = Math.floor((Date.now() - order.createdAt) / 60000);
+      if (diffMin < 1) timeText = "baru saja";
+      else if (diffMin < 60) timeText = diffMin + " mnt lalu";
+      else timeText = Math.floor(diffMin / 60) + " jam lalu";
+    }
   } catch(e) {}
   return `<div class="notif-item">
     <span class="notif-icon">🛒</span>
-    <span class="notif-text"><b>Beli</b> · ${shortName}. · <b>${price}</b> · ${svc} · <span class="time">${timeText}</span></span>
+    <span class="notif-text"><b>Beli</b> · ${shortName}. · <b>${priceText}</b> · ${svc} · <span class="time">${timeText}</span></span>
+    <button type="button" class="notif-close" onclick="hideAllNotif()" title="Tutup notifikasi">×</button>
   </div>`;
 }
 
@@ -30,9 +49,16 @@ function updateTopNotif() {
   const el = document.getElementById("topNotif");
   if (!el) return;
 
+  // Kalau user sudah tutup notif, jangan tampilkan lagi
+  if (isNotifHidden()) {
+    el.style.display = "none";
+    el.innerHTML = "";
+    return;
+  }
+
   const recent = getRecentOrdersForNotif();
   if (recent.length === 0) {
-    // Tidak ada order → sembunyikan notif
+    // Tidak ada order real → sembunyikan notif
     el.style.display = "none";
     el.innerHTML = "";
     return;
@@ -103,7 +129,7 @@ async function buatPesanan() {
   const total = document.getElementById("totalHarga")?.textContent || "Rp 5.000";
   const rand = Math.floor(1000 + Math.random() * 9000);
   const timePart = String(Date.now()).slice(-3);
-  const kode = `RJ-2026-${rand}${timePart}`;
+  const kode = `NJ-2026-${rand}${timePart}`;
 
   let order = {
     kode,
@@ -130,31 +156,18 @@ async function buatPesanan() {
     order.qrisExpired = false;
   }
 
-  // Simpan ke localStorage
+  // Simpan ke localStorage saja (belum kirim Telegram)
   let orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
   orders.unshift(order);
   localStorage.setItem("nailong_orders", JSON.stringify(orders));
 
-  // Kirim ke Telegram
-  if (typeof kirimOrderKeTelegram === "function") {
-    await kirimOrderKeTelegram(order);
-  }
-
-  // Kirim foto TF
-  const fileInput = document.getElementById("buktiTF");
-  if (fileInput && fileInput.files[0] && typeof kirimFotoTelegram === "function") {
-    await kirimFotoTelegram(
-      fileInput.files[0],
-      `Bukti TF - ${kode}\nNama: ${nama}\nTotal: ${total}`
-    );
-  }
-
   // Reset form fields
-  document.getElementById("nama").value = "";
-  document.getElementById("wa").value = "";
-  if (fileInput) fileInput.value = "";
+  const namaEl = document.getElementById("nama");
+  const waEl = document.getElementById("wa");
+  if (namaEl) namaEl.value = "";
+  if (waEl) waEl.value = "";
 
-  // Redirect ke halaman pembayaran QRIS
+  // Redirect ke halaman pembayaran QRIS (Telegram dikirim saat customer klik "Saya Sudah Bayar")
   window.location.href = `pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(total)}`;
 }
 

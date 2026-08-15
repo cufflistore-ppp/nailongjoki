@@ -2,38 +2,51 @@
 const produk = [
   {
     id: 1,
-    judul: "Tutorial Buat Logo JB Instan",
-    harga: 10000,
-    status: "AKTIF",
-    img: "logo.png",
-    deskripsi: "Tutorial lengkap membuat logo JB dalam hitungan menit. File digital langsung dikirim setelah pembayaran.",
+    judul: "Jasa Post Akun 1 Channel",
+    harga: 5000,
+    status: "TERSEDIA",
+    img: "nailong1.png",
+    deskripsi: "Jasa post akun ke semua channel & grup terkait. Tingkatkan reach akun kamu.",
     fitur: [
-      "File tutorial siap pakai",
-      "Bisa dipelajari offline",
-      "Update gratis jika ada revisi",
-      "Dikirim via WhatsApp"
+      "Post di grup + 1 channel aktif",
+      "Laporan hasil post",
+      "Proses 1x24 jam"
     ]
   },
   {
     id: 2,
-    judul: "Jasa Post Akun All Channel",
+    judul: "Jasa Post Akun 3 Channel",
     harga: 15000,
     status: "TERSEDIA",
-    img: "logo.png",
+    img: "nailong2.png",
     deskripsi: "Jasa post akun ke semua channel & grup terkait. Tingkatkan reach akun kamu.",
     fitur: [
-      "Post di banyak channel",
-      "Post di grup aktif",
+      "Post di 3 channel",
+      "Post di grup + 3 channel aktif",
       "Laporan hasil post",
       "Proses 1x24 jam"
     ]
   },
   {
     id: 3,
+    judul: "Jasa Post Akun All Channel",
+    harga: 75000,
+    status: "TERSEDIA",
+    img: "nailong3.png",
+    deskripsi: "Jasa post akun ke semua channel & grup terkait. Tingkatkan reach akun kamu.",
+    fitur: [
+      "Post di banyak channel + grup",
+      "Post di all grup + all channel aktif",
+      "Laporan hasil post",
+      "Proses 1x24 jam"
+    ]
+  },
+  {
+    id: 4,
     judul: "Paket Views + Kontak",
-    harga: 25000,
+    harga: 35000,
     status: "AKTIF",
-    img: "logo.png",
+    img: "nailong4.png",
     deskripsi: "Paket gabungan views story + push kontak untuk meningkatkan interaksi akun.",
     fitur: [
       "Tambah views story",
@@ -43,11 +56,11 @@ const produk = [
     ]
   },
   {
-    id: 4,
+    id: 5,
     judul: "Paket Premium Kontak",
-    harga: 30000,
+    harga: 500000,
     status: "TERSEDIA",
-    img: "logo.png",
+    img: "nailong5.png",
     deskripsi: "Paket premium untuk push kontak lebih agresif dan prioritas antrian.",
     fitur: [
       "Prioritas antrian",

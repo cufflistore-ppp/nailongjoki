@@ -179,7 +179,7 @@
       <h2>Scan QRIS untuk Bayar</h2>
       <p style="font-size:13px;color:#aaa;">Order kamu sudah dibuat</p>
       
-      <div class="kode" id="kodeOrder">RJ-2026-0000</div>
+      <div class="kode" id="kodeOrder">NJ-2026-0000</div>
       
       <div class="total-bayar" id="totalBayar">Rp 0</div>
       <div class="rincian" id="rincianBayar">
@@ -237,10 +237,6 @@
 
   <nav class="bottom-nav">
     <a href="joki.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
-    <a href="joki.html" class="nav-item">
-      <i class="fa-solid fa-box"></i>
-      <span>Produk</span>
-    </a>
     <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
     <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
     <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
@@ -277,7 +273,7 @@
         // Fallback dari URL
         const total = params.get("total") || "Rp 5.000";
         order = {
-          kode: kodeParam || "RJ-2026-0000",
+          kode: kodeParam || "NJ-2026-0000",
           total: total,
           nama: "-",
           wa: "-",
@@ -441,19 +437,21 @@
       }
 
       const pesan = `
-💳 <b>KONFIRMASI PEMBAYARAN</b>
+🛒 <b>ORDER BARU + KONFIRMASI BAYAR</b>
 
-Customer mengklaim sudah bayar.
+Customer sudah bayar & konfirmasi.
 
-🆔 Kode: <code>${order.kode || "-"}</code>
-👤 Nama: ${order.nama || "-"}
-📱 WA: ${order.wa || "-"}
+🆔 Kode Antrian: <code>${order.kode || "-"}</code>
+👤 Nama: <b>${order.nama || "-"}</b>
+📱 WhatsApp: <b>${order.wa || "-"}</b>
+📦 Paket: ${order.paket || "Joki Kontak"}
 💰 Total (termasuk admin): <b>${formatRupiah(finalAmt)}</b>
-📌 Biaya Admin: ${formatRupiah(order.adminFee || window.QRISHelper.ADMIN_FEE)}
+📌 Biaya Admin: ${formatRupiah(order.adminFee || (window.QRISHelper && window.QRISHelper.ADMIN_FEE) || 1000)}
 
-📊 Status tetap: <b>Belum Bayar</b>
-(Admin silakan cek & ubah status manual)
+📝 Catatan / Teks Push:
+<pre>${order.catatan || "-"}</pre>
 
+📊 Status: <b>Belum Bayar</b> (cek & ubah manual di admin)
 ⏰ ${new Date().toLocaleString("id-ID")}
       `.trim();
 

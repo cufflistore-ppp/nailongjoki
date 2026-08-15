@@ -44,7 +44,7 @@ function loadOrders() {
 }
 
 function tambahOrderAdmin() {
-  const kode = document.getElementById("admKode").value.trim() || ( "RJ-2026-" + Math.floor(1000 + Math.random() * 9000) + String(Date.now()).slice(-3) );
+  const kode = document.getElementById("admKode").value.trim() || ( "NJ-2026-" + Math.floor(1000 + Math.random() * 9000) + String(Date.now()).slice(-3) );
   const nama = document.getElementById("admNama").value.trim() || "Manual";
   const wa = document.getElementById("admWA").value.trim() || "-";
   const total = document.getElementById("admTotal").value.trim() || "Rp 0";
