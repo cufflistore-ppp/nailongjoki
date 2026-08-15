@@ -6,6 +6,40 @@
   <title>Pesan Paket - Nailong Joki</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .jaspost-notice {
+      background: #2a2200;
+      border: 1px solid #ffd70055;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 12px 0;
+      font-size: 12px;
+      color: #eee;
+      line-height: 1.5;
+    }
+    .jaspost-notice .title {
+      color: #ffd700;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .foto-preview {
+      max-width: 100%;
+      max-height: 180px;
+      border-radius: 10px;
+      margin-top: 8px;
+      display: none;
+      border: 1px solid #3d3200;
+    }
+    .field-hint {
+      font-size: 11px;
+      color: #aaa;
+      margin: -4px 0 8px;
+    }
+    #formJaspost label {
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
   <header class="header">
@@ -21,7 +55,7 @@
   <div class="top-notif" id="topNotif" style="display:none;"></div>
 
   <div class="page-content">
-    <a href="joki.html" class="back"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
+    <a href="javascript:history.back()" class="back"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
 
     <div class="order-header" style="margin-bottom:16px;">
       <img src="logo.png" class="order-logo" onerror="this.style.background='#ffd700'">
@@ -31,55 +65,104 @@
       </div>
     </div>
 
-    <div class="warning-box red">
+    <div class="warning-box red" id="warningJoki">
       <i class="fa-solid fa-triangle-exclamation"></i>
       <div class="marquee">
         <span>KANG JOKI KONTAK DILARANG ORDER. JIKA KETAHUAN TIDAK DILAYANI! &nbsp;&nbsp;&nbsp; KANG JOKI KONTAK DILARANG ORDER. JIKA KETAHUAN TIDAK DILAYANI!</span>
       </div>
     </div>
 
-    <div class="form-section">
-      <h4><span class="step">1</span> Data Customer</h4>
-      
-      <label>Nama (Store/JB)</label>
-      <input type="text" id="nama" placeholder="Nama Store kamu" required>
+    <!-- ========== FORM STANDAR (Joki + Paket Views/Premium) ========== -->
+    <div id="formStandar">
+      <div class="form-section">
+        <h4><span class="step">1</span> Data Customer</h4>
+        
+        <label>Nama (Store/JB)</label>
+        <input type="text" id="nama" placeholder="Nama Store kamu" required>
 
-      <label>Nomor WhatsApp</label>
-      <input type="tel" id="wa" placeholder="08xxxxxxxxxx" required>
+        <label>Nomor WhatsApp</label>
+        <input type="tel" id="wa" placeholder="08xxxxxxxxxx" required>
 
-      <label>Catatan (Format Teks Push Kontak)</label>
-      <p style="font-size:12px; color:#ffd700; margin:4px 0 8px;">
-        * Tinggal ganti <b>NAMA STORE</b> dan nomor WhatsApp saja. Jangan hapus formatnya.
-      </p>
-      <textarea id="catatan" rows="7">SV BUYER FRESH NAILONG🔥
+        <label>Catatan (Format Teks Push Kontak)</label>
+        <p style="font-size:12px; color:#ffd700; margin:4px 0 8px;">
+          * Tinggal ganti <b>NAMA STORE</b> dan nomor WhatsApp saja. Jangan hapus formatnya.
+        </p>
+        <textarea id="catatan" rows="7">SV BUYER FRESH NAILONG🔥
 
 SV ; NAMA STORE
 Wa.me/628…
 
 #NAMBAH VIEW SW + KONTAK + SELLER + BUYYER + DLL 🌤️🌈</textarea>
+      </div>
+
+      <div class="form-section" id="addonSection">
+        <h4><span class="step">2</span> Include Paket</h4>
+        <div class="addon" onclick="toggleAddon(this, 5000)">
+          <span>+ 1hari</span>
+          <span class="addon-price">+Rp 5.000</span>
+          <button class="btn-pilih" type="button">Pilih</button>
+        </div>
+        <div class="addon" onclick="toggleAddon(this, 10000)">
+          <span>+ 2hari</span>
+          <span class="addon-price">+Rp 10.000</span>
+          <button class="btn-pilih" type="button">Pilih</button>
+        </div>
+        <div class="addon" onclick="toggleAddon(this, 15000)">
+          <span>+ 3hari</span>
+          <span class="addon-price">+Rp 15.000</span>
+          <button class="btn-pilih" type="button">Pilih</button>
+        </div>
+        <div class="addon" onclick="toggleAddon(this, 35000)">
+          <span>Prioritas Antrian</span>
+          <span class="addon-price">+Rp 35.000</span>
+          <button class="btn-pilih" type="button">Pilih</button>
+        </div>
+      </div>
     </div>
 
-    <div class="form-section">
-      <h4><span class="step">2</span> Include Paket</h4>
-      <div class="addon" onclick="toggleAddon(this, 5000)">
-        <span>+ 1hari</span>
-        <span class="addon-price">+Rp 5.000</span>
-        <button class="btn-pilih" type="button">Pilih</button>
-      </div>
-      <div class="addon" onclick="toggleAddon(this, 10000)">
-        <span>+ 2hari</span>
-        <span class="addon-price">+Rp 10.000</span>
-        <button class="btn-pilih" type="button">Pilih</button>
-      </div>
-      <div class="addon" onclick="toggleAddon(this, 15000)">
-        <span>+ 3hari</span>
-        <span class="addon-price">+Rp 15.000</span>
-        <button class="btn-pilih" type="button">Pilih</button>
-      </div>
-      <div class="addon" onclick="toggleAddon(this, 35000)">
-        <span>Prioritas Antrian</span>
-        <span class="addon-price">+Rp 35.000</span>
-        <button class="btn-pilih" type="button">Pilih</button>
+    <!-- ========== FORM JASA POST AKUN (id 1,2,3) ========== -->
+    <div id="formJaspost" style="display:none;">
+      <div class="form-section">
+        <h4><span class="step">1</span> Format Jasa Post</h4>
+
+        <div class="jaspost-notice">
+          <span class="title">🫣_JASA POST FREE/GRATIS PM AJA NAILONG_</span>
+          <b>*FORMAT JASPOST BY 《CUFFLI》*</b><br>
+          <code>BUKAN AKUN ADMIN</code>
+        </div>
+
+        <label>JUAL / CARI</label>
+        <input type="text" id="jp_jualcari" placeholder="Contoh: JUAL atau CARI" required>
+
+        <label>NOMER LU (WhatsApp)</label>
+        <input type="tel" id="jp_nomer" placeholder="08xxxxxxxxxx" required>
+
+        <label>NAMA LU</label>
+        <input type="text" id="jp_nama" placeholder="Nama kamu / store" required>
+
+        <label>ITEM / AKUN</label>
+        <input type="text" id="jp_item" placeholder="Jenis item atau akun yang dipost" required>
+
+        <label>LOG</label>
+        <input type="text" id="jp_log" placeholder="Contoh: ada / tidak / detail log">
+
+        <label>OP</label>
+        <input type="text" id="jp_op" placeholder="Operator / info tambahan">
+
+        <label>SPEK</label>
+        <textarea id="jp_spek" rows="3" placeholder="Spesifikasi akun / item"></textarea>
+
+        <label>Mc / Admin</label>
+        <input type="text" id="jp_mc" value="NAILONG" readonly style="background:#1a1500;color:#ffd700;">
+
+        <div class="jaspost-notice" style="margin-top:14px;">
+          😶 <b>PEMBERITAHUAN</b> : GUNAKAN JASA ADMIN / MC AGAR TERHINDAR DARI PENIPUAN
+        </div>
+
+        <label style="margin-top:14px;">Foto Akun (wajib)</label>
+        <p class="field-hint">Ambil foto / screenshot akun yang mau dipost, lalu kirim ke admin via bot.</p>
+        <input type="file" id="fotoAkun" accept="image/*" capture="environment">
+        <img id="fotoPreview" class="foto-preview" alt="Preview foto akun">
       </div>
     </div>
 
@@ -87,12 +170,12 @@ Wa.me/628…
       <h4>Ringkasan Order</h4>
       <div class="row"><span id="namaPaketRow">Joki Kontak</span><span>Paket</span><span id="hargaPaket">Rp 5.000</span></div>
       <div class="row total"><span>Total</span><span id="totalHarga">Rp 5.000</span></div>
-      <button class="btn-buat" onclick="buatPesanan()">Buat Pesanan</button>
+      <button class="btn-buat" id="btnSubmitOrder" onclick="buatPesanan()">Buat Pesanan</button>
     </div>
   </div>
 
   <nav class="bottom-nav">
-    <a href="joki.html" class="nav-item active"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+    <a href="joki.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
     <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
     <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
     <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
@@ -104,11 +187,27 @@ Wa.me/628…
   <script src="script.js"></script>
   <script src="produk.js"></script>
   <script>
-    // Support Joki (default) dan Produk Digital
+    // Preview foto akun
+    document.getElementById("fotoAkun")?.addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      const prev = document.getElementById("fotoPreview");
+      if (file && prev) {
+        prev.src = URL.createObjectURL(file);
+        prev.style.display = "block";
+      } else if (prev) {
+        prev.style.display = "none";
+      }
+    });
+
+    // Support Joki (default), Produk Views/Premium (sama seperti joki), dan Jasa Post (form khusus)
     document.addEventListener("DOMContentLoaded", function() {
       const params = new URLSearchParams(window.location.search);
       const type = params.get("type") || "joki";
       const id = parseInt(params.get("id") || "1", 10);
+
+      window.isJaspost = false;
+      window.orderType = "Joki Kontak";
+      window.orderPaketName = "Joki Kontak";
 
       if (type === "produk") {
         // Load produk digital
@@ -129,15 +228,37 @@ Wa.me/628…
           document.getElementById("paketJudul").textContent = item.judul;
           document.getElementById("namaPaketRow").textContent = item.judul;
           document.getElementById("hargaPaket").textContent = "Rp " + Number(item.harga).toLocaleString("id-ID");
-          // Sembunyikan addon joki (opsional)
-          const addonSection = document.querySelectorAll(".form-section")[1];
-          if (addonSection) addonSection.style.display = "none";
-          if (typeof updateTotal === "function") updateTotal();
           window.orderPaketName = item.judul;
           window.orderType = "Produk Digital";
+
+          // Cek apakah ini Jasa Post (id 1,2,3 atau judul mengandung "Jasa Post")
+          const isJasaPost = (id === 1 || id === 2 || id === 3) ||
+            (item.judul && item.judul.toLowerCase().includes("jasa post"));
+
+          if (isJasaPost) {
+            window.isJaspost = true;
+            window.orderType = "Jasa Post Akun";
+            // Tampilkan form jaspost, sembunyikan form standar
+            document.getElementById("formStandar").style.display = "none";
+            document.getElementById("formJaspost").style.display = "block";
+            document.getElementById("warningJoki").style.display = "none";
+            // Ubah tombol
+            const btn = document.getElementById("btnSubmitOrder");
+            if (btn) btn.textContent = "Bayar Sekarang";
+          } else {
+            // Paket Views + Kontak & Premium Kontak → sama seperti joki
+            // Sembunyikan addon (karena harga fixed)
+            const addonSection = document.getElementById("addonSection");
+            if (addonSection) addonSection.style.display = "none";
+            // Tombol tetap bisa "Bayar Sekarang"
+            const btn = document.getElementById("btnSubmitOrder");
+            if (btn) btn.textContent = "Bayar Sekarang";
+          }
+
+          if (typeof updateTotal === "function") updateTotal();
         }
       } else {
-        // Joki
+        // Joki biasa
         if (typeof loadPaketFromStorage === "function") loadPaketFromStorage();
         const paket = (typeof paketJoki !== "undefined") ? paketJoki.find(p => p.id === id) : null;
         if (paket) {
@@ -151,6 +272,126 @@ Wa.me/628…
         }
       }
     });
+
+    // Override / extend buatPesanan agar support form jaspost + kirim foto
+    const originalBuatPesanan = window.buatPesanan;
+    window.buatPesanan = async function() {
+      if (window.isJaspost) {
+        // Ambil data dari form jaspost
+        const jualcari = document.getElementById("jp_jualcari")?.value?.trim() || "";
+        const nomer = document.getElementById("jp_nomer")?.value?.trim() || "";
+        const nama = document.getElementById("jp_nama")?.value?.trim() || "";
+        const item = document.getElementById("jp_item")?.value?.trim() || "";
+        const log = document.getElementById("jp_log")?.value?.trim() || "-";
+        const op = document.getElementById("jp_op")?.value?.trim() || "-";
+        const spek = document.getElementById("jp_spek")?.value?.trim() || "-";
+        const mc = document.getElementById("jp_mc")?.value?.trim() || "NAILONG";
+        const fotoInput = document.getElementById("fotoAkun");
+
+        if (!jualcari || !nomer || !nama || !item) {
+          alert("Lengkapi field wajib: JUAL/CARI, NOMER, NAMA, dan ITEM/AKUN.");
+          return;
+        }
+        if (!fotoInput || !fotoInput.files || !fotoInput.files[0]) {
+          alert("Wajib upload / ambil foto akun terlebih dahulu.");
+          return;
+        }
+
+        // Susun teks format sesuai template
+        const catatan = `🫣_JASA POST FREE/GRATIS PM AJA NAILONG_
+*FORMAT JASPOST BY 《CUFFLI》*
+\`BUKAN AKUN ADMIN\`
+- *JUAL/CARI*: ${jualcari}
+- *NOMER LU* : ${nomer}
+- *NAMA LU*    : ${nama}
+- *ITEM/AKUN* : ${item}
+- *LOG* : ${log}
+- *OP* : ${op}
+- *SPEK* : ${spek}
+- *Mc/Admin* : ${mc}
+😶PEMBERITAHUAN : GUNAKAN JASA ADMIN / MC AGAR TERHINDAR DARI PENIPUAN`;
+
+        // Isi field tersembunyi agar original logic bisa baca (nama & wa)
+        const namaEl = document.getElementById("nama");
+        const waEl = document.getElementById("wa");
+        const catatanEl = document.getElementById("catatan");
+        if (namaEl) namaEl.value = nama;
+        if (waEl) waEl.value = nomer;
+        if (catatanEl) catatanEl.value = catatan;
+
+        // Buat order dulu (pakai logic existing)
+        const total = document.getElementById("totalHarga")?.textContent || "Rp 0";
+        const rand = Math.floor(1000 + Math.random() * 9000);
+        const timePart = String(Date.now()).slice(-3);
+        const kode = `NJ-2026-${rand}${timePart}`;
+
+        let order = {
+          kode,
+          nama,
+          wa: nomer,
+          catatan,
+          total,
+          paket: window.orderPaketName || "Jasa Post Akun",
+          status: "Belum Bayar",
+          waktu: new Date().toLocaleString("id-ID"),
+          isJaspost: true
+        };
+
+        if (typeof window.QRISHelper !== "undefined" && window.QRISHelper.createOrderWithExpiry) {
+          order = window.QRISHelper.createOrderWithExpiry(order);
+        } else {
+          const adminFee = 1000;
+          const subtotal = Number(String(total).replace(/[^\d]/g, "")) || 0;
+          order.adminFee = adminFee;
+          order.finalAmount = subtotal + adminFee;
+          order.createdAt = Date.now();
+          order.expiresAt = Date.now() + (15 * 60 * 1000);
+          order.qrisExpired = false;
+        }
+
+        // Simpan order
+        let orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
+        orders.unshift(order);
+        localStorage.setItem("nailong_orders", JSON.stringify(orders));
+
+        // Kirim teks format + foto akun ke Telegram SEKARANG
+        try {
+          const pesanTelegram = `
+🛒 <b>ORDER JASA POST AKUN - PENDING BAYAR</b>
+
+🆔 Kode: <code>${kode}</code>
+📦 Paket: ${order.paket}
+💰 Total: <b>${total}</b>
+
+📝 Format JASPOST:
+<pre>${catatan}</pre>
+
+⏰ ${order.waktu}
+          `.trim();
+
+          if (typeof kirimTelegram === "function") {
+            await kirimTelegram(pesanTelegram);
+          }
+          if (typeof kirimFotoTelegram === "function" && fotoInput.files[0]) {
+            await kirimFotoTelegram(
+              fotoInput.files[0],
+              `Foto Akun - ${kode}\n${nama} | ${nomer}\n${order.paket}`
+            );
+          }
+        } catch (err) {
+          console.error("Gagal kirim ke Telegram:", err);
+        }
+
+        // Redirect ke pembayaran (sama seperti biasa)
+        window.location.href = `pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(total)}`;
+        return;
+      }
+
+      // Non-jaspost → panggil original
+      if (typeof originalBuatPesanan === "function") {
+        return originalBuatPesanan();
+      }
+    };
   </script>
 </body>
 </html>
