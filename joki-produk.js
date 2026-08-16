@@ -44,23 +44,23 @@ const paketJoki = [
       "Status dapat dipantau"
     ]
   },
-    {
+  {
     id: 5,
-    label: "perminggu",
-    judul: "Joki peinggu",
-    deskripsi: "Layanan joki kontak selama 7 hari.",
-    harga: 88000,
+    label: "5 HARI",
+    judul: "Joki 5 Hari",
+    deskripsi: "Layanan joki kontak selama 5 hari.",
+    harga: 30000,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau"
     ]
   },
-    {
+  {
     id: 6,
-    label: "perbulan",
-    judul: "Joki perbulan",
-    deskripsi: "Layanan joki kontak selama 1 bulan.",
-    harga: 400000,
+    label: "6 HARI",
+    judul: "Joki 6 Hari",
+    deskripsi: "Layanan joki kontak selama 6 hari.",
+    harga: 35000,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau"
@@ -68,16 +68,62 @@ const paketJoki = [
   },
     {
     id: 7,
+    label: "perminggu",
+    judul: "Joki peinggu",
+    deskripsi: "Layanan joki kontak selama 7 hari.",
+    harga: 40000,
+    fitur: [
+      "Order langsung dari website",
+      "Status dapat dipantau"
+    ]
+  },
+  {
+    id: 8,
+    label: "perminggu vip",
+    judul: "Joki perminggu vip",
+    deskripsi: "Layanan joki kontak selama 1 minggu vip.",
+    harga: 50000,
+    fitur: [
+      "Order langsung dari website",
+      "Status dapat dipantau",
+      "prioritas tertinggi"
+    ]
+  },
+    {
+    id: 9,
+    label: "perbulan",
+    judul: "Joki perbulan",
+    deskripsi: "Layanan joki kontak selama 1 bulan.",
+    harga: 150000,
+    fitur: [
+      "Order langsung dari website",
+      "Status dapat dipantau"
+    ]
+  },
+  {
+    id: 10,
+    label: "perbulan vip",
+    judul: "Joki perminggu vip",
+    deskripsi: "Layanan joki kontak selama 1 bulan vip.",
+    harga: 250000,
+    fitur: [
+      "Order langsung dari website",
+      "Status dapat dipantau",
+      "prioritas tertinggi"
+    ]
+  },
+    {
+    id: 11,
     label: "Permanent",
     judul: "Joki Permanent",
     deskripsi: "Layanan joki kontak selama nya....",
-    harga: 900000,
+    harga: 500000,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau",
       "Prioritas tertinggi"
     ]
-  },
+  }
 ];
 
 function formatRp(n) {
