@@ -2,49 +2,205 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tentang - Nailong Joki</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tentang - Nailong Joki Elite</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .about-hero {
+      text-align: center;
+      padding: 8px 0 20px;
+    }
+    .about-hero img {
+      width: 88px;
+      height: 88px;
+      border-radius: 20px;
+      object-fit: cover;
+      border: 2px solid #ffd70055;
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.15);
+      margin-bottom: 12px;
+      background: #3d3200;
+    }
+    .about-hero h2 {
+      font-size: 20px;
+      color: #ffd700;
+      margin: 0 0 4px;
+      font-weight: 800;
+    }
+    .about-hero .badge-elite {
+      display: inline-block;
+      background: linear-gradient(135deg, #ffd700, #e6b800);
+      color: #1a1500;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    .about-card {
+      background: #2a2200;
+      border: 1px solid #3d3200;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 18px;
+      line-height: 1.65;
+      font-size: 13px;
+      color: #ccc;
+    }
+    .about-card p { margin: 0 0 10px; }
+    .about-card p:last-child { margin-bottom: 0; }
+    .about-card strong { color: #ffd700; }
+    .section-title {
+      color: #ffd700;
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-sub {
+      color: #888;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+    .contact-list { margin-top: 4px; }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #2a2200;
+      border: 1px solid #3d3200;
+      border-radius: 12px;
+      padding: 14px 14px;
+      margin-bottom: 10px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .contact-item:active {
+      border-color: #ffd70066;
+      background: #322800;
+    }
+    .contact-item .icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .contact-item .icon-wrap.wa { background: #075e5433; color: #25d366; }
+    .contact-item .icon-wrap.group { background: #075e5433; color: #25d366; }
+    .contact-item .icon-wrap.channel { background: #075e5433; color: #25d366; }
+    .contact-item .icon-wrap.tg { background: #0088cc22; color: #2aabee; }
+    .contact-item strong {
+      display: block;
+      font-size: 14px;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+    .contact-item small {
+      display: block;
+      color: #999;
+      font-size: 12px;
+    }
+    .contact-item .arrow {
+      margin-left: auto;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-<header class="header">
+  <header class="header">
     <div class="brand">
-      <img src="logo.png" class="logo" onerror="this.style.background='#ffd700'">
+      <img src="logo.png" class="logo" onerror="this.style.background='#ffd700'" alt="Nailong">
       <div>
         <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
-        <p>Pusat Layanan Nailong Joki</p>
+        <p>Nailong Joki Elite</p>
       </div>
     </div>
   </header>
-  <!-- Notif (hanya muncul jika ada order real) -->
+
   <div class="top-notif" id="topNotif" style="display:none;"></div>
 
-
   <div class="page-content">
-    <p style="line-height:1.6;margin-bottom:20px;">
-      Nailong Joki menyediakan layanan Joki Kontak dan produk digital dengan proses order, pembayaran, serta pemantauan antrian yang terpusat.
-    </p>
+    <!-- Hero -->
+    <div class="about-hero">
+      <img src="logo.png" alt="Nailong Joki Elite" onerror="this.style.background='#3d3200'">
+      <div class="badge-elite">ELITE</div>
+      <h2>Nailong Joki Elite</h2>
+      <p style="color:#aaa;font-size:13px;margin:0;">Joki Kontak & Produk Digital Terpercaya</p>
+    </div>
 
-    <h3 style="color:#ffd700;margin-bottom:8px;">TERHUBUNG DENGAN KAMI</h3>
-    <p style="color:#aaa;font-size:13px;margin-bottom:16px;">Sosmed, admin WA, grup & saluran.</p>
+    <!-- Tentang -->
+    <div class="about-card">
+      <p>
+        <strong>Nailong Joki Elite</strong> adalah pusat layanan joki kontak dan produk digital yang dirancang agar proses order, pembayaran, serta pemantauan antrian jadi lebih rapi dan terpusat di satu website.
+      </p>
+      <p>
+        Kami fokus pada layanan <strong>Joki Kontak</strong>, <strong>Paket Views + Kontak</strong>, dan <strong>Jasa Post Akun</strong> dengan sistem order yang jelas, konfirmasi pembayaran via bot, serta status antrian yang bisa dipantau kapan saja.
+      </p>
+      <p>
+        Semua transaksi diproses secara profesional. Gunakan jasa admin / MC resmi agar terhindar dari penipuan.
+      </p>
+    </div>
+
+    <!-- Kontak -->
+    <div class="section-title">
+      <i class="fa-solid fa-headset"></i> Hubungi Kami
+    </div>
+    <p class="section-sub">CS WhatsApp, Grup, dan Saluran resmi Nailong Joki Elite.</p>
 
     <div class="contact-list">
-      <a href="t.me/nailongjoki" class="contact-item">
-        <i class="fa-brands fa-telegram"></i>
+      <!-- WA CS - ganti nomor di href & teks -->
+      <a href="https://wa.me/6281234567890" class="contact-item" target="_blank" rel="noopener">
+        <div class="icon-wrap wa"><i class="fa-brands fa-whatsapp"></i></div>
         <div>
-          <strong>JOKI KONTAK</strong>
-          <small style="display:block;color:#aaa;font-size:12px;">Ikuti informasi dan promo</small>
+          <strong>WhatsApp CS</strong>
+          <small>Chat langsung dengan admin CS</small>
         </div>
+        <i class="fa-solid fa-chevron-right arrow"></i>
       </a>
-      <a href="#" class="contact-item">
-        <i class="fa-brands fa-whatsapp"></i>
+
+      <!-- Grup WA - ganti link invite -->
+      <a href="https://chat.whatsapp.com/XXXXXXXXXXXX" class="contact-item" target="_blank" rel="noopener">
+        <div class="icon-wrap group"><i class="fa-solid fa-users"></i></div>
         <div>
-          <strong>Nailong Joki | WA</strong>
-          <small style="display:block;color:#aaa;font-size:12px;">Ikuti informasi dan promo</small>
+          <strong>Grup WhatsApp</strong>
+          <small>Gabung grup info & update order</small>
         </div>
+        <i class="fa-solid fa-chevron-right arrow"></i>
+      </a>
+
+      <!-- Saluran WA - ganti link channel -->
+      <a href="https://whatsapp.com/channel/XXXXXXXXXXXX" class="contact-item" target="_blank" rel="noopener">
+        <div class="icon-wrap channel"><i class="fa-solid fa-bullhorn"></i></div>
+        <div>
+          <strong>Saluran WhatsApp</strong>
+          <small>Ikuti info, promo & pengumuman</small>
+        </div>
+        <i class="fa-solid fa-chevron-right arrow"></i>
+      </a>
+
+      <!-- Telegram (opsional, sudah ada sebelumnya) -->
+      <a href="https://t.me/nailongjoki" class="contact-item" target="_blank" rel="noopener">
+        <div class="icon-wrap tg"><i class="fa-brands fa-telegram"></i></div>
+        <div>
+          <strong>Telegram</strong>
+          <small>Channel / update Nailong Joki</small>
+        </div>
+        <i class="fa-solid fa-chevron-right arrow"></i>
       </a>
     </div>
+
+    <p style="text-align:center;color:#666;font-size:11px;margin-top:20px;line-height:1.5;">
+      © Nailong Joki Elite · Order hanya melalui website resmi
+    </p>
   </div>
 
   <nav class="bottom-nav">
