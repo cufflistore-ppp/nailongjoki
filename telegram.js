@@ -1,5 +1,5 @@
 // ============ KONFIGURASI TELEGRAM ============
-const TELEGRAM_BOT_TOKEN = "8996765919:AAFLM7IBlm3eMqxpcFZyCqunqUAIG0Hn53Q";
+const TELEGRAM_BOT_TOKEN = "8938063328:AAEukRSsBo3iB18FyOBChEC-RqdDVnru_NA";
 const TELEGRAM_CHAT_ID   = "7701533150";
 // ==============================================
 
