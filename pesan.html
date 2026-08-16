@@ -231,7 +231,7 @@ Wa.me/628…
           window.orderType = "Produk Digital";
 
           // Cek apakah ini Jasa Post (id 1,2,3 atau judul mengandung "Jasa Post")
-          const isJasaPost = (id === 1 || id === 2 || id === 3) ||
+          const isJasaPost = (id === 1) ||
             (item.judul && item.judul.toLowerCase().includes("jasa post"));
 
           if (isJasaPost) {
