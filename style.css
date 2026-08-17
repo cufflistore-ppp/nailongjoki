@@ -627,3 +627,167 @@ textarea { resize: vertical; min-height: 120px; }
 .btn-proses { background: #ffaa00; color: #1a1500; }
 .btn-unpaid { background: #aa0000; color: white; }
 .btn-delete { background: #333; color: #ff6666; }
+
+/* Red Laporan button - like the example */
+.action-row {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 16px;
+  align-items: center;
+}
+.btn-lihat-layanan {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #ffd700, #daa520);
+  color: #1a1500;
+  padding: 10px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+.btn-laporan {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: #c62828;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-laporan:hover {
+  background: #e53935;
+}
+.btn-laporan i {
+  font-size: 12px;
+}
+
+/* Floating Laporan for other pages */
+.floating-laporan {
+  position: fixed;
+  bottom: 90px;
+  right: 16px;
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #c62828;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(198, 40, 40, 0.4);
+}
+.floating-laporan:hover {
+  background: #e53935;
+}
+
+/* ========== Custom Animated Modal / Alert ========== */
+.site-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+.site-modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+.site-modal {
+  background: #2a2200;
+  border: 1px solid #3d3200;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 320px;
+  padding: 24px 20px 18px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  transform: scale(0.85) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.site-modal-overlay.show .site-modal {
+  transform: scale(1) translateY(0);
+}
+.site-modal-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  font-size: 24px;
+}
+.site-modal-icon.warning {
+  background: rgba(198, 40, 40, 0.2);
+  color: #ef5350;
+  animation: modalIconPulse 0.6s ease;
+}
+.site-modal-icon.success {
+  background: rgba(0, 170, 0, 0.2);
+  color: #66bb6a;
+  animation: modalIconPulse 0.6s ease;
+}
+.site-modal-icon.info {
+  background: rgba(255, 215, 0, 0.15);
+  color: #ffd700;
+  animation: modalIconPulse 0.6s ease;
+}
+@keyframes modalIconPulse {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.site-modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.site-modal-msg {
+  font-size: 13px;
+  color: #ccc;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+.site-modal-btn {
+  display: block;
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(90deg, #ffd700, #daa520);
+  color: #1a1500;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.site-modal-btn:active {
+  transform: scale(0.97);
+}
+.site-modal-btn.danger {
+  background: linear-gradient(90deg, #e53935, #c62828);
+  color: #fff;
+}

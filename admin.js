@@ -69,7 +69,11 @@ function tambahOrderAdmin() {
     kirimOrderKeTelegram(order);
   }
 
-  alert("✅ Pesanan berhasil ditambahkan & dikirim ke Telegram!");
+  if (typeof showSiteModal === "function") {
+    showSiteModal("Pesanan berhasil ditambahkan & dikirim ke Telegram!", "success");
+  } else {
+    alert("✅ Pesanan berhasil ditambahkan & dikirim ke Telegram!");
+  }
   loadOrders();
 
   document.getElementById("admKode").value = "";

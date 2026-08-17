@@ -112,9 +112,19 @@ function updateTotal() {
 }
 
 async function buatPesanan() {
-  const nama = document.getElementById("nama")?.value?.trim() || "Anonim";
-  const wa = document.getElementById("wa")?.value?.trim() || "-";
+  const nama = document.getElementById("nama")?.value?.trim() || "";
+  const wa = document.getElementById("wa")?.value?.trim() || "";
   let catatan = document.getElementById("catatan")?.value || "";
+
+  // Validasi field wajib untuk Joki Kontak
+  if (!nama || !wa) {
+    showSiteModal("Lengkapi field wajib: Nama (Store/JB) dan Nomor WhatsApp.", "warning");
+    return;
+  }
+  if (wa.replace(/\D/g, "").length < 10) {
+    showSiteModal("Nomor WhatsApp tidak valid. Masukkan minimal 10 digit.", "warning");
+    return;
+  }
 
   // Auto replace placeholder
   if (catatan.includes("NAMA STORE")) {
@@ -175,5 +185,57 @@ async function kirimLaporan() {
     await kirimLaporanKeTelegram(data, files);
   }
 
-  alert("✅ Laporan berhasil dikirim ke admin via Telegram!");
+  showSiteModal("Laporan berhasil dikirim ke admin via Telegram!", "success");
 }
+
+// ========== Custom Animated Modal ==========
+function showSiteModal(message, type = "warning") {
+  // Hapus modal lama jika ada
+  const old = document.querySelector(".site-modal-overlay");
+  if (old) old.remove();
+
+  const icons = {
+    warning: '<i class="fa-solid fa-exclamation"></i>',
+    success: '<i class="fa-solid fa-check"></i>',
+    info: '<i class="fa-solid fa-info"></i>'
+  };
+  const titles = {
+    warning: "Perhatian",
+    success: "Berhasil",
+    info: "Informasi"
+  };
+
+  const overlay = document.createElement("div");
+  overlay.className = "site-modal-overlay";
+  overlay.innerHTML = `
+    <div class="site-modal">
+      <div class="site-modal-icon ${type}">${icons[type] || icons.warning}</div>
+      <div class="site-modal-title">${titles[type] || "Perhatian"}</div>
+      <div class="site-modal-msg">${message}</div>
+      <button type="button" class="site-modal-btn ${type === "warning" ? "danger" : ""}">Oke</button>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  // Trigger animation
+  requestAnimationFrame(() => {
+    overlay.classList.add("show");
+  });
+
+  const close = () => {
+    overlay.classList.remove("show");
+    setTimeout(() => overlay.remove(), 280);
+  };
+
+  overlay.querySelector(".site-modal-btn").addEventListener("click", close);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) close();
+  });
+}
+
+// Alias biar kompatibel dengan kode lama
+window.showSiteModal = showSiteModal;
+window.showNiceAlert = function(msg) {
+  showSiteModal(msg, "warning");
+};
