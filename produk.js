@@ -3,7 +3,7 @@ const produk = [
   {
     id: 1,
     judul: "Jasa Post Akun Channel",
-    harga: 5000,
+    harga: 1500,
     status: "TERSEDIA",
     img: "nailong1.png",
     deskripsi: "Jasa post akun ke semua channel & grup terkait. Tingkatkan reach akun kamu.",
@@ -17,7 +17,7 @@ const produk = [
   {
     id: 2,
     judul: "Paket Views + Kontak",
-    harga: 35000,
+    harga: 11000,
     status: "AKTIF",
     img: "nailong2.png",
     deskripsi: "Paket gabungan views story + push kontak untuk meningkatkan interaksi akun.",
@@ -31,7 +31,7 @@ const produk = [
   {
     id: 3,
     judul: "Paket Premium Kontak",
-    harga: 500000,
+    harga: 33000,
     status: "TERSEDIA",
     img: "nailong3.png",
     deskripsi: "Paket premium untuk push kontak lebih agresif dan prioritas antrian.",

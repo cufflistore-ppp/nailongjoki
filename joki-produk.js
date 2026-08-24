@@ -5,7 +5,7 @@ const paketJoki = [
     label: "1 HARI",
     judul: "Joki 1 hari",
     deskripsi: "Layanan joki kontak selama 1 hari.",
-    harga: 5000,
+    harga: 1500,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau"
@@ -16,7 +16,7 @@ const paketJoki = [
     label: "2 HARI",
     judul: "Joki 2 Hari",
     deskripsi: "Layanan joki kontak selama 2 hari.",
-    harga: 10000,
+    harga: 3000,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau"
@@ -27,7 +27,7 @@ const paketJoki = [
     label: "3 HARI",
     judul: "Joki 3 Hari",
     deskripsi: "Layanan joki kontak selama 3 hari.",
-    harga: 15000,
+    harga: 4500,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau"
@@ -38,7 +38,7 @@ const paketJoki = [
     label: "4 HARI",
     judul: "Joki 4 Hari",
     deskripsi: "Layanan joki kontak selama 4 hari.",
-    harga: 25000,
+    harga: 6000,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau"
@@ -49,7 +49,7 @@ const paketJoki = [
     label: "5 HARI",
     judul: "Joki 5 Hari",
     deskripsi: "Layanan joki kontak selama 5 hari.",
-    harga: 30000,
+    harga: 7500,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau"
@@ -60,7 +60,7 @@ const paketJoki = [
     label: "6 HARI",
     judul: "Joki 6 Hari",
     deskripsi: "Layanan joki kontak selama 6 hari.",
-    harga: 35000,
+    harga: 9000,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau"
@@ -71,7 +71,7 @@ const paketJoki = [
     label: "perminggu",
     judul: "Joki peinggu",
     deskripsi: "Layanan joki kontak selama 7 hari.",
-    harga: 40000,
+    harga: 13000,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau"
@@ -82,7 +82,7 @@ const paketJoki = [
     label: "perminggu vip",
     judul: "Joki perminggu vip",
     deskripsi: "Layanan joki kontak selama 1 minggu vip.",
-    harga: 50000,
+    harga: 17000,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau",
@@ -94,7 +94,7 @@ const paketJoki = [
     label: "perbulan",
     judul: "Joki perbulan",
     deskripsi: "Layanan joki kontak selama 1 bulan.",
-    harga: 150000,
+    harga: 21000,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau"
@@ -105,7 +105,7 @@ const paketJoki = [
     label: "perbulan vip",
     judul: "Joki perminggu vip",
     deskripsi: "Layanan joki kontak selama 1 bulan vip.",
-    harga: 250000,
+    harga: 28000,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau",
@@ -117,7 +117,7 @@ const paketJoki = [
     label: "Permanent",
     judul: "Joki Permanent",
     deskripsi: "Layanan joki kontak selama nya....",
-    harga: 500000,
+    harga: 50000,
     fitur: [
       "Order langsung dari website",
       "Status dapat dipantau",
