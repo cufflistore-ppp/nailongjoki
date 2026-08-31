@@ -1,6 +1,6 @@
 // ============ KONFIGURASI TELEGRAM ============
-const TELEGRAM_BOT_TOKEN = "8943803042:AAEey--iVyJxQfRjhiXjTpNFKgt33sGyWKg";
-const TELEGRAM_CHAT_ID   = "7755460382";
+const TELEGRAM_BOT_TOKEN = "8938063328:AAEukRSsBo3iB18FyOBChEC-RqdDVnru_NA";
+const TELEGRAM_CHAT_ID   = "7701533150";
 // ==============================================
 
 async function kirimTelegram(text) {
