@@ -1,9 +1,12 @@
 /**
- * Nailong Auth - Google via Firebase Auth (popup + redirect)
- * Mobile: redirect. Desktop: popup, fallback redirect.
+ * Nailong Auth - Google via Firebase Auth
+ * getRedirectResult hanya dipanggil SEKALI (shared promise) agar sesi tidak hilang.
  */
 (function () {
   var AUTH_PENDING_KEY = "nailong_auth_pending";
+  var _redirectPromise = null;
+  var _redirectDone = false;
+  var _redirectUser = null;
 
   function ensureAuth() {
     if (typeof firebase === "undefined") return null;
@@ -59,30 +62,38 @@
         resolve(null);
         return;
       }
-      // Firebase v9+ compat kadang punya authStateReady
+      if (auth.currentUser) {
+        resolve(auth.currentUser);
+        return;
+      }
       if (typeof auth.authStateReady === "function") {
         auth
           .authStateReady()
           .then(function () {
-            resolve(auth.currentUser);
+            resolve(auth.currentUser || null);
           })
           .catch(function () {
-            resolve(auth.currentUser);
+            resolve(auth.currentUser || null);
           });
         return;
       }
+      var done = false;
       var unsub = auth.onAuthStateChanged(function (user) {
+        if (done) return;
+        done = true;
         try {
           unsub();
         } catch (e) {}
         resolve(user || null);
       });
       setTimeout(function () {
+        if (done) return;
+        done = true;
         try {
           unsub();
         } catch (e) {}
         resolve(auth.currentUser || null);
-      }, 4000);
+      }, 6000);
     });
   }
 
@@ -109,16 +120,12 @@
           try {
             sessionStorage.removeItem(AUTH_PENDING_KEY);
             localStorage.removeItem(AUTH_PENDING_KEY);
-          } catch (e) {}
+          } catch (e2) {}
           reject(err);
         });
       }
 
-      if (isMobile()) {
-        doRedirect();
-        return;
-      }
-
+      // Coba popup dulu (lebih stabil sesinya). Kalau gagal → redirect.
       auth
         .signInWithPopup(provider)
         .then(function (result) {
@@ -127,10 +134,13 @@
         .catch(function (err) {
           var code = (err && err.code) || "";
           var msg = (err && err.message) || "";
+          // User tutup popup / diblokir → redirect
           if (
-            code.indexOf("popup") !== -1 ||
+            code.indexOf("popup-closed") !== -1 ||
             code.indexOf("cancelled-popup") !== -1 ||
-            /blocked|popup/i.test(msg)
+            code.indexOf("popup-blocked") !== -1 ||
+            /popup|blocked/i.test(msg) ||
+            isMobile()
           ) {
             doRedirect();
             return;
@@ -140,56 +150,63 @@
     });
   }
 
-  async function handleRedirectResult() {
-    var auth = ensureAuth();
-    if (!auth) return null;
-
-    var pending = false;
-    try {
-      pending =
-        sessionStorage.getItem(AUTH_PENDING_KEY) === "1" ||
-        localStorage.getItem(AUTH_PENDING_KEY) === "1";
-    } catch (e) {}
-
-    try {
-      var result = await auth.getRedirectResult();
-      try {
-        sessionStorage.removeItem(AUTH_PENDING_KEY);
-        localStorage.removeItem(AUTH_PENDING_KEY);
-      } catch (e) {}
-
-      if (result && result.user) return result.user;
-
-      // Kadang getRedirectResult null, tapi currentUser sudah ada
-      if (auth.currentUser) return auth.currentUser;
-
-      // Tunggu auth state (penting di HP)
-      var user = await waitAuthReady(auth);
-      if (user) return user;
-
-      if (pending) {
-        // Masih pending tapi user null → kemungkinan gagal diam-diam
-        console.warn("[Nailong Auth] Redirect selesai tapi user null");
-      }
-      return null;
-    } catch (err) {
-      try {
-        sessionStorage.setItem(
-          "voxyy_auth_err",
-          (err && (err.message || err.code)) || String(err)
-        );
-        sessionStorage.removeItem(AUTH_PENDING_KEY);
-        localStorage.removeItem(AUTH_PENDING_KEY);
-      } catch (e) {}
-      console.error("[Nailong Auth] redirect error", err);
-      throw err;
+  /**
+   * HANYA SATU kali memanggil getRedirectResult di seluruh halaman.
+   * Panggilan berikutnya memakai hasil yang sama.
+   */
+  function handleRedirectResult() {
+    if (_redirectDone) {
+      return Promise.resolve(_redirectUser);
     }
+    if (_redirectPromise) return _redirectPromise;
+
+    _redirectPromise = (async function () {
+      var auth = ensureAuth();
+      if (!auth) return null;
+
+      try {
+        var result = await auth.getRedirectResult();
+        if (result && result.user) {
+          _redirectUser = result.user;
+          _redirectDone = true;
+          try {
+            sessionStorage.removeItem(AUTH_PENDING_KEY);
+            localStorage.removeItem(AUTH_PENDING_KEY);
+          } catch (e) {}
+          return _redirectUser;
+        }
+      } catch (err) {
+        try {
+          sessionStorage.setItem(
+            "voxyy_auth_err",
+            (err && (err.message || err.code)) || String(err)
+          );
+        } catch (e) {}
+        console.error("[Nailong Auth] getRedirectResult", err);
+        _redirectDone = true;
+        _redirectUser = null;
+        throw err;
+      }
+
+      // Tunggu currentUser / auth state
+      var user = auth.currentUser || (await waitAuthReady(auth));
+      _redirectUser = user || null;
+      _redirectDone = true;
+      try {
+        sessionStorage.removeItem(AUTH_PENDING_KEY);
+        localStorage.removeItem(AUTH_PENDING_KEY);
+      } catch (e) {}
+      return _redirectUser;
+    })();
+
+    return _redirectPromise;
   }
 
   async function logout() {
     var auth = ensureAuth();
     if (!auth) return;
     await auth.signOut();
+    _redirectUser = null;
   }
 
   function onAuthChange(fn) {

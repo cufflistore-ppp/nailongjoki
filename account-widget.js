@@ -193,8 +193,18 @@
     ensureModal();
 
     if (window.VoxyyAuth) {
+      // Shared promise di auth.js → aman dipanggil dari mana saja
       try {
-        window.VoxyyAuth.handleRedirectResult && window.VoxyyAuth.handleRedirectResult();
+        if (window.VoxyyAuth.handleRedirectResult) {
+          window.VoxyyAuth.handleRedirectResult().then(function (user) {
+            if (user) {
+              updateHeaderProfile(user);
+              if (document.getElementById("akunModalOverlay") && document.getElementById("akunModalOverlay").classList.contains("open")) {
+                renderModalUser(user);
+              }
+            }
+          }).catch(function () {});
+        }
       } catch (e) {}
       if (window.VoxyyAuth.onAuthChange) {
         window.VoxyyAuth.onAuthChange(function (user) {
