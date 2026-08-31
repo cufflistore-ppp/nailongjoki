@@ -16,6 +16,7 @@ const produkDigital = [
       { nama: "Vip", harga: 1000 },
       { nama: "Reseller", harga: 2000 },
       { nama: "Partner", harga: 3000 },
+      { nama: "Admin", harga: 2500 },
       { nama: "Jasa badak no wa", harga: 300 }
     ],
     fitur: ["Pilih paket", "Bayar langsung QRIS", "Konfirmasi via WhatsApp"]
