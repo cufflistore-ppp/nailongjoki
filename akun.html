@@ -121,7 +121,8 @@
         <i class="fa-solid fa-right-from-bracket"></i> Keluar
       </button>
       <div class="akun-hint" id="akunHint">
-        <b>Login dlu menggunakan akun google kalian agar satu sama lain bisa melihat orderannya, ga login juga gpp</b>
+        <b>⚠️ Wajib Login</b><br>
+        Masuk dengan akun Google untuk order di <b>Nailong Joki Elite</b>. Tanpa login, pesanan tidak bisa diproses dan status antrian tidak bisa dipantau.
       </div>
     </div>
   </div>
@@ -175,7 +176,7 @@
         btnG.style.display = "none";
         btnL.style.display = "block";
 
-        // Setelah login dari flow order → kembali ke halaman order
+        // Setelah login dari flow order → langsung kembali ke pembayaran/order
         try {
           const ret = sessionStorage.getItem("nailong_return_after_login");
           if (ret) {
@@ -183,7 +184,7 @@
             status.textContent = "Login berhasil · mengalihkan…";
             setTimeout(function () {
               window.location.href = ret;
-            }, 900);
+            }, 400);
           }
         } catch (e) {}
       } else {

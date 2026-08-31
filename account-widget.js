@@ -36,7 +36,8 @@
           <button type="button" class="btn-logout" id="akunModalLogout" style="display:none;">Keluar</button>
         </div>
         <div class="akun-hint">
-          <b>Login dulu menggunakan akun Google kalian agar satu sama lain bisa melihat orderannya. Ga login juga gpp.</b>
+          <b>⚠️ Wajib Login</b><br>
+          Masuk dengan akun Google untuk order di <b>Nailong Joki Elite</b>. Tanpa login, pesanan tidak bisa diproses dan status antrian tidak bisa dipantau.
         </div>
         <p style="margin-top:12px;font-size:12px;color:#8aa0b8;text-align:center;">
           Atau buka halaman penuh: <a href="akun.html" style="color:#FFC107;">Akun</a>

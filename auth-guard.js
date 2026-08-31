@@ -3,8 +3,8 @@
  * Kalau belum login → animasi peringatan → redirect ke akun.html
  */
 (function () {
-  var REDIRECT_MS = 2200;
-  var AUTH_WAIT_MS = 2500;
+  var REDIRECT_MS = 1800;
+  var AUTH_WAIT_MS = 8000;
 
   function escapeHtml(s) {
     return String(s || "")
@@ -80,7 +80,7 @@
           if (window.VoxyyAuth) {
             clearInterval(t);
             waitForAuthUser().then(resolve);
-          } else if (tries > 15) {
+          } else if (tries > 25) {
             clearInterval(t);
             done(null);
           }
@@ -88,6 +88,7 @@
         return;
       }
 
+      // Cek sync dulu (sudah login dari sesi sebelumnya)
       try {
         var u = window.VoxyyAuth.getCurrentUser && window.VoxyyAuth.getCurrentUser();
         if (u) {
@@ -97,32 +98,59 @@
       } catch (e) {}
 
       var settled = false;
-      var timer = setTimeout(function () {
+      function finish(user) {
         if (settled) return;
         settled = true;
-        done(null);
+        clearTimeout(timer);
+        try {
+          if (typeof unsub === "function") unsub();
+        } catch (e) {}
+        done(user || null);
+      }
+
+      var timer = setTimeout(function () {
+        // last chance: cek currentUser lagi
+        try {
+          var last = window.VoxyyAuth.getCurrentUser && window.VoxyyAuth.getCurrentUser();
+          finish(last);
+        } catch (e) {
+          finish(null);
+        }
       }, AUTH_WAIT_MS);
 
+      var unsub = null;
+
+      // 1) Handle redirect result (penting setelah login Google di HP)
+      try {
+        if (window.VoxyyAuth.handleRedirectResult) {
+          window.VoxyyAuth.handleRedirectResult()
+            .then(function (user) {
+              if (user) finish(user);
+            })
+            .catch(function () {});
+        }
+      } catch (e) {}
+
+      // 2) Tunggu auth state ready
+      try {
+        if (window.VoxyyAuth.waitAuthReady) {
+          window.VoxyyAuth.waitAuthReady()
+            .then(function (user) {
+              if (user) finish(user);
+            })
+            .catch(function () {});
+        }
+      } catch (e) {}
+
+      // 3) Listener onAuthStateChanged
       try {
         if (window.VoxyyAuth.onAuthChange) {
-          var unsub = window.VoxyyAuth.onAuthChange(function (user) {
-            if (settled) return;
-            settled = true;
-            clearTimeout(timer);
-            try {
-              if (typeof unsub === "function") unsub();
-            } catch (e) {}
-            done(user || null);
+          unsub = window.VoxyyAuth.onAuthChange(function (user) {
+            if (user) finish(user);
           });
-        } else {
-          settled = true;
-          clearTimeout(timer);
-          done(null);
         }
       } catch (e) {
-        settled = true;
-        clearTimeout(timer);
-        done(null);
+        finish(null);
       }
     });
   }
@@ -165,7 +193,16 @@
         if (!a) return;
         var href = a.getAttribute("href") || "";
         if (!isOrderLink(href)) return;
-        // biarkan jika sudah login (cek sync dulu; async block di bawah)
+
+        // Sudah login (sync) → langsung jalan, tanpa delay
+        try {
+          var u =
+            window.VoxyyAuth &&
+            window.VoxyyAuth.getCurrentUser &&
+            window.VoxyyAuth.getCurrentUser();
+          if (u) return; // biarkan browser navigate normal
+        } catch (err) {}
+
         e.preventDefault();
         e.stopPropagation();
         requireLogin({
