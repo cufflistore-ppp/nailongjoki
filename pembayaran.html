@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Pembayaran - Nailong Joki</title>
+  <title>Pembayaran - Nailong</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
@@ -13,8 +13,8 @@
       padding: 16px 14px 90px;
     }
     .pay-card {
-      background: #2a2200;
-      border: 1px solid #3d3200;
+      background: #10182a;
+      border: 1px solid #1a2740;
       border-radius: 16px;
       padding: 20px 16px;
       text-align: center;
@@ -22,24 +22,24 @@
     .pay-card h2 {
       font-size: 18px;
       margin-bottom: 4px;
-      color: #ffd700;
+      color: #FFC107;
     }
     .kode {
-      background: #1a1500;
-      border: 1px dashed #ffd70055;
+      background: #0a0e1a;
+      border: 1px dashed #FFC10755;
       border-radius: 8px;
       padding: 10px;
       font-size: 15px;
       font-weight: 700;
       letter-spacing: 1px;
       margin: 12px 0;
-      color: #ffd700;
+      color: #FFC107;
       word-break: break-all;
     }
     .total-bayar {
       font-size: 28px;
       font-weight: 800;
-      color: #ffd700;
+      color: #FFC107;
       margin: 8px 0 4px;
     }
     .rincian {
@@ -68,14 +68,14 @@
       text-align: left;
       line-height: 1.6;
       margin: 14px 0;
-      background: #1a1500;
+      background: #0a0e1a;
       padding: 12px;
       border-radius: 10px;
     }
     .btn-konfirmasi {
       width: 100%;
-      background: linear-gradient(135deg, #ffd700, #e6b800);
-      color: #1a1500;
+      background: linear-gradient(135deg, #FFC107, #FF8F00);
+      color: #0a0e1a;
       border: none;
       border-radius: 12px;
       padding: 14px;
@@ -99,14 +99,14 @@
       border-radius: 10px;
       font-size: 13px;
       line-height: 1.5;
-      background: #1a3d00;
-      color: #7fff00;
+      background: #0d2137;
+      color: #FFE082;
       border: 1px solid #2d5a00;
     }
     .status-box.show {
       display: block;
     }
-    .paylater-label {
+    .qris-label {
       font-size: 11px;
       color: #888;
       margin-top: 6px;
@@ -116,9 +116,9 @@
 <body>
   <header class="header">
     <div class="brand">
-      <img src="logo.png" alt="Nailong Joki" class="logo" onerror="this.style.background='#ffd700'">
+      <img src="logo.png" alt="Nailong" class="logo"  >
       <div>
-        <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
+        <h1>𝗡Λ𝗜𝗟𝗢𝗡𝗚々𝗝𝗢𝗞𝗜 𝗘𝗟𝗜𝗧𝗘 <i class="fa-solid fa-circle-check verified"></i></h1>
         <p>Pembayaran</p>
       </div>
     </div>
@@ -128,30 +128,30 @@
 
   <div class="pay-container">
     <div class="pay-card">
-      <h2>Scan QR PayLater untuk Bayar</h2>
+      <h2>Scan QRIS untuk Bayar</h2>
       <p style="font-size:13px;color:#aaa;">Order kamu sudah dibuat</p>
       
-      <div class="kode" id="kodeOrder">NJ-2026-0000</div>
+      <div class="kode" id="kodeOrder">VJ-2026-0000</div>
       
       <div class="total-bayar" id="totalBayar">Rp 0</div>
       <div class="rincian" id="rincianBayar" style="display:none;"></div>
 
       <!-- FOTO PAYLATER (static) -->
       <div class="qris-box-big" id="qrisContainer">
-        <img src="paylater.png" alt="QR PayLater" id="paylaterImg"
-             onerror="this.style.display='none'; document.getElementById('paylaterFallback').style.display='block';">
-        <div id="paylaterFallback" style="display:none;padding:30px 10px;color:#333;font-size:13px;font-weight:600;">
+        <img src="qris.png" alt="QRIS" id="qrisImg"
+             onerror="this.style.display='none'; document.getElementById('qrisFallback').style.display='block';">
+        <div id="qrisFallback" style="display:none;padding:30px 10px;color:#333;font-size:13px;font-weight:600;">
           <i class="fa-solid fa-image" style="font-size:32px;color:#ff9800;display:block;margin-bottom:8px;"></i>
-          Letakkan file <b>paylater.png</b><br>di folder website
+          Letakkan file <b>qris.png</b><br>di folder website
         </div>
       </div>
-      <p class="paylater-label">QR PayLater</p>
+      <p class="qris-label">QRIS</p>
 
       <p class="info-bayar" id="infoBayar">
-        1. Scan QR PayLater di atas pakai aplikasi e-wallet / PayLater<br>
-        2. Transfer sesuai <b>nominal total</b> yang tertera di atas<br>
-        3. Setelah transfer, upload bukti pembayaran (opsional)<br>
-        4. Klik tombol <b>Saya Sudah Bayar</b> di bawah
+        1. Scan <b>QRIS</b> di atas pakai e-wallet / mobile banking<br>
+        2. Transfer sesuai <b>nominal total</b> di atas<br>
+        3. Setelah TF, klik <b>Saya Sudah Bayar</b><br>
+        4. Lalu <b>hubungi admin via WhatsApp</b> untuk proses (wajib)
       </p>
 
       <label style="text-align:left;display:block;margin-bottom:6px;font-size:12px;color:#aaa;">
@@ -164,28 +164,39 @@
       </button>
 
       <div class="status-box" id="statusBox">
-        ✅ Konfirmasi terkirim ke admin.<br>
-        Status masih <b>Belum Bayar</b> sampai admin verifikasi.<br>
-        Kamu bisa pantau di halaman Antrian.
+        ✅ Konfirmasi terkirim.<br>
+        <b>Langkah terakhir:</b> hubungi admin WhatsApp dan kirim bukti TF + kode order.<br>
+        <a href="https://wa.me/6285182549509?text=Halo%20admin%20Nailong%2C%20saya%20sudah%20TF%20order" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;background:#25d366;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;">
+          <i class="fa-brands fa-whatsapp"></i> Hubungi Admin WhatsApp
+        </a>
       </div>
     </div>
 
     <p style="text-align:center;margin-top:16px;font-size:12px;color:#888;">
-      Ada kendala? <a href="laporan.html" style="color:#ffd700;">Kirim Laporan</a>
+      Ada kendala? <a href="laporan.html" style="color:#FFC107;">Kirim Laporan</a>
     </p>
   </div>
 
   <a href="laporan.html" class="floating-laporan"><i class="fa-solid fa-exclamation-circle"></i> Laporan</a>
 
-  <nav class="bottom-nav">
+            <nav class="bottom-nav nav-5">
     <a href="joki.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
-    <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="digital.html" class="nav-item"><i class="fa-solid fa-box"></i><span>Produk Digital</span></a>
+    <a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></a>
     <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
     <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
   </nav>
 
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="global-orders.js"></script>
   <script src="telegram.js"></script>
   <script src="script.js"></script>
+  <script src="auth.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="account-widget.js"></script>
     <script>
     let currentOrder = null;
 
@@ -193,8 +204,49 @@
       return "Rp " + Number(n).toLocaleString("id-ID");
     }
 
-    function loadOrderData() {
-      const orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
+    async function loadOrderData() {
+      // Klik produk → buat order otomatis + tampil QRIS
+      const paramsEarly = new URLSearchParams(window.location.search);
+      const paketEarly = (paramsEarly.get("paket") || "").trim();
+      if (paketEarly && !paramsEarly.get("kode")) {
+        const totalNum = parseInt(String(paramsEarly.get("total") || "0").replace(/[^\d]/g, ""), 10) || 0;
+        const rand = Math.floor(1000 + Math.random() * 9000);
+        const timePart = String(Date.now()).slice(-3);
+        const kode = `VJ-2026-${rand}${timePart}`;
+        const isWebsite = /website/i.test(paketEarly);
+        const order = {
+          kode,
+          nama: "Customer",
+          wa: "-",
+          catatan: paketEarly + " — bayar QRIS dulu, setelah konfirmasi hubungi admin WA",
+          total: "Rp " + totalNum.toLocaleString("id-ID"),
+          paket: paketEarly === "website" ? "Jasa Bikin Website" : paketEarly,
+          status: "Belum Bayar",
+          waktu: new Date().toLocaleString("id-ID"),
+          createdAt: Date.now(),
+          finalAmount: totalNum,
+          isWebsite: isWebsite,
+          isDigital: !isWebsite
+        };
+        if (window.VoxyyOrders && typeof window.VoxyyOrders.addOrder === "function") {
+          await window.VoxyyOrders.addOrder(order);
+        } else {
+          let orders = JSON.parse(localStorage.getItem("voxyy_orders") || "[]");
+          orders.unshift(order);
+          localStorage.setItem("voxyy_orders", JSON.stringify(orders));
+        }
+        if (kode) localStorage.setItem("voxyy_saved_kode", kode);
+        const extra = isWebsite ? "&website=1" : "&digital=1";
+        window.location.replace(`pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(order.total)}${extra}`);
+        return;
+      }
+
+      let orders = [];
+      if (window.VoxyyOrders && typeof window.VoxyyOrders.getOrders === "function") {
+        orders = await window.VoxyyOrders.getOrders();
+      } else {
+        orders = JSON.parse(localStorage.getItem("voxyy_orders") || "[]");
+      }
       const params = new URLSearchParams(window.location.search);
       const kodeParam = params.get("kode");
 
@@ -209,7 +261,7 @@
       if (!order) {
         const total = params.get("total") || "Rp 5.000";
         order = {
-          kode: kodeParam || "NJ-2026-0000",
+          kode: kodeParam || "VJ-2026-0000",
           total: total,
           nama: "-",
           wa: "-",
@@ -217,10 +269,24 @@
         };
       }
 
+      if (params.get("website") === "1") {
+        order.isWebsite = true;
+        order.paket = order.paket || "Jasa Bikin Website";
+      }
+      if (params.get("digital") === "1") {
+        order.isDigital = true;
+      }
       currentOrder = order;
       window.currentOrder = order;
 
       document.getElementById("kodeOrder").textContent = order.kode;
+      if (order.kode && order.status !== "Sukses" && order.status !== "SELESAI") {
+        localStorage.setItem("voxyy_saved_kode", order.kode);
+      }
+      const h2 = document.querySelector(".pay-card h2");
+      if (h2 && order.paket) {
+        h2.textContent = "Bayar " + order.paket;
+      }
 
       const totalNum = order.finalAmount
         || Number(String(order.total).replace(/[^\d]/g, ""))
@@ -257,7 +323,7 @@ Customer sudah bayar & konfirmasi.
 📝 Catatan / Format:
 <pre>${order.catatan || "-"}</pre>
 
-📊 Status: <b>Belum Bayar</b> (cek & ubah manual di admin)
+📊 Status: <b>Menunggu Verifikasi</b> (customer konfirmasi sudah bayar)
 ⏰ ${new Date().toLocaleString("id-ID")}
       `.trim();
 
@@ -276,7 +342,7 @@ Customer sudah bayar & konfirmasi.
       // Untuk Jasa Post: kirim foto akun yang disimpan di sessionStorage
       if (isJaspost && typeof kirimFotoTelegram === "function") {
         try {
-          const key = "nailong_jaspost_foto_" + (order.kode || "");
+          const key = "voxyy_jaspost_foto_" + (order.kode || "");
           const b64 = sessionStorage.getItem(key);
           if (b64) {
             // convert base64 → Blob → File
@@ -294,7 +360,7 @@ Customer sudah bayar & konfirmasi.
             );
             // bersihkan
             sessionStorage.removeItem(key);
-            sessionStorage.removeItem("nailong_jaspost_pending");
+            sessionStorage.removeItem("voxyy_jaspost_pending");
           }
         } catch (e) {
           console.warn("Gagal kirim foto akun dari session:", e);
@@ -303,16 +369,40 @@ Customer sudah bayar & konfirmasi.
 
       // Update status order di localStorage (opsional: tetap Belum Bayar sampai admin ubah)
       try {
-        let orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
-        const idx = orders.findIndex(o => o.kode === order.kode);
-        if (idx >= 0) {
-          orders[idx].status = "Menunggu Verifikasi";
-          localStorage.setItem("nailong_orders", JSON.stringify(orders));
+        if (window.VoxyyOrders && typeof window.VoxyyOrders.updateOrderByKode === "function") {
+          await window.VoxyyOrders.updateOrderByKode(order.kode, { status: "Menunggu Verifikasi" });
+        } else {
+          let orders = JSON.parse(localStorage.getItem("voxyy_orders") || "[]");
+          const idx = orders.findIndex(o => o.kode === order.kode);
+          if (idx >= 0) {
+            orders[idx].status = "Menunggu Verifikasi";
+            localStorage.setItem("voxyy_orders", JSON.stringify(orders));
+          }
         }
       } catch(e) {}
 
       document.getElementById("statusBox").classList.add("show");
       btn.innerHTML = '<i class="fa-solid fa-check"></i> Konfirmasi Terkirim';
+
+      // Setelah konfirmasi → link WA admin (auto-buka hanya untuk produk digital)
+      const waText = encodeURIComponent(
+        `Halo admin Nailong, saya sudah TF.\nKode: ${order.kode || "-"}\nPaket: ${order.paket || "-"}\nTotal: ${formatRupiah(finalAmt)}`
+      );
+      const waBtn = document.querySelector("#statusBox a[href*='wa.me']");
+      if (waBtn) waBtn.href = `https://wa.me/6285182549509?text=${waText}`;
+
+      // Auto-buka WhatsApp HANYA untuk produk digital (bukan joki)
+      const paramsNow = new URLSearchParams(window.location.search);
+      const isDigital =
+        paramsNow.get("digital") === "1" ||
+        /apk|badak|bioskop|digital|partner|member|vip|reseller/i.test(String(order.paket || ""));
+      const isJoki = /joki|kontak|jam/i.test(String(order.paket || "")) && !isDigital;
+
+      if (isDigital && !isJoki) {
+        setTimeout(function() {
+          window.open(`https://wa.me/6285182549509?text=${waText}`, "_blank");
+        }, 600);
+      }
     }
 
     document.addEventListener("DOMContentLoaded", loadOrderData);

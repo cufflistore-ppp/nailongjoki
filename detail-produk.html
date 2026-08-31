@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Detail Produk - Nailong Joki</title>
+  <title>Detail Produk - Nailong</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
@@ -15,13 +15,13 @@
       object-fit: cover;
       object-position: center;
       border-radius: 12px;
-      background: #3d3200;
+      background: #1e2a45;
       margin-bottom: 14px;
       display: block;
     }
     .produk-detail-card {
-      background: #2a2200;
-      border: 1px solid #3d3200;
+      background: #12182a;
+      border: 1px solid #1e2a45;
       border-radius: 14px;
       padding: 16px;
     }
@@ -31,8 +31,8 @@
     }
     .produk-status {
       display: inline-block;
-      background: #1a3d00;
-      color: #7fff00;
+      background: #0d2137;
+      color: #FFE082;
       font-size: 11px;
       padding: 3px 10px;
       border-radius: 20px;
@@ -41,7 +41,7 @@
     .produk-harga-big {
       font-size: 26px;
       font-weight: 800;
-      color: #ffd700;
+      color: #FF6F00;
       margin: 12px 0;
     }
     .fitur-list {
@@ -50,12 +50,12 @@
     }
     .fitur-list li {
       padding: 8px 0;
-      border-bottom: 1px solid #3d3200;
+      border-bottom: 1px solid #1e2a45;
       font-size: 13px;
       color: #ccc;
     }
     .fitur-list li i {
-      color: #ffd700;
+      color: #FF6F00;
       margin-right: 8px;
     }
     .fitur-list li:last-child { border-bottom: none; }
@@ -64,9 +64,9 @@
 <body>
   <header class="header">
     <div class="brand">
-      <img src="logo.png" alt="Nailong Joki" class="logo" onerror="this.style.background='#ffd700'">
+      <img src="logo.png" alt="Nailong" class="logo"  >
       <div>
-        <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
+        <h1>𝗡Λ𝗜𝗟𝗢𝗡𝗚々𝗝𝗢𝗞𝗜 𝗘𝗟𝗜𝗧𝗘 <i class="fa-solid fa-circle-check verified"></i></h1>
         <p>Detail Produk Digital</p>
       </div>
     </div>
@@ -75,7 +75,7 @@
   <div class="top-notif" id="topNotif" style="display:none;"></div>
 
   <div class="page-content">
-    <a href="index.html" class="back"><i class="fa-solid fa-arrow-left"></i> Kembali ke Home</a>
+    <a href="digital.html" class="back"><i class="fa-solid fa-arrow-left"></i> Kembali ke Produk Digital</a>
 
     <div id="detailProduk">
       <p style="color:#aaa;text-align:center;">Memuat produk...</p>
@@ -84,37 +84,37 @@
 
   <a href="laporan.html" class="floating-laporan"><i class="fa-solid fa-exclamation-circle"></i> Laporan</a>
 
-  <nav class="bottom-nav">
+            <nav class="bottom-nav nav-5">
     <a href="joki.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
-    <a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="digital.html" class="nav-item active"><i class="fa-solid fa-box"></i><span>Produk Digital</span></a>
+    <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
     <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
     <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
   </nav>
 
-  <script src="produk.js"></script>
+  <script src="digital-produk.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="global-orders.js"></script>
   <script src="script.js"></script>
+  <script src="auth.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="account-widget.js"></script>
   <script>
     function loadDetailProduk() {
       const params = new URLSearchParams(window.location.search);
       const id = parseInt(params.get("id") || "1", 10);
 
-      // reload dari storage
-      try {
-        const saved = localStorage.getItem("nailong_produk");
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length) {
-            produk.length = 0;
-            parsed.forEach(p => produk.push(p));
-          }
-        }
-      } catch (e) {}
+      // reload dari storage (digital-produk.js sudah load)
+      if (typeof loadProdukDigital === "function") loadProdukDigital();
 
-      const item = produk.find(p => p.id === id);
+      const item = (typeof produkDigital !== "undefined" ? produkDigital : []).find(p => p.id === id);
       const el = document.getElementById("detailProduk");
 
       if (!item) {
-        el.innerHTML = "<p style='color:#aaa;'>Produk tidak ditemukan. <a href='index.html' style='color:#ffd700;'>Kembali</a></p>";
+        el.innerHTML = "<p style='color:#aaa;'>Produk tidak ditemukan. <a href='digital.html' style='color:#FF6F00;'>Kembali</a></p>";
         return;
       }
 
@@ -123,14 +123,14 @@
       el.innerHTML = `
         <div class="badge">PRODUK DIGITAL</div>
         <div class="produk-detail-card" style="margin-top:12px;">
-          <img src="${item.img}" alt="${item.judul}" class="produk-detail-img" onerror="this.style.background='#3d3200'">
-          <span class="produk-status">${item.status}</span>
+          ${item.img ? `<img src="${item.img}" alt="${item.judul}" class="produk-detail-img" onerror="this.style.display=\'none\'">` : ""}
+          <span class="produk-status">${item.status || "TERSEDIA"}</span>
           <h2>${item.judul}</h2>
           <p style="font-size:13px;color:#bbb;line-height:1.5;">${item.deskripsi || ""}</p>
           
           <div class="produk-harga-big">${harga}</div>
 
-          <h4 style="font-size:14px;margin-top:8px;color:#ffd700;">Yang kamu dapat:</h4>
+          <h4 style="font-size:14px;margin-top:8px;color:#FF6F00;">Yang kamu dapat:</h4>
           <ul class="fitur-list">
             ${(item.fitur || []).map(f => `<li><i class="fa-solid fa-check"></i> ${f}</li>`).join("")}
           </ul>

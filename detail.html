@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Detail Paket - Nailong Joki</title>
+  <title>Detail Paket - Nailong</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="header">
     <div class="brand">
-      <img src="logo.png" alt="Nailong Joki" class="logo" onerror="this.style.background='#ffd700'">
+      <img src="logo.png" alt="Nailong" class="logo"  >
       <div>
-        <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
+        <h1>𝗡Λ𝗜𝗟𝗢𝗡𝗚々𝗝𝗢𝗞𝗜 𝗘𝗟𝗜𝗧𝗘 <i class="fa-solid fa-circle-check verified"></i></h1>
         <p>Detail Paket</p>
       </div>
     </div>
@@ -30,15 +30,24 @@
 
   <a href="laporan.html" class="floating-laporan"><i class="fa-solid fa-exclamation-circle"></i> Laporan</a>
 
-  <nav class="bottom-nav">
+            <nav class="bottom-nav nav-5">
     <a href="joki.html" class="nav-item active"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+    <a href="digital.html" class="nav-item"><i class="fa-solid fa-box"></i><span>Produk Digital</span></a>
     <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
     <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
     <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
   </nav>
 
   <script src="joki-produk.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="global-orders.js"></script>
   <script src="script.js"></script>
+  <script src="auth.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="account-widget.js"></script>
   <script>
     function loadDetail() {
       const params = new URLSearchParams(window.location.search);
@@ -53,7 +62,7 @@
 
       const el = document.getElementById("detailPaket");
       if (!paket) {
-        el.innerHTML = "<p style='color:#aaa;'>Paket tidak ditemukan. <a href='joki.html' style='color:#ffd700;'>Kembali</a></p>";
+        el.innerHTML = "<p style='color:#aaa;'>Paket tidak ditemukan. <a href='joki.html' style='color:#FFC107;'>Kembali</a></p>";
         return;
       }
 

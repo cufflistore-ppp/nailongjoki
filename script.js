@@ -1,15 +1,15 @@
-// ========== TOP NOTIF (hanya muncul jika ada order real) ==========
+// ========== TOP NOTIF (marquee bergeser, hanya jika ada order aktif) ==========
 function formatRupiah(n) {
   if (typeof n === "string" && n.includes("Rp")) return n;
   return "Rp " + Number(n).toLocaleString("id-ID");
 }
 
 function isNotifHidden() {
-  return localStorage.getItem("nailong_notif_hidden") === "1";
+  return localStorage.getItem("voxyy_notif_hidden") === "1";
 }
 
 function hideAllNotif() {
-  localStorage.setItem("nailong_notif_hidden", "1");
+  localStorage.setItem("voxyy_notif_hidden", "1");
   const el = document.getElementById("topNotif");
   if (el) {
     el.style.display = "none";
@@ -17,18 +17,41 @@ function hideAllNotif() {
   }
 }
 
-function getRecentOrdersForNotif() {
-  const orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
-  // Hanya order real (punya kode NJ)
-  return orders.filter(o => o && o.kode && String(o.kode).startsWith("NJ-")).slice(0, 5);
+function isOrderActiveForNotif(o) {
+  if (!o || !o.kode) return false;
+  const st = String(o.status || "").toLowerCase();
+  if (st.includes("sukses") || st.includes("selesai")) return false;
+  return true;
 }
 
-function generateNotifFromOrder(order) {
+function getOrdersSyncForNotif() {
+  try {
+    return JSON.parse(localStorage.getItem("voxyy_orders") || "[]");
+  } catch (e) {
+    return [];
+  }
+}
+
+async function getRecentOrdersForNotif() {
+  let orders = [];
+  try {
+    if (window.VoxyyOrders && typeof window.VoxyyOrders.getOrders === "function") {
+      orders = await window.VoxyyOrders.getOrders();
+    } else {
+      orders = getOrdersSyncForNotif();
+    }
+  } catch (e) {
+    orders = getOrdersSyncForNotif();
+  }
+  return (orders || []).filter(isOrderActiveForNotif).slice(0, 12);
+}
+
+function notifLineFromOrder(order) {
   if (!order) return "";
   const shortName = (order.nama || "A").substring(0, 1) + "****";
-  const price = order.total || order.finalAmount || "Rp 5.000";
-  const priceText = typeof price === "number" ? formatRupiah(price) : price;
-  const svc = order.paket || "Joki Kontak";
+  const price = order.total || order.finalAmount || "Rp 0";
+  const priceText = typeof price === "number" ? formatRupiah(price) : String(price);
+  const svc = order.paket || "Order";
   let timeText = "baru saja";
   try {
     if (order.createdAt) {
@@ -37,43 +60,50 @@ function generateNotifFromOrder(order) {
       else if (diffMin < 60) timeText = diffMin + " mnt lalu";
       else timeText = Math.floor(diffMin / 60) + " jam lalu";
     }
-  } catch(e) {}
-  return `<div class="notif-item">
-    <span class="notif-icon">🛒</span>
-    <span class="notif-text"><b>Beli</b> · ${shortName}. · <b>${priceText}</b> · ${svc} · <span class="time">${timeText}</span></span>
-    <button type="button" class="notif-close" onclick="hideAllNotif()" title="Tutup notifikasi">×</button>
-  </div>`;
+  } catch (e) {}
+  return `🛒 Beli · ${shortName}. · ${priceText} · ${svc} · ${timeText}`;
 }
 
 function updateTopNotif() {
   const el = document.getElementById("topNotif");
   if (!el) return;
 
-  // Kalau user sudah tutup notif, jangan tampilkan lagi
   if (isNotifHidden()) {
     el.style.display = "none";
     el.innerHTML = "";
     return;
   }
 
-  const recent = getRecentOrdersForNotif();
-  if (recent.length === 0) {
-    // Tidak ada order real → sembunyikan notif
-    el.style.display = "none";
-    el.innerHTML = "";
-    return;
-  }
+  // async load
+  Promise.resolve(getRecentOrdersForNotif()).then(function (recent) {
+    if (!recent || recent.length === 0) {
+      el.style.display = "none";
+      el.innerHTML = "";
+      return;
+    }
 
-  el.style.display = "block";
-  // Tampilkan order terbaru, berganti setiap beberapa detik
-  const idx = Math.floor(Date.now() / 8000) % recent.length;
-  el.innerHTML = generateNotifFromOrder(recent[idx]);
+    const lines = recent.map(notifLineFromOrder).filter(Boolean);
+    // Duplikasi teks agar marquee mulus
+    const track = lines.concat(lines).join("   ···   ");
+    el.style.display = "block";
+    el.innerHTML = `
+      <div class="notif-marquee-wrap">
+        <div class="notif-marquee-track">${track.replace(/</g, "&lt;")}</div>
+        <button type="button" class="notif-close" onclick="hideAllNotif()" title="Tutup">×</button>
+      </div>`;
+  });
 }
 
-// Jalankan saat load & setiap 8 detik
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   updateTopNotif();
-  setInterval(updateTopNotif, 8000);
+  setInterval(updateTopNotif, 10000);
+  // Realtime refresh notif saat order berubah
+  if (window.VoxyyOrders && typeof window.VoxyyOrders.onOrdersChange === "function") {
+    window.VoxyyOrders.onOrdersChange(function () {
+      try { localStorage.removeItem("voxyy_notif_hidden"); } catch (e) {}
+      updateTopNotif();
+    });
+  }
 });
 
 // ========== ORDER FORM ==========
@@ -112,6 +142,13 @@ function updateTotal() {
 }
 
 async function buatPesanan() {
+  if (window.NailongAuthGuard && typeof window.NailongAuthGuard.requireLogin === "function") {
+    const ok = await window.NailongAuthGuard.requireLogin({
+      message: "Sebelum order, kamu wajib login dulu pakai akun Google."
+    });
+    if (!ok) return;
+  }
+
   const nama = document.getElementById("nama")?.value?.trim() || "";
   const wa = document.getElementById("wa")?.value?.trim() || "";
   let catatan = document.getElementById("catatan")?.value || "";
@@ -139,7 +176,7 @@ async function buatPesanan() {
   const total = document.getElementById("totalHarga")?.textContent || "Rp 5.000";
   const rand = Math.floor(1000 + Math.random() * 9000);
   const timePart = String(Date.now()).slice(-3);
-  const kode = `NJ-2026-${rand}${timePart}`;
+  const kode = `VJ-2026-${rand}${timePart}`;
 
   let order = {
     kode,
@@ -156,10 +193,15 @@ async function buatPesanan() {
   order.createdAt = Date.now();
   order.finalAmount = Number(String(total).replace(/[^\d]/g, "")) || 0;
 
-  // Simpan ke localStorage saja (belum kirim Telegram)
-  let orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
-  orders.unshift(order);
-  localStorage.setItem("nailong_orders", JSON.stringify(orders));
+  // Simpan ke global (jika setup) + localStorage
+  if (window.VoxyyOrders && typeof window.VoxyyOrders.addOrder === "function") {
+    await window.VoxyyOrders.addOrder(order);
+  } else {
+    let orders = JSON.parse(localStorage.getItem("voxyy_orders") || "[]");
+    orders.unshift(order);
+    localStorage.setItem("voxyy_orders", JSON.stringify(orders));
+  }
+  if (kode) localStorage.setItem("voxyy_saved_kode", kode);
 
   // Reset form fields
   const namaEl = document.getElementById("nama");

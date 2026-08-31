@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akun - Nailong</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .akun-card {
+      background: #10182a;
+      border: 1px solid #1a2740;
+      border-radius: 16px;
+      padding: 24px 18px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .akun-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #FFC107;
+      margin-bottom: 12px;
+      background: #0a0e18;
+    }
+    .akun-avatar.placeholder {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: #8aa0b8;
+    }
+    .akun-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .akun-email { font-size: 13px; color: #8aa0b8; margin-bottom: 16px; word-break: break-all; }
+    .btn-google {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: #fff;
+      color: #3c4043;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+    .btn-google:active { background: #f7f8f8; }
+    .btn-google:disabled { opacity: 0.65; cursor: wait; }
+    .btn-google .g-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .btn-logout {
+      width: 100%;
+      background: transparent;
+      border: 1px solid #442222;
+      color: #ef9a9a;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .akun-hint {
+      font-size: 12px;
+      color: #8aa0b8;
+      line-height: 1.5;
+      margin-top: 14px;
+      text-align: left;
+      background: #0a0e18;
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid #1a2740;
+    }
+    .akun-status {
+      display: inline-block;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .akun-status.on { background: #0d3d1a; color: #66bb6a; }
+    .akun-status.off { background: #3d2a0d; color: #ffb74d; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <img src="logo.png" class="logo" alt="Nailong">
+      <div>
+        <h1>𝗡Λ𝗜𝗟𝗢𝗡𝗚々𝗝𝗢𝗞𝗜 𝗘𝗟𝗜𝗧𝗘 <i class="fa-solid fa-circle-check verified"></i></h1>
+        <p>Joki Kontak & Produk Digital</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <h2 style="margin-bottom:6px;">AKUN</h2>
+    <p style="color:#aaa;font-size:13px;margin-bottom:16px;">Masuk hanya dengan akun Google.</p>
+
+    <div class="akun-card" id="akunCard">
+      <div class="akun-status off" id="akunStatus">Memuat...</div>
+      <div id="akunBody">
+        <div class="akun-avatar placeholder"><i class="fa-solid fa-user"></i></div>
+        <div class="akun-name">Belum masuk</div>
+        <div class="akun-email">Login Google untuk menyimpan profil di perangkat ini.</div>
+      </div>
+      <button type="button" class="btn-google" id="btnGoogle">
+        <svg class="g-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Masuk dengan Google
+      </button>
+      <button type="button" class="btn-logout" id="btnLogout" style="display:none;">
+        <i class="fa-solid fa-right-from-bracket"></i> Keluar
+      </button>
+      <div class="akun-hint" id="akunHint">
+        <b>Login dlu menggunakan akun google kalian agar satu sama lain bisa melihat orderannya, ga login juga gpp</b>
+      </div>
+    </div>
+  </div>
+
+        <nav class="bottom-nav nav-5">
+    <a href="joki.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+    <a href="digital.html" class="nav-item"><i class="fa-solid fa-box"></i><span>Produk Digital</span></a>
+    <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
+    <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
+  </nav>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="global-orders.js"></script>
+  <script src="auth.js"></script>
+  <script src="auth-guard.js"></script>
+  <script>
+    function renderUser(user) {
+      const status = document.getElementById("akunStatus");
+      const body = document.getElementById("akunBody");
+      const btnG = document.getElementById("btnGoogle");
+      const btnL = document.getElementById("btnLogout");
+      const configured = window.VoxyyOrders && window.VoxyyOrders.isGlobalConfigured();
+
+      if (!configured) {
+        status.className = "akun-status off";
+        status.textContent = "Firebase belum di-setup";
+        body.innerHTML =
+          '<div class="akun-avatar placeholder"><i class="fa-solid fa-gear"></i></div>' +
+          '<div class="akun-name">Setup diperlukan</div>' +
+          '<div class="akun-email">Isi FIREBASE_CONFIG di global-orders.js + aktifkan Google Sign-In.</div>';
+        btnG.disabled = true;
+        btnG.style.display = "flex";
+        btnL.style.display = "none";
+        return;
+      }
+
+      if (user) {
+        status.className = "akun-status on";
+        status.textContent = "Sudah masuk";
+        const photo = user.photoURL
+          ? '<img class="akun-avatar" src="' + user.photoURL + '" alt="foto">'
+          : '<div class="akun-avatar placeholder"><i class="fa-solid fa-user"></i></div>';
+        body.innerHTML =
+          photo +
+          '<div class="akun-name">' + escapeHtml(user.displayName || "Pengguna") + "</div>" +
+          '<div class="akun-email">' + escapeHtml(user.email || "-") + "</div>";
+        btnG.style.display = "none";
+        btnL.style.display = "block";
+
+        // Setelah login dari flow order → kembali ke halaman order
+        try {
+          const ret = sessionStorage.getItem("nailong_return_after_login");
+          if (ret) {
+            sessionStorage.removeItem("nailong_return_after_login");
+            status.textContent = "Login berhasil · mengalihkan…";
+            setTimeout(function () {
+              window.location.href = ret;
+            }, 900);
+          }
+        } catch (e) {}
+      } else {
+        status.className = "akun-status off";
+        status.textContent = "Belum masuk";
+        body.innerHTML =
+          '<div class="akun-avatar placeholder"><i class="fa-solid fa-user"></i></div>' +
+          '<div class="akun-name">Belum masuk</div>' +
+          '<div class="akun-email">Masuk dengan akun Google saja.</div>';
+        btnG.style.display = "flex";
+        btnG.disabled = false;
+        btnL.style.display = "none";
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    const G_ICON = `<svg class="g-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>`;
+
+    document.getElementById("btnGoogle").addEventListener("click", async function () {
+      const btn = this;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menghubungkan...';
+      try {
+        // tunggu GSI load max 5 detik
+        for (let i = 0; i < 25; i++) {
+          if (window.google && google.accounts && google.accounts.oauth2) break;
+          await new Promise(r => setTimeout(r, 200));
+        }
+        const user = await window.VoxyyAuth.loginGoogle();
+        if (user) renderUser(user);
+      } catch (e) {
+        const msg = (e && e.message) ? e.message : String(e);
+        alert(msg);
+        console.error(e);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = G_ICON + " Masuk dengan Google";
+      }
+    });
+
+    document.getElementById("btnLogout").addEventListener("click", async function () {
+      try {
+        await window.VoxyyAuth.logout();
+      } catch (e) {
+        alert("Gagal keluar");
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", async function () {
+      if (window.VoxyyAuth) {
+        try {
+          await window.VoxyyAuth.handleRedirectResult();
+        } catch (e) {}
+        try {
+          const err = sessionStorage.getItem("voxyy_auth_err");
+          if (err) {
+            sessionStorage.removeItem("voxyy_auth_err");
+            let hint = err;
+            if (/unauthorized-domain/i.test(err)) {
+              hint = "Domain belum diizinkan di Firebase Authorized domains.\nTambah: " + location.hostname;
+            }
+            alert("Login gagal: " + hint);
+          }
+        } catch (e) {}
+        window.VoxyyAuth.onAuthChange(renderUser);
+      } else {
+        renderUser(null);
+      }
+    });
+  </script>
+  <script src="account-widget.js"></script>
+</body>
+</html>

@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Pesan Paket - Nailong Joki</title>
+  <title>Pesan Paket - Nailong</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
     .jaspost-notice {
       background: #2a2200;
-      border: 1px solid #ffd70055;
+      border: 1px solid #FFC10755;
       border-radius: 10px;
       padding: 12px;
       margin: 12px 0;
@@ -18,7 +18,7 @@
       line-height: 1.5;
     }
     .jaspost-notice .title {
-      color: #ffd700;
+      color: #FFC107;
       font-weight: 700;
       margin-bottom: 6px;
       display: block;
@@ -44,9 +44,9 @@
 <body>
   <header class="header">
     <div class="brand">
-      <img src="logo.png" alt="Nailong Joki" class="logo" onerror="this.style.background='#ffd700'">
+      <img src="logo.png" alt="Nailong" class="logo"  >
       <div>
-        <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
+        <h1>𝗡Λ𝗜𝗟𝗢𝗡𝗚々𝗝𝗢𝗞𝗜 𝗘𝗟𝗜𝗧𝗘 <i class="fa-solid fa-circle-check verified"></i></h1>
         <p>Form Pemesanan</p>
       </div>
     </div>
@@ -58,10 +58,10 @@
     <a href="javascript:history.back()" class="back"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
 
     <div class="order-header" style="margin-bottom:16px;">
-      <img src="logo.png" class="order-logo" onerror="this.style.background='#ffd700'">
+      <img src="logo.png" class="order-logo"  >
       <div>
         <h3 id="paketJudul">Joki Kontak</h3>
-        <p>Nailong Joki · <span class="tag">Proses Cepat</span> · <span class="tag aman">Aman</span></p>
+        <p>Nailong · <span class="tag">Proses Cepat</span> · <span class="tag aman">Aman</span></p>
       </div>
     </div>
 
@@ -84,7 +84,7 @@
         <input type="tel" id="wa" placeholder="08xxxxxxxxxx" required>
 
         <label>Catatan (Format Teks Push Kontak)</label>
-        <p style="font-size:12px; color:#ffd700; margin:4px 0 8px;">
+        <p style="font-size:12px; color:#FFC107; margin:4px 0 8px;">
           * Tinggal ganti <b>NAMA STORE</b> dan nomor WhatsApp saja. Jangan hapus formatnya.
         </p>
         <textarea id="catatan" rows="7">SV BUYER FRESH NAILONG🔥
@@ -120,49 +120,50 @@ Wa.me/628…
       </div>
     </div>
 
-    <!-- ========== FORM JASA POST AKUN (id 1,2,3) ========== -->
+    <!-- ========== FORM JASA POST ========== -->
     <div id="formJaspost" style="display:none;">
       <div class="form-section">
         <h4><span class="step">1</span> Format Jasa Post</h4>
 
         <div class="jaspost-notice">
-          <span class="title">🫣_JASA POST FREE/GRATIS PM AJA NAILONG_</span>
-          <b>*FORMAT JASPOST BY NAILONG*</b><br>
+          <span class="title">🫣 JASA POST FREE/GRATIS PM AJA NAILONG</span>
+          <b>FORMAT JASPOST BY NAILONG</b><br>
           <code>BUKAN AKUN ADMIN</code>
         </div>
 
         <label>JUAL / CARI</label>
-        <input type="text" id="jp_jualcari" placeholder="Contoh: JUAL atau CARI" required>
+        <input type="text" id="jp_jual_cari" placeholder="Jual / Cari ..." required>
 
-        <label>NOMER LU (WhatsApp)</label>
-        <input type="tel" id="jp_nomer" placeholder="08xxxxxxxxxx" required>
+        <label>NOMER LU</label>
+        <input type="tel" id="jp_nomer" placeholder="08xxxxxxxxxx / 62xxxxxxxxxx" required>
 
         <label>NAMA LU</label>
-        <input type="text" id="jp_nama" placeholder="Nama kamu / store" required>
+        <input type="text" id="jp_nama" placeholder="Nama kamu" required>
 
         <label>ITEM / AKUN</label>
-        <input type="text" id="jp_item" placeholder="Jenis item atau akun yang dipost" required>
+        <input type="text" id="jp_item" placeholder="Item / akun yang dipost" required>
 
         <label>LOG</label>
-        <input type="text" id="jp_log" placeholder="Contoh: google/facebook/twiter/bind/monton/dll">
+        <input type="text" id="jp_log" placeholder="Log (opsional)">
 
         <label>OP</label>
-        <input type="text" id="jp_op" placeholder="contoh:10k,59k">
+        <input type="text" id="jp_op" placeholder="OP (opsional)">
 
         <label>SPEK</label>
-        <textarea id="jp_spek" rows="3" placeholder="Spesifikasi akun / item"></textarea>
+        <textarea id="jp_spek" rows="3" placeholder="Spesifikasi produk / akun" required></textarea>
 
         <label>Mc / Admin</label>
-        <input type="text" id="jp_mc" value="NAILONG" readonly style="background:#1a1500;color:#ffd700;">
+        <input type="text" id="jp_mc" value="NAILONG" readonly style="background:#0a0e18;color:#FFC107;">
 
         <div class="jaspost-notice" style="margin-top:14px;">
-          😶 <b>PEMBERITAHUAN</b> : GUNAKAN JASA ADMIN / MC AGAR TERHINDAR DARI PENIPUAN
+          😶 <b>PEMBERITAHUAN</b> : GUNAKAN JASA ADMIN / MC AGAR TERHINDAR DARI PENIPUAN<br><br>
+          Jasa Post <b>GRATIS</b>. Isi lengkap + foto, lalu kirim.
         </div>
 
-        <label style="margin-top:14px;">Foto Akun (wajib)</label>
-        <p class="field-hint">Pilih foto / screenshot akun dari galeri. Foto akan dikirim ke admin setelah kamu konfirmasi pembayaran.</p>
-        <input type="file" id="fotoAkun" accept="image/*">
-        <img id="fotoPreview" class="foto-preview" alt="Preview foto akun">
+        <label style="margin-top:14px;">Foto produk / akun (wajib) 📷</label>
+        <p class="field-hint">Wajib upload foto. Data + foto langsung dikirim ke admin saat kamu tekan <b>Kirim Gratis</b>.</p>
+        <input type="file" id="fotoAkun" accept="image/*" required>
+        <img id="fotoPreview" class="foto-preview" alt="Preview foto">
       </div>
     </div>
 
@@ -176,17 +177,25 @@ Wa.me/628…
 
   <a href="laporan.html" class="floating-laporan"><i class="fa-solid fa-exclamation-circle"></i> Laporan</a>
 
-  <nav class="bottom-nav">
-    <a href="joki.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+            <nav class="bottom-nav nav-5">
+    <a href="joki.html" class="nav-item active"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+    <a href="digital.html" class="nav-item"><i class="fa-solid fa-box"></i><span>Produk Digital</span></a>
     <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
     <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
     <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
   </nav>
 
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="global-orders.js"></script>
   <script src="joki-produk.js"></script>
   <script src="telegram.js"></script>
     <script src="script.js"></script>
-  <script src="produk.js"></script>
+  <script src="auth.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="account-widget.js"></script>
+  <script src="digital-produk.js"></script>
   <script>
     // Preview foto akun
     document.getElementById("fotoAkun")?.addEventListener("change", function(e) {
@@ -210,20 +219,28 @@ Wa.me/628…
       window.orderType = "Joki Kontak";
       window.orderPaketName = "Joki Kontak";
 
-      if (type === "produk") {
+      if (type === "jaspost") {
+        window.isJaspost = true;
+        window.orderType = "Jasa Post";
+        window.orderPaketName = "Jasa Post Free by Nailong";
+        baseHarga = 0;
+        document.getElementById("paketJudul").textContent = "🫣 Jasa Post Free / Gratis — Nailong";
+        document.getElementById("namaPaketRow").textContent = "Jasa Post Free by Nailong";
+        document.getElementById("hargaPaket").textContent = "GRATIS";
+        const totalEl = document.getElementById("totalHarga");
+        if (totalEl) totalEl.textContent = "GRATIS";
+        document.getElementById("formStandar").style.display = "none";
+        document.getElementById("formJaspost").style.display = "block";
+        const warn = document.getElementById("warningJoki");
+        if (warn) warn.style.display = "none";
+        const addon = document.getElementById("addonSection");
+        if (addon) addon.style.display = "none";
+        const btn = document.getElementById("btnSubmitOrder");
+        if (btn) btn.textContent = "Kirim Gratis";
+      } else if (type === "produk") {
         // Load produk digital
-        try {
-          const saved = localStorage.getItem("nailong_produk");
-          if (saved) {
-            const parsed = JSON.parse(saved);
-            if (Array.isArray(parsed) && parsed.length) {
-              produk.length = 0;
-              parsed.forEach(p => produk.push(p));
-            }
-          }
-        } catch(e) {}
-
-        const item = (typeof produk !== "undefined") ? produk.find(p => p.id === id) : null;
+        if (typeof loadProdukDigital === "function") loadProdukDigital();
+        const item = (typeof produkDigital !== "undefined") ? produkDigital.find(p => p.id === id) : null;
         if (item) {
           baseHarga = item.harga;
           document.getElementById("paketJudul").textContent = item.judul;
@@ -232,26 +249,24 @@ Wa.me/628…
           window.orderPaketName = item.judul;
           window.orderType = "Produk Digital";
 
-          // Cek apakah ini Jasa Post (id 1,2,3 atau judul mengandung "Jasa Post")
-          const isJasaPost = (id === 1) ||
-            (item.judul && item.judul.toLowerCase().includes("jasa post"));
+          const isJasaPost = (item.judul && item.judul.toLowerCase().includes("jasa post"));
 
           if (isJasaPost) {
             window.isJaspost = true;
-            window.orderType = "Jasa Post Akun";
-            // Tampilkan form jaspost, sembunyikan form standar
+            window.orderType = "Jasa Post";
+            window.orderPaketName = "Jasa Post Free by Nailong";
+            baseHarga = 0;
             document.getElementById("formStandar").style.display = "none";
             document.getElementById("formJaspost").style.display = "block";
             document.getElementById("warningJoki").style.display = "none";
-            // Ubah tombol
+            document.getElementById("hargaPaket").textContent = "GRATIS";
+            const totalEl = document.getElementById("totalHarga");
+            if (totalEl) totalEl.textContent = "GRATIS";
             const btn = document.getElementById("btnSubmitOrder");
-            if (btn) btn.textContent = "Bayar Sekarang";
+            if (btn) btn.textContent = "Kirim Gratis";
           } else {
-            // Paket Views + Kontak & Premium Kontak → sama seperti joki
-            // Sembunyikan addon (karena harga fixed)
             const addonSection = document.getElementById("addonSection");
             if (addonSection) addonSection.style.display = "none";
-            // Tombol tetap bisa "Bayar Sekarang"
             const btn = document.getElementById("btnSubmitOrder");
             if (btn) btn.textContent = "Bayar Sekarang";
           }
@@ -274,34 +289,40 @@ Wa.me/628…
       }
     });
 
-    // Override / extend buatPesanan agar support form jaspost
-    // Foto + format hanya dikirim ke Telegram SETELAH konfirmasi bayar
     const originalBuatPesanan = window.buatPesanan;
     window.buatPesanan = async function() {
+      if (window.NailongAuthGuard && typeof window.NailongAuthGuard.requireLogin === "function") {
+        const okLogin = await window.NailongAuthGuard.requireLogin({
+          message: "Sebelum order, kamu wajib login dulu pakai akun Google."
+        });
+        if (!okLogin) return;
+      }
+
       if (window.isJaspost) {
-        const jualcari = document.getElementById("jp_jualcari")?.value?.trim() || "";
+        const jualCari = document.getElementById("jp_jual_cari")?.value?.trim() || "";
         const nomer = document.getElementById("jp_nomer")?.value?.trim() || "";
-        const nama = document.getElementById("jp_nama")?.value?.trim() || "";
+        const nama = document.getElementById("jp_nama")?.value?.trim() || "Customer";
         const item = document.getElementById("jp_item")?.value?.trim() || "";
         const log = document.getElementById("jp_log")?.value?.trim() || "-";
         const op = document.getElementById("jp_op")?.value?.trim() || "-";
-        const spek = document.getElementById("jp_spek")?.value?.trim() || "-";
+        const spek = document.getElementById("jp_spek")?.value?.trim() || "";
         const mc = document.getElementById("jp_mc")?.value?.trim() || "NAILONG";
         const fotoInput = document.getElementById("fotoAkun");
+        const btn = document.getElementById("btnSubmitOrder");
 
-        if (!jualcari || !nomer || !nama || !item) {
-          showNiceAlert("Lengkapi field wajib: JUAL/CARI, NOMER, NAMA, dan ITEM/AKUN.");
+        if (!jualCari || !nomer || !nama || !item || !spek) {
+          showNiceAlert("Lengkapi field wajib: JUAL/CARI, NOMER LU, NAMA LU, ITEM/AKUN, dan SPEK.");
           return;
         }
         if (!fotoInput || !fotoInput.files || !fotoInput.files[0]) {
-          showNiceAlert("Wajib pilih foto akun dari galeri terlebih dahulu.");
+          showNiceAlert("Wajib upload foto produk/akun terlebih dahulu.");
           return;
         }
 
         const catatan = `🫣_JASA POST FREE/GRATIS PM AJA NAILONG_
-*FORMAT JASPOST BY 《CUFFLI》*
+*FORMAT JASPOST BY NAILONG*
 \`BUKAN AKUN ADMIN\`
-- *JUAL/CARI*: ${jualcari}
+- *JUAL/CARI*: ${jualCari}
 - *NOMER LU* : ${nomer}
 - *NAMA LU*    : ${nama}
 - *ITEM/AKUN* : ${item}
@@ -311,59 +332,76 @@ Wa.me/628…
 - *Mc/Admin* : ${mc}
 😶PEMBERITAHUAN : GUNAKAN JASA ADMIN / MC AGAR TERHINDAR DARI PENIPUAN`;
 
-        // Isi field agar logic lain bisa baca
-        const namaEl = document.getElementById("nama");
-        const waEl = document.getElementById("wa");
-        const catatanEl = document.getElementById("catatan");
-        if (namaEl) namaEl.value = nama;
-        if (waEl) waEl.value = nomer;
-        if (catatanEl) catatanEl.value = catatan;
-
-        const total = document.getElementById("totalHarga")?.textContent || "Rp 0";
         const rand = Math.floor(1000 + Math.random() * 9000);
         const timePart = String(Date.now()).slice(-3);
-        const kode = `NJ-2026-${rand}${timePart}`;
+        const kode = `NL-2026-${rand}${timePart}`;
 
-        let order = {
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "Mengirim...";
+        }
+
+        const pesan = `
+📣 <b>JASA POST GRATIS - NAILONG</b>
+
+🆔 Kode: <code>${kode}</code>
+🛒 Jual/Cari: <b>${jualCari}</b>
+👤 Nama: <b>${nama}</b>
+📦 Item/Akun: <b>${item}</b>
+📱 Nomer: <b>${nomer}</b>
+📋 Log: ${log}
+⚙️ OP: ${op}
+📈 Spek: ${spek}
+🏷️ Mc/Admin: ${mc}
+💰 Biaya: <b>GRATIS</b>
+📊 Status: <b>Masuk Antrian</b>
+⏰ ${new Date().toLocaleString("id-ID")}
+        `.trim();
+
+        try {
+          if (typeof kirimTelegram === "function") {
+            await kirimTelegram(pesan);
+          }
+          if (typeof kirimFotoTelegram === "function" && fotoInput.files[0]) {
+            await kirimFotoTelegram(
+              fotoInput.files[0],
+              `Foto Jasa Post - ${kode}\n${item}\n${nomer}`
+            );
+          }
+        } catch (e) {
+          console.warn("Gagal kirim Telegram jasa post:", e);
+        }
+
+        const order = {
           kode,
           nama,
           wa: nomer,
           catatan,
-          total,
-          paket: window.orderPaketName || "Jasa Post Akun",
-          status: "Belum Bayar",
+          total: "GRATIS",
+          paket: window.orderPaketName || "Jasa Post Free by Nailong",
+          status: "Proses",
           waktu: new Date().toLocaleString("id-ID"),
-          isJaspost: true
+          isJaspost: true,
+          createdAt: Date.now(),
+          finalAmount: 0
         };
 
-        order.createdAt = Date.now();
-        order.finalAmount = Number(String(total).replace(/[^\d]/g, "")) || 0;
-
-        // Simpan order (belum kirim Telegram)
-        let orders = JSON.parse(localStorage.getItem("nailong_orders") || "[]");
-        orders.unshift(order);
-        localStorage.setItem("nailong_orders", JSON.stringify(orders));
-
-        // Simpan foto sebagai base64 di sessionStorage agar bisa dikirim setelah bayar
-        try {
-          const file = fotoInput.files[0];
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            try {
-              sessionStorage.setItem("nailong_jaspost_foto_" + kode, e.target.result);
-              sessionStorage.setItem("nailong_jaspost_pending", kode);
-            } catch (err) {
-              console.warn("Foto terlalu besar untuk sessionStorage", err);
-            }
-            window.location.href = `pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(total)}`;
-          };
-          reader.onerror = function() {
-            window.location.href = `pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(total)}`;
-          };
-          reader.readAsDataURL(file);
-        } catch (err) {
-          window.location.href = `pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(total)}`;
+        if (window.VoxyyOrders && typeof window.VoxyyOrders.addOrder === "function") {
+          await window.VoxyyOrders.addOrder(order);
+        } else {
+          let orders = JSON.parse(localStorage.getItem("voxyy_orders") || "[]");
+          orders.unshift(order);
+          localStorage.setItem("voxyy_orders", JSON.stringify(orders));
         }
+        localStorage.setItem("voxyy_saved_kode", kode);
+
+        if (typeof window.showSiteModal === "function") {
+          window.showSiteModal("Jasa post gratis sudah dikirim ke admin Telegram.", "success");
+        }
+
+        setTimeout(function() {
+          window.location.href = "antrian.html";
+        }, 900);
         return;
       }
 

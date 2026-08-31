@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/__/auth/:path*",
+      "destination": "https://voxyyjoki.firebaseapp.com/__/auth/:path*"
+    }
+  ]
+}

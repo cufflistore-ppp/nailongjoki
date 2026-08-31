@@ -1,6 +1,6 @@
 // ============ KONFIGURASI TELEGRAM ============
-const TELEGRAM_BOT_TOKEN = "8938063328:AAEukRSsBo3iB18FyOBChEC-RqdDVnru_NA";
-const TELEGRAM_CHAT_ID   = "7701533150";
+const TELEGRAM_BOT_TOKEN = "8943803042:AAEey--iVyJxQfRjhiXjTpNFKgt33sGyWKg";
+const TELEGRAM_CHAT_ID   = "7755460382";
 // ==============================================
 
 async function kirimTelegram(text) {
@@ -46,7 +46,7 @@ async function kirimFotoTelegram(file, caption = "") {
 
 async function kirimOrderKeTelegram(data) {
   const pesan = `
-🛒 <b>ORDER BARU - NAILONG JOKI</b>
+🛒 <b>ORDER BARU - NAILONG</b>
 
 🆔 Kode Antrian: <code>${data.kode}</code>
 👤 Nama: <b>${data.nama}</b>
@@ -85,7 +85,7 @@ ${data.deskripsi}
 
 async function kirimStatusUpdate(kode, status, nama) {
   const pesan = `
-🔄 <b>STATUS DIUBAH - NAILONG JOKI</b>
+🔄 <b>STATUS DIUBAH - NAILONG</b>
 
 🆔 Kode: <code>${kode}</code>
 👤 Nama: ${nama || "-"}

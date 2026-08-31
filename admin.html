@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Nailong Joki</title>
+  <title>Admin - Nailong</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="admin-header">
-    <i class="fa-solid fa-user-shield"></i> PANEL ADMIN - NAILONG JOKI
+    <i class="fa-solid fa-user-shield"></i> PANEL ADMIN - NAILONG
   </div>
 
   <div class="page-content">
-    <h3 style="margin-bottom:12px;color:#ffd700;">Tambah Pesanan Manual</h3>
+    <h3 style="margin-bottom:12px;color:#FFC107;">Tambah Pesanan Manual</h3>
     
     <div class="form-section">
       <label>Kode Antrian</label>
-      <input type="text" id="admKode" placeholder="NJ-2026-XXXX (kosongkan = auto)">
+      <input type="text" id="admKode" placeholder="VJ-2026-XXXX (kosongkan = auto)">
       
       <label>Nama</label>
       <input type="text" id="admNama" placeholder="Nama customer">
@@ -40,10 +40,14 @@
       </button>
     </div>
 
-    <h3 style="margin:24px 0 12px;color:#ffd700;">Daftar Pesanan</h3>
+    <h3 style="margin:24px 0 12px;color:#FFC107;">Daftar Pesanan</h3>
     <div id="listOrders"></div>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="global-orders.js"></script>
   <script src="telegram.js"></script>
   <script src="script.js"></script>
   <script src="admin.js"></script>

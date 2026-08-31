@@ -3,91 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Nailong Joki - Pusat Layanan</title>
+  <title>Nailong - Pusat Layanan</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Header -->
   <header class="header">
     <div class="brand">
-      <img src="logo.png" alt="Nailong Joki" class="logo" onerror="this.style.background='#ffd700'">
+      <img src="logo.png" alt="Nailong" class="logo">
       <div>
-        <h1>Nailong Joki <i class="fa-solid fa-circle-check verified"></i></h1>
-        <p>Pusat Layanan Nailong Joki</p>
+        <h1>𝗡Λ𝗜𝗟𝗢𝗡𝗚々𝗝𝗢𝗞𝗜 𝗘𝗟𝗜𝗧𝗘 <i class="fa-solid fa-circle-check verified"></i></h1>
+        <p>Pusat Layanan Nailong</p>
       </div>
     </div>
   </header>
 
-  <!-- Banner -->
   <div class="banner">
-    <div class="banner-content">
-      <h2>NAILONG JOKI</h2>
-      <p>TINGKATKAN STATUS VIEWS ANDA</p>
-      <small>dengan order joki kontak di nailongjoki.vercel.app</small>
-    </div>
-    <div class="banner-image">
-      <img src="nailong.png" alt="Nailong" onerror="this.style.display='none'">
-    </div>
+    <img src="banner.jpg" alt="Selamat Datang di Nailong" class="banner-full">
   </div>
-  <!-- Notif di bawah banner (hanya muncul jika ada order) -->
   <div class="top-notif" id="topNotif" style="display:none;"></div>
 
-
-
-  <!-- Menu Grid -->
+  <!-- Menu kecil: Joki | Produk Digital | Jasa Post -->
   <div class="menu-grid">
     <a href="joki.html" class="menu-item">
       <i class="fa-solid fa-shield-halved"></i>
-      <span>Joki Kontak</span>
+      <span>Joki</span>
     </a>
-    <a href="https://nailongjoki.vercel.app/pesan.html?type=produk&id=1" class="menu-item">
+    <a href="digital.html" class="menu-item">
+      <i class="fa-solid fa-box"></i>
+      <span>Produk Digital</span>
+    </a>
+    <a href="pesan.html?type=jaspost" class="menu-item">
       <i class="fa-solid fa-paper-plane"></i>
-      <span>Jasa Post Akun</span>
+      <span>Jasa Post</span>
+    </a>
+    <a href="https://wa.me//6285182549509" class="menu-item">
+      <i class="fa-brands fa-whatsapp"></i>
+      <span>Wa Utama</span>
+    </a>
+    <a href="https://wa.me//6295745850498" class="menu-item">
+      <i class="fa-brands fa-whatsapp"></i>
+      <span>Wa Cadangan</span>
+    </a>
+    <a href="pembayaran.html?paket=Apk%20Badak%20No%20Wa%20Manen%20·%20Partner&total=3000" class="menu-item">
+      <i class="fa-solid fa-skull-crossbones"></i>
+      <span>Apk Badak No Wa Manen · Partner</span>
     </a>
   </div>
 
-  <!-- Produk Section (2 kolom) -->
+  <!-- Grid produk 2 kolom (produk.js) -->
   <section class="produk-section">
-    <h3>JASA POST AKUN</h3>
-    <p class="subtitle">Promosikan akun kamu lebih luas.</p>
-    <div class="action-row">
-      <a href="#produkGrid" class="btn-lihat-layanan">Lihat Daftar Layanan</a>
+    <h3>PRODUK DIGITAL</h3>
+    <p class="subtitle">Jasa website. Bayar QRIS, lalu konfirmasi via WhatsApp.</p>
+    <div class="produk-grid" id="produkGrid"></div>
   </section>
 
-  <!-- Info -->
   <div class="info-box">
     <h4>Website jadi pusat proses order.</h4>
     <p>Website dipakai untuk menerima order, pembayaran, data customer, antrian, dan status supaya proses tidak tercerai di chat.</p>
   </div>
 
-  <a href="laporan.html" class="btn-laporan"><i class="fa-solid fa-exclamation-circle"></i> Laporan</a>
-    </div>
-    <div class="produk-grid" id="produkGrid"></div>
-</section>
+  <div style="padding:0 12px 24px;">
+    <a href="laporan.html" class="btn-laporan"><i class="fa-solid fa-exclamation-circle"></i> Laporan</a>
+  </div>
 
-  <!-- Bottom Nav -->
-  <nav class="bottom-nav">
-    <a href="joki.html" class="nav-item">
-      <i class="fa-solid fa-shield-halved"></i>
-      <span>Joki</span>
-    </a>
-    <a href="index.html" class="nav-item active">
-      <i class="fa-solid fa-house"></i>
-      <span>Home</span>
-    </a>
-    <a href="antrian.html" class="nav-item">
-      <i class="fa-solid fa-clock"></i>
-      <span>Antrian</span>
-    </a>
-    <a href="tentang.html" class="nav-item">
-      <i class="fa-solid fa-circle-info"></i>
-      <span>Tentang</span>
-    </a>
+        <nav class="bottom-nav nav-5">
+    <a href="joki.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
+    <a href="digital.html" class="nav-item"><i class="fa-solid fa-box"></i><span>Produk Digital</span></a>
+    <a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></a>
+    <a href="antrian.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Antrian</span></a>
+    <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
   </nav>
 
   <script src="produk.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="global-orders.js"></script>
   <script src="script.js"></script>
+  <script src="auth.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="account-widget.js"></script>
 </body>
 </html>

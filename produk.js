@@ -1,46 +1,59 @@
-// Daftar Produk Digital - berbeda dari paket Joki
+const HOME_CATALOG_VER = "4";
+
 const produk = [
   {
     id: 1,
-    judul: "Jasa Post Akun Channel",
-    harga: 1500,
+    judul: "Jasa Bikin Website 1 html",
+    harga: 5000,
     status: "TERSEDIA",
-    img: "nailong1.png",
-    deskripsi: "Jasa post akun ke semua channel & grup terkait. Tingkatkan reach akun kamu.",
-    fitur: [
-      "Post di banyak channel + grup",
-      "Post di channel aktif",
-      "Laporan hasil post",
-      "Proses 1x24 jam"
-    ]
+    img: "logo.png",
+    deskripsi: "Bayar QRIS dulu. Setelah transfer, konfirmasi ke admin WhatsApp.",
+    fitur: ["Harga Rp 5.000", "Bayar langsung QRIS", "Konfirmasi via WhatsApp"]
   },
   {
     id: 2,
-    judul: "Paket Views + Kontak",
-    harga: 11000,
-    status: "AKTIF",
-    img: "nailong2.png",
-    deskripsi: "Paket gabungan views story + push kontak untuk meningkatkan interaksi akun.",
-    fitur: [
-      "Tambah views story",
-      "Push kontak targeted",
-      "Cocok untuk seller",
-      "Hasil terukur"
-    ]
+    judul: "Jasa Bikin Website 1 html + 1 js",
+    harga: 10000,
+    status: "TERSEDIA",
+    img: "logo.png",
+    deskripsi: "Bayar QRIS dulu. Setelah transfer, konfirmasi ke admin WhatsApp.",
+    fitur: ["Harga Rp 10.000", "Bayar langsung QRIS", "Konfirmasi via WhatsApp"]
   },
   {
     id: 3,
-    judul: "Paket Premium Kontak",
-    harga: 33000,
+    judul: "Jasa Bikin Website 1 html + 1 js + 1 css",
+    harga: 15000,
     status: "TERSEDIA",
-    img: "nailong3.png",
-    deskripsi: "Paket premium untuk push kontak lebih agresif dan prioritas antrian.",
-    fitur: [
-      "Prioritas antrian",
-      "Push kontak lebih banyak",
-      "Support via WA",
-      "Garansi proses"
-    ]
+    img: "logo.png",
+    deskripsi: "Bayar QRIS dulu. Setelah transfer, konfirmasi ke admin WhatsApp.",
+    fitur: ["Harga Rp 15.000", "Bayar langsung QRIS", "Konfirmasi via WhatsApp"]
+},
+  {
+    id: 4,
+    judul: "Jasa Bikin Website 2 html + 2 js + 1 css",
+    harga: 25000,
+    status: "TERSEDIA",
+    img: "logo.png",
+    deskripsi: "Bayar QRIS dulu. Setelah transfer, konfirmasi ke admin WhatsApp.",
+    fitur: ["Harga Rp 35.000", "Bayar langsung QRIS", "Konfirmasi via WhatsApp"]
+  },
+  {
+    id: 5,
+    judul: "Jasa Bikin Website Jb",
+    harga: 80000,
+    status: "TERSEDIA",
+    img: "logo.png",
+    deskripsi: "Bayar QRIS dulu. Setelah transfer, konfirmasi ke admin WhatsApp.",
+    fitur: ["Harga Rp 35.000", "Bayar langsung QRIS", "Konfirmasi via WhatsApp"]
+  },
+  {
+    id: 6,
+    judul: "Jasa Bikin Website Seperti Nailong",
+    harga: 70000,
+    status: "TERSEDIA",
+    img: "logo.png",
+    deskripsi: "Bayar QRIS dulu. Setelah transfer, konfirmasi ke admin WhatsApp.",
+    fitur: ["Harga Rp 70.000", "Bayar langsung QRIS", "Konfirmasi via WhatsApp"]
   }
 ];
 
@@ -53,7 +66,11 @@ function renderProduk() {
   if (!grid) return;
 
   try {
-    const saved = localStorage.getItem("nailong_produk");
+    if (localStorage.getItem("voxyy_produk_ver") !== HOME_CATALOG_VER) {
+      localStorage.removeItem("voxyy_produk");
+      localStorage.setItem("voxyy_produk_ver", HOME_CATALOG_VER);
+    }
+    const saved = localStorage.getItem("voxyy_produk");
     if (saved) {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed) && parsed.length) {
@@ -63,17 +80,19 @@ function renderProduk() {
     }
   } catch (e) {}
 
-  grid.innerHTML = produk.map(p => `
+  grid.innerHTML = produk.map(p => {
+    const href = "pembayaran.html?paket=" + encodeURIComponent(p.judul) + "&total=" + encodeURIComponent(String(p.harga));
+    return `
     <div class="produk-card">
-      <img src="${p.img}" alt="${p.judul}" onerror="this.style.background='#3d3200'">
+      <img src="${p.img || "logo.png"}" alt="${p.judul}" onerror="this.src='logo.png'">
       <div class="produk-info">
-        <small style="color:#ffd700;font-size:10px;">${p.status}</small>
+        <small style="color:#FF6F00;font-size:10px;">${p.status || "TERSEDIA"}</small>
         <h4>${p.judul}</h4>
         <div class="harga">${formatRpProduk(p.harga)}</div>
-        <a href="detail-produk.html?id=${p.id}" class="btn">Lihat Detail</a>
+        <a href="${href}" class="btn">Bayar Sekarang</a>
       </div>
-    </div>
-  `).join("");
+    </div>`;
+  }).join("");
 }
 
 function tambahProduk(data) {
@@ -85,9 +104,9 @@ function tambahProduk(data) {
     status: data.status || "TERSEDIA",
     img: data.img || "logo.png",
     deskripsi: data.deskripsi || "",
-    fitur: data.fitur || ["File digital", "Dikirim via WA"]
+    fitur: data.fitur || ["Bayar langsung QRIS"]
   });
-  localStorage.setItem("nailong_produk", JSON.stringify(produk));
+  localStorage.setItem("voxyy_produk", JSON.stringify(produk));
   renderProduk();
 }
 
