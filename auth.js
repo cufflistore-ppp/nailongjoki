@@ -1,5 +1,6 @@
 /**
- * Nailong Auth - Google via Identity Services (tanpa redirect/popup blank)
+ * Nailong Auth - Google via Firebase Auth (popup + redirect fallback)
+ * Tidak bergantung OAuth Client ID project lain → hindari origin_mismatch
  */
 (function () {
   function ensureAuth() {
@@ -16,7 +17,7 @@
       } catch (e) {}
       return auth;
     } catch (e) {
-      console.error("[Voxyy Auth]", e);
+      console.error("[Nailong Auth]", e);
       return null;
     }
   }
@@ -34,7 +35,23 @@
     return String(fromOrders || fromGlobal || "").trim();
   }
 
-  /** Login pakai Google Identity Services (ID token → Firebase) */
+  function isMobile() {
+    try {
+      return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
+    } catch (e) {
+      return true;
+    }
+  }
+
+  function googleProvider() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account" });
+    provider.addScope("email");
+    provider.addScope("profile");
+    return provider;
+  }
+
+  /** Login Google: mobile → redirect, desktop → popup dulu */
   function loginGoogle() {
     return new Promise(function (resolve, reject) {
       const auth = ensureAuth();
@@ -46,66 +63,64 @@
         );
         return;
       }
-      const clientId = getClientId();
-      if (!clientId || clientId.length < 20) {
-        reject(
-          new Error(
-            "GOOGLE_WEB_CLIENT_ID masih kosong.\n\nAmbil di:\nconsole.cloud.google.com → APIs & Services → Credentials\n→ Web client (auto created by Google Service)\n→ copy Client ID\n→ tempel di global-orders.js"
-          )
-        );
-        return;
+
+      const provider = googleProvider();
+
+      function doRedirect() {
+        try {
+          sessionStorage.setItem("nailong_auth_pending", "1");
+        } catch (e) {}
+        auth.signInWithRedirect(provider).catch(function (err) {
+          reject(err);
+        });
+        // redirect akan pindah halaman; resolve lewat handleRedirectResult
       }
-      if (typeof google === "undefined" || !google.accounts || !google.accounts.oauth2) {
-        reject(
-          new Error(
-            "Google script belum termuat. Refresh halaman lalu coba lagi."
-          )
-        );
+
+      if (isMobile()) {
+        doRedirect();
         return;
       }
 
-      const tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: clientId,
-        scope: "email profile openid",
-        callback: function (tokenResponse) {
-          if (!tokenResponse || tokenResponse.error) {
-            reject(
-              new Error(
-                (tokenResponse && tokenResponse.error) ||
-                  "Login Google dibatalkan"
-              )
-            );
+      auth
+        .signInWithPopup(provider)
+        .then(function (result) {
+          resolve(result.user);
+        })
+        .catch(function (err) {
+          var code = (err && err.code) || "";
+          // Popup diblokir / gagal → fallback redirect
+          if (
+            code.indexOf("popup") !== -1 ||
+            code.indexOf("cancelled") !== -1 ||
+            code.indexOf("blocked") !== -1
+          ) {
+            doRedirect();
             return;
           }
-          const credential = firebase.auth.GoogleAuthProvider.credential(
-            null,
-            tokenResponse.access_token
-          );
-          auth
-            .signInWithCredential(credential)
-            .then(function (result) {
-              resolve(result.user);
-            })
-            .catch(function (err) {
-              reject(err);
-            });
-        },
-        error_callback: function (err) {
-          reject(err || new Error("Gagal membuka Google login"));
-        }
-      });
-
-      try {
-        tokenClient.requestAccessToken({ prompt: "select_account" });
-      } catch (e) {
-        reject(e);
-      }
+          reject(err);
+        });
     });
   }
 
   async function handleRedirectResult() {
-    // GIS tidak pakai redirect
-    return null;
+    const auth = ensureAuth();
+    if (!auth) return null;
+    try {
+      const result = await auth.getRedirectResult();
+      try {
+        sessionStorage.removeItem("nailong_auth_pending");
+      } catch (e) {}
+      if (result && result.user) return result.user;
+      return null;
+    } catch (err) {
+      try {
+        sessionStorage.setItem(
+          "voxyy_auth_err",
+          (err && (err.message || err.code)) || String(err)
+        );
+      } catch (e) {}
+      throw err;
+    }
   }
 
   async function logout() {
@@ -125,12 +140,12 @@
 
   window.VoxyyAuth = {
     getCurrentUser: currentUser,
-    ensureAuth,
-    currentUser,
-    loginGoogle,
-    logout,
-    onAuthChange,
-    handleRedirectResult,
-    getClientId
+    ensureAuth: ensureAuth,
+    currentUser: currentUser,
+    loginGoogle: loginGoogle,
+    logout: logout,
+    onAuthChange: onAuthChange,
+    handleRedirectResult: handleRedirectResult,
+    getClientId: getClientId
   };
 })();
