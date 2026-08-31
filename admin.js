@@ -104,7 +104,7 @@ function escapeHtmlAttr(str) {
 async function tambahOrderAdmin() {
   const kode =
     document.getElementById("admKode").value.trim() ||
-    "VJ-2026-" +
+    "NJ-2026-" +
       Math.floor(1000 + Math.random() * 9000) +
       String(Date.now()).slice(-3);
   const nama = document.getElementById("admNama").value.trim() || "Manual";

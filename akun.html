@@ -121,7 +121,7 @@
         <i class="fa-solid fa-right-from-bracket"></i> Keluar
       </button>
       <div class="akun-hint" id="akunHint">
-        <b>Login dlu menggunakan akun google kalian agar satu sama lain bisa melihat orde, ini wajib kalo ga daftar ga bisa order</b>
+        <b>Login dlu menggunakan akun google kalian agar satu sama lain bisa melihat orderannya, ga login juga gpp</b>
       </div>
     </div>
   </div>
@@ -239,27 +239,67 @@
       }
     });
 
-    document.addEventListener("DOMContentLoaded", async function () {
-      if (window.VoxyyAuth) {
-        try {
-          await window.VoxyyAuth.handleRedirectResult();
-        } catch (e) {}
-        try {
-          const err = sessionStorage.getItem("voxyy_auth_err");
-          if (err) {
-            sessionStorage.removeItem("voxyy_auth_err");
-            let hint = err;
-            if (/unauthorized-domain/i.test(err)) {
-              hint = "Domain belum diizinkan di Firebase Authorized domains.\nTambah: " + location.hostname;
-            }
-            alert("Login gagal: " + hint);
-          }
-        } catch (e) {}
-        window.VoxyyAuth.onAuthChange(renderUser);
-      } else {
-        renderUser(null);
+    async function bootAuth() {
+      const status = document.getElementById("akunStatus");
+      if (status) {
+        status.className = "akun-status off";
+        status.textContent = "Memuat...";
       }
-    });
+
+      if (!window.VoxyyAuth) {
+        renderUser(null);
+        return;
+      }
+
+      // 1) Proses hasil redirect Google (penting di HP)
+      let user = null;
+      try {
+        user = await window.VoxyyAuth.handleRedirectResult();
+      } catch (e) {
+        console.error(e);
+        const msg = (e && (e.message || e.code)) || String(e);
+        if (/unauthorized-domain/i.test(msg)) {
+          alert("Domain belum diizinkan di Firebase Authorized domains.\nTambah: " + location.hostname);
+        } else if (msg && msg !== "null") {
+          alert("Login gagal: " + msg);
+        }
+      }
+
+      try {
+        const err = sessionStorage.getItem("voxyy_auth_err");
+        if (err) {
+          sessionStorage.removeItem("voxyy_auth_err");
+          let hint = err;
+          if (/unauthorized-domain/i.test(err)) {
+            hint = "Domain belum diizinkan di Firebase Authorized domains.\nTambah: " + location.hostname;
+          }
+          alert("Login gagal: " + hint);
+        }
+      } catch (e) {}
+
+      // 2) Tunggu auth state siap
+      if (!user && window.VoxyyAuth.waitAuthReady) {
+        try {
+          user = await window.VoxyyAuth.waitAuthReady();
+        } catch (e) {}
+      }
+      if (!user && window.VoxyyAuth.getCurrentUser) {
+        user = window.VoxyyAuth.getCurrentUser();
+      }
+
+      renderUser(user || null);
+
+      // 3) Listen perubahan login/logout
+      window.VoxyyAuth.onAuthChange(function (u) {
+        renderUser(u || null);
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bootAuth);
+    } else {
+      bootAuth();
+    }
   </script>
   <script src="account-widget.js"></script>
 </body>

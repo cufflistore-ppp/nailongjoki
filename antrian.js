@@ -396,7 +396,7 @@ async function cekStatus() {
     showStatusModal(
       "Nomor Order Kosong",
       row("Info", "Masukkan nomor order terlebih dahulu.") +
-        row("Contoh", "<code>VJ-2026-7129517</code>"),
+        row("Contoh", "<code>NJ-2026-7129517</code>"),
       "⚠️"
     );
     return;
@@ -449,7 +449,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const inp = document.getElementById("searchOrder");
   if (inp) {
-    inp.placeholder = "VJ-2026-xxxx";
+    inp.placeholder = "NJ-2026-xxxx";
     inp.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
         e.preventDefault();

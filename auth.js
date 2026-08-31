@@ -1,8 +1,10 @@
 /**
- * Nailong Auth - Google via Firebase Auth (popup + redirect fallback)
- * Tidak bergantung OAuth Client ID project lain → hindari origin_mismatch
+ * Nailong Auth - Google via Firebase Auth (popup + redirect)
+ * Mobile: redirect. Desktop: popup, fallback redirect.
  */
 (function () {
+  var AUTH_PENDING_KEY = "nailong_auth_pending";
+
   function ensureAuth() {
     if (typeof firebase === "undefined") return null;
     if (!window.VoxyyOrders || !window.VoxyyOrders.isGlobalConfigured()) return null;
@@ -11,7 +13,7 @@
         firebase.initializeApp(window.VoxyyOrders.FIREBASE_CONFIG || {});
       }
       if (window.VoxyyOrders.initFirebase) window.VoxyyOrders.initFirebase();
-      const auth = firebase.auth();
+      var auth = firebase.auth();
       try {
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       } catch (e) {}
@@ -23,7 +25,7 @@
   }
 
   function currentUser() {
-    const auth = ensureAuth();
+    var auth = ensureAuth();
     return auth ? auth.currentUser : null;
   }
 
@@ -44,17 +46,49 @@
   }
 
   function googleProvider() {
-    const provider = new firebase.auth.GoogleAuthProvider();
+    var provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
     provider.addScope("email");
     provider.addScope("profile");
     return provider;
   }
 
-  /** Login Google: mobile → redirect, desktop → popup dulu */
+  function waitAuthReady(auth) {
+    return new Promise(function (resolve) {
+      if (!auth) {
+        resolve(null);
+        return;
+      }
+      // Firebase v9+ compat kadang punya authStateReady
+      if (typeof auth.authStateReady === "function") {
+        auth
+          .authStateReady()
+          .then(function () {
+            resolve(auth.currentUser);
+          })
+          .catch(function () {
+            resolve(auth.currentUser);
+          });
+        return;
+      }
+      var unsub = auth.onAuthStateChanged(function (user) {
+        try {
+          unsub();
+        } catch (e) {}
+        resolve(user || null);
+      });
+      setTimeout(function () {
+        try {
+          unsub();
+        } catch (e) {}
+        resolve(auth.currentUser || null);
+      }, 4000);
+    });
+  }
+
   function loginGoogle() {
     return new Promise(function (resolve, reject) {
-      const auth = ensureAuth();
+      var auth = ensureAuth();
       if (!auth) {
         reject(
           new Error(
@@ -64,16 +98,20 @@
         return;
       }
 
-      const provider = googleProvider();
+      var provider = googleProvider();
 
       function doRedirect() {
         try {
-          sessionStorage.setItem("nailong_auth_pending", "1");
+          sessionStorage.setItem(AUTH_PENDING_KEY, "1");
+          localStorage.setItem(AUTH_PENDING_KEY, "1");
         } catch (e) {}
         auth.signInWithRedirect(provider).catch(function (err) {
+          try {
+            sessionStorage.removeItem(AUTH_PENDING_KEY);
+            localStorage.removeItem(AUTH_PENDING_KEY);
+          } catch (e) {}
           reject(err);
         });
-        // redirect akan pindah halaman; resolve lewat handleRedirectResult
       }
 
       if (isMobile()) {
@@ -88,11 +126,11 @@
         })
         .catch(function (err) {
           var code = (err && err.code) || "";
-          // Popup diblokir / gagal → fallback redirect
+          var msg = (err && err.message) || "";
           if (
             code.indexOf("popup") !== -1 ||
-            code.indexOf("cancelled") !== -1 ||
-            code.indexOf("blocked") !== -1
+            code.indexOf("cancelled-popup") !== -1 ||
+            /blocked|popup/i.test(msg)
           ) {
             doRedirect();
             return;
@@ -103,14 +141,36 @@
   }
 
   async function handleRedirectResult() {
-    const auth = ensureAuth();
+    var auth = ensureAuth();
     if (!auth) return null;
+
+    var pending = false;
     try {
-      const result = await auth.getRedirectResult();
+      pending =
+        sessionStorage.getItem(AUTH_PENDING_KEY) === "1" ||
+        localStorage.getItem(AUTH_PENDING_KEY) === "1";
+    } catch (e) {}
+
+    try {
+      var result = await auth.getRedirectResult();
       try {
-        sessionStorage.removeItem("nailong_auth_pending");
+        sessionStorage.removeItem(AUTH_PENDING_KEY);
+        localStorage.removeItem(AUTH_PENDING_KEY);
       } catch (e) {}
+
       if (result && result.user) return result.user;
+
+      // Kadang getRedirectResult null, tapi currentUser sudah ada
+      if (auth.currentUser) return auth.currentUser;
+
+      // Tunggu auth state (penting di HP)
+      var user = await waitAuthReady(auth);
+      if (user) return user;
+
+      if (pending) {
+        // Masih pending tapi user null → kemungkinan gagal diam-diam
+        console.warn("[Nailong Auth] Redirect selesai tapi user null");
+      }
       return null;
     } catch (err) {
       try {
@@ -118,19 +178,22 @@
           "voxyy_auth_err",
           (err && (err.message || err.code)) || String(err)
         );
+        sessionStorage.removeItem(AUTH_PENDING_KEY);
+        localStorage.removeItem(AUTH_PENDING_KEY);
       } catch (e) {}
+      console.error("[Nailong Auth] redirect error", err);
       throw err;
     }
   }
 
   async function logout() {
-    const auth = ensureAuth();
+    var auth = ensureAuth();
     if (!auth) return;
     await auth.signOut();
   }
 
   function onAuthChange(fn) {
-    const auth = ensureAuth();
+    var auth = ensureAuth();
     if (!auth) {
       fn(null);
       return function () {};
@@ -146,6 +209,9 @@
     logout: logout,
     onAuthChange: onAuthChange,
     handleRedirectResult: handleRedirectResult,
-    getClientId: getClientId
+    getClientId: getClientId,
+    waitAuthReady: function () {
+      return waitAuthReady(ensureAuth());
+    }
   };
 })();

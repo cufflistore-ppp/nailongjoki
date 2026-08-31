@@ -176,7 +176,7 @@ async function buatPesanan() {
   const total = document.getElementById("totalHarga")?.textContent || "Rp 5.000";
   const rand = Math.floor(1000 + Math.random() * 9000);
   const timePart = String(Date.now()).slice(-3);
-  const kode = `VJ-2026-${rand}${timePart}`;
+  const kode = `NJ-2026-${rand}${timePart}`;
 
   let order = {
     kode,
