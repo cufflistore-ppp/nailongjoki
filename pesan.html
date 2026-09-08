@@ -75,27 +75,32 @@
     <!-- ========== FORM STANDAR (Joki + Paket Views/Premium) ========== -->
     <div id="formStandar">
       <div class="form-section">
-        <h4><span class="step">1</span> Data Customer</h4>
-        
-        <label>Nama (Store/JB)</label>
-        <input type="text" id="nama" placeholder="Nama Store kamu" required>
+        <h4><span class="step">1</span> Format Teks Joki</h4>
 
-        <label>Nomor WhatsApp</label>
-        <input type="tel" id="wa" placeholder="08xxxxxxxxxx" required>
+        <!-- Nama & WA disembunyikan untuk joki; tetap ada di DOM untuk kompatibilitas produk digital -->
+        <div id="fieldNamaWa" style="display:none;">
+          <label>Nama (Store/JB)</label>
+          <input type="text" id="nama" placeholder="Nama Store kamu">
+          <label>Nomor WhatsApp</label>
+          <input type="tel" id="wa" placeholder="08xxxxxxxxxx">
+        </div>
 
-        <label>Catatan (Format Teks Push Kontak)</label>
+        <label>Teks Joki (Format Push Kontak)</label>
         <p style="font-size:12px; color:#FFC107; margin:4px 0 8px;">
-          * Tinggal ganti <b>NAMA STORE</b> dan nomor WhatsApp saja. Jangan hapus formatnya.
+          * Tinggal ganti <b>NAMA STORE</b> dan nomor di <b>Wa.me/628…</b> saja. Jangan hapus formatnya.
+          Durasi <b id="hintDurasi">[20 jam]</b> otomatis sesuai paket yang kamu pilih.
         </p>
-        <textarea id="catatan" rows="7">SV BUYER FRESH NAILONG🔥
+        <textarea id="catatan" rows="9">SV BUYER FRESH 𝗡Λ𝗜𝗟𝗢𝗡𝗚🐣
+
+[20 jam]
 
 SV ; NAMA STORE
 Wa.me/628…
 
-#NAMBAH VIEW SW + KONTAK + SELLER + BUYYER + DLL 🌤️🌈</textarea>
+*#NAMBAH VIEW SW + KONTAK + SELLER + BUYYER + DLL 👾🐥*</textarea>
       </div>
 
-      <div class="form-section" id="addonSection">
+      <div class="form-section" id="addonSection" style="display:none;">
         <h4><span class="step">2</span> Include Paket</h4>
         <div class="addon" onclick="toggleAddon(this, 500)">
           <span>+ 20jam</span>
@@ -277,6 +282,9 @@ Wa.me/628…
           } else {
             const addonSection = document.getElementById("addonSection");
             if (addonSection) addonSection.style.display = "none";
+            const fn = document.getElementById("fieldNamaWa");
+            if (fn) fn.style.display = "block";
+            window.isJokiOrder = false;
             const btn = document.getElementById("btnSubmitOrder");
             if (btn) btn.textContent = "Bayar Sekarang";
           }
@@ -284,7 +292,7 @@ Wa.me/628…
           if (typeof updateTotal === "function") updateTotal();
         }
       } else {
-        // Joki biasa
+        // Joki biasa — hanya teks joki, tanpa field nama/WA
         if (typeof loadPaketFromStorage === "function") loadPaketFromStorage();
         const paket = (typeof paketJoki !== "undefined") ? paketJoki.find(p => p.id === id) : null;
         if (paket) {
@@ -295,6 +303,49 @@ Wa.me/628…
           if (typeof updateTotal === "function") updateTotal();
           window.orderPaketName = paket.judul;
           window.orderType = "Joki Kontak";
+          window.isJokiOrder = true;
+
+          // Sembunyikan nama & WA, sembunyikan addon (durasi sudah di paket)
+          const fn = document.getElementById("fieldNamaWa");
+          if (fn) fn.style.display = "none";
+          const addon = document.getElementById("addonSection");
+          if (addon) addon.style.display = "none";
+
+          // Durasi di teks sesuai paket
+          const durasiMap = {
+            1: "20 jam",
+            2: "1 hari",
+            3: "2 hari",
+            4: "3 hari",
+            5: "4 hari",
+            6: "5 hari",
+            7: "permanen"
+          };
+          const label = paket.label || "";
+          let durasi = durasiMap[paket.id] || "20 jam";
+          if (/permanen/i.test(label) || /permanen/i.test(paket.judul || "")) durasi = "permanen";
+          else if (/20\s*jam/i.test(label) || /20\s*jam/i.test(paket.judul || "")) durasi = "20 jam";
+          else if (/1\s*hari/i.test(label)) durasi = "1 hari";
+          else if (/2\s*hari/i.test(label)) durasi = "2 hari";
+          else if (/3\s*hari/i.test(label)) durasi = "3 hari";
+          else if (/4\s*hari/i.test(label)) durasi = "4 hari";
+          else if (/5\s*hari/i.test(label)) durasi = "5 hari";
+
+          window.jokiDurasi = durasi;
+          const hint = document.getElementById("hintDurasi");
+          if (hint) hint.textContent = "[" + durasi + "]";
+
+          const ta = document.getElementById("catatan");
+          if (ta) {
+            ta.value = `SV BUYER FRESH 𝗡Λ𝗜𝗟𝗢𝗡𝗚🐣
+
+[${durasi}]
+
+SV ; NAMA STORE
+Wa.me/628…
+
+*#NAMBAH VIEW SW + KONTAK + SELLER + BUYYER + DLL 👾🐥*`;
+          }
         }
       }
     });
@@ -368,18 +419,21 @@ Wa.me/628…
 ⏰ ${new Date().toLocaleString("id-ID")}
         `.trim();
 
+        // Kompres foto + simpan ke panel admin (Firebase), bukan Telegram
+        let photoData = null;
         try {
-          if (typeof kirimTelegram === "function") {
-            await kirimTelegram(pesan);
-          }
-          if (typeof kirimFotoTelegram === "function" && fotoInput.files[0]) {
-            await kirimFotoTelegram(
-              fotoInput.files[0],
-              `Foto Jasa Post - ${kode}\n${item}\n${nomer}`
-            );
+          if (fotoInput.files[0] && window.VoxyyOrders && typeof window.VoxyyOrders.compressImageFile === "function") {
+            photoData = await window.VoxyyOrders.compressImageFile(fotoInput.files[0], 900, 0.72);
+          } else if (fotoInput.files[0]) {
+            photoData = await new Promise((resolve, reject) => {
+              const r = new FileReader();
+              r.onload = () => resolve(r.result);
+              r.onerror = reject;
+              r.readAsDataURL(fotoInput.files[0]);
+            });
           }
         } catch (e) {
-          console.warn("Gagal kirim Telegram jasa post:", e);
+          console.warn("Gagal kompres foto jasa post:", e);
         }
 
         const order = {
@@ -405,8 +459,29 @@ Wa.me/628…
         }
         localStorage.setItem("voxyy_saved_kode", kode);
 
+        // Simpan khusus jasa post (teks + foto) ke panel admin
+        try {
+          if (window.VoxyyOrders && typeof window.VoxyyOrders.addJaspost === "function") {
+            await window.VoxyyOrders.addJaspost({
+              kode,
+              nama,
+              wa: nomer,
+              nomer,
+              item,
+              paket: order.paket,
+              teks: catatan,
+              catatan,
+              photos: photoData ? [photoData] : [],
+              waktu: order.waktu,
+              createdAt: order.createdAt
+            });
+          }
+        } catch (e) {
+          console.warn("Gagal simpan jaspost ke admin:", e);
+        }
+
         if (typeof window.showSiteModal === "function") {
-          window.showSiteModal("Jasa post gratis sudah dikirim ke admin Telegram.", "success");
+          window.showSiteModal("Jasa post gratis sudah dikirim ke panel admin.", "success");
         }
 
         setTimeout(function() {

@@ -2,54 +2,340 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Admin - Nailong</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #0a0e18; }
+    .admin-header {
+      background: linear-gradient(90deg, #FFC107, #FF8F00);
+      color: #0a0e18;
+      padding: 16px 14px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0.3px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: 0 4px 20px rgba(255,193,7,0.25);
+    }
+    .admin-lock {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+      color: #aaa;
+    }
+    .admin-lock i { font-size: 48px; color: #FFC107; margin-bottom: 16px; }
+    .admin-lock h3 { color: #fff; margin-bottom: 8px; }
+    .admin-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 12px 12px 4px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .admin-tabs::-webkit-scrollbar { display: none; }
+    .admin-tab {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid #1a2740;
+      background: #10182a;
+      color: #aaa;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+    .admin-tab i { margin-right: 5px; }
+    .admin-tab.active {
+      background: linear-gradient(90deg, #FFC107, #FF8F00);
+      color: #0a0e18;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(255,193,7,0.3);
+      transform: translateY(-1px);
+    }
+    .admin-tab .badge-count {
+      display: inline-block;
+      min-width: 18px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: #e53935;
+      color: #fff;
+      font-size: 10px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    .admin-tab.active .badge-count { background: #0a0e18; color: #FFC107; }
+    .admin-panel {
+      display: none;
+      padding: 12px 14px 100px;
+      animation: panelFadeIn 0.35s ease;
+    }
+    .admin-panel.active { display: block; }
+    @keyframes panelFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .order-card, .admin-card {
+      background: #10182a;
+      border: 1px solid #1a2740;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+      animation: cardIn 0.4s ease both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .order-card.paid, .admin-card.paid { border-color: #00aa00; }
+    .order-card.proses, .admin-card.proses { border-color: #4dd0e1; }
+    .order-card.updating {
+      opacity: 0.55;
+      pointer-events: none;
+      transform: scale(0.98);
+    }
+    .order-card.removing {
+      opacity: 0;
+      transform: translateX(-30px) scale(0.95);
+    }
+    .status-btn {
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .status-btn:active { transform: scale(0.95); }
+    .btn-paid { background: #00aa00; color: white; }
+    .btn-proses { background: #4dd0e1; color: #0a0e18; }
+    .btn-unpaid { background: #aa0000; color: white; }
+    .btn-delete { background: #333; color: #ff6666; }
+    .btn-copy {
+      background: #1a2740;
+      color: #FFC107;
+      border: 1px solid #FFC10755;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn-copy.copied { background: #004400; color: #66bb6a; border-color: #66bb6a; }
+    .btn-dl {
+      background: #1a2740;
+      color: #4dd0e1;
+      border: 1px solid #4dd0e155;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .copy-box {
+      background: #0a0e1a;
+      border: 1px dashed #FFC10744;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 12px;
+      color: #ddd;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 10px 0;
+      max-height: 220px;
+      overflow-y: auto;
+      font-family: ui-monospace, monospace;
+      line-height: 1.5;
+    }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .photo-item {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #1a2740;
+      background: #0a0e1a;
+      aspect-ratio: 1;
+    }
+    .photo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+      transition: transform 0.25s ease;
+    }
+    .photo-item img:hover { transform: scale(1.05); }
+    .photo-item .photo-actions {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      padding: 8px;
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+    .empty-state {
+      text-align: center;
+      color: #666;
+      padding: 40px 20px;
+      font-size: 13px;
+    }
+    .empty-state i { font-size: 36px; margin-bottom: 10px; display: block; color: #333; }
+    .admin-section-title {
+      color: #FFC107;
+      font-size: 14px;
+      margin: 4px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .lightbox.show { display: flex; animation: panelFadeIn 0.25s ease; }
+    .lightbox img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 12px;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #FFC107;
+      color: #0a0e18;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .meta-line { font-size: 13px; line-height: 1.65; color: #ccc; }
+    .meta-line b { color: #fff; }
+    .toast-admin {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1a2740;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      z-index: 9998;
+      border: 1px solid #FFC10755;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+      pointer-events: none;
+    }
+    .toast-admin.show { transform: translateX(-50%) translateY(0); }
+  </style>
 </head>
 <body>
   <div class="admin-header">
     <i class="fa-solid fa-user-shield"></i> PANEL ADMIN - NAILONG
   </div>
 
-  <div class="page-content">
-    <h3 style="margin-bottom:12px;color:#FFC107;">Tambah Pesanan Manual</h3>
-    
-    <div class="form-section">
-      <label>Kode Antrian</label>
-      <input type="text" id="admKode" placeholder="NJ-2026-XXXX (kosongkan = auto)">
-      
-      <label>Nama</label>
-      <input type="text" id="admNama" placeholder="Nama customer">
-      
-      <label>WhatsApp</label>
-      <input type="text" id="admWA" placeholder="08xxxxxxxxxx">
-      
-      <label>Total</label>
-      <input type="text" id="admTotal" placeholder="Rp 5.000">
-      
-      <label>Status</label>
-      <select id="admStatus">
-        <option value="Belum Bayar">Belum Bayar</option>
-        <option value="Proses">Proses</option>
-        <option value="Sukses">Sukses</option>
-      </select>
-      
-      <button class="btn-buat" style="margin-top:12px;" onclick="tambahOrderAdmin()">
-        <i class="fa-solid fa-plus"></i> Tambah Pesanan
+  <div id="adminLock" class="admin-lock" style="display:none;">
+    <i class="fa-solid fa-lock"></i>
+    <h3>Akses Terbatas</h3>
+    <p>Panel admin hanya tersedia untuk akun admin resmi.<br>Login dengan Google terlebih dahulu.</p>
+    <button class="btn-buat" style="margin-top:16px;max-width:240px;" onclick="loginAdmin()">
+      <i class="fa-brands fa-google"></i> Login Google
+    </button>
+    <p style="margin-top:16px;font-size:12px;"><a href="index.html" style="color:#FFC107;">← Kembali ke beranda</a></p>
+  </div>
+
+  <div id="adminApp" style="display:none;">
+    <div class="admin-tabs" id="adminTabs">
+      <button class="admin-tab active" data-tab="pesanan" onclick="switchTab('pesanan')">
+        <i class="fa-solid fa-list"></i> Pesanan <span class="badge-count" id="cntPesanan" style="display:none;">0</span>
+      </button>
+      <button class="admin-tab" data-tab="bukti" onclick="switchTab('bukti')">
+        <i class="fa-solid fa-receipt"></i> Bukti TF <span class="badge-count" id="cntBukti" style="display:none;">0</span>
+      </button>
+      <button class="admin-tab" data-tab="jaspost" onclick="switchTab('jaspost')">
+        <i class="fa-solid fa-share-nodes"></i> Jasa Post <span class="badge-count" id="cntJaspost" style="display:none;">0</span>
+      </button>
+      <button class="admin-tab" data-tab="teksjoki" onclick="switchTab('teksjoki')">
+        <i class="fa-solid fa-comment-dots"></i> Teks Joki <span class="badge-count" id="cntTeksjoki" style="display:none;">0</span>
+      </button>
+      <button class="admin-tab" data-tab="laporan" onclick="switchTab('laporan')">
+        <i class="fa-solid fa-flag"></i> Laporan <span class="badge-count" id="cntLaporan" style="display:none;">0</span>
       </button>
     </div>
 
-    <h3 style="margin:24px 0 12px;color:#FFC107;">Daftar Pesanan</h3>
-    <div id="listOrders"></div>
+    <div class="admin-panel active" id="panel-pesanan">
+      <div class="admin-section-title"><i class="fa-solid fa-list"></i> Daftar Pesanan Customer</div>
+      <div id="listOrders"></div>
+    </div>
+
+    <div class="admin-panel" id="panel-bukti">
+      <div class="admin-section-title"><i class="fa-solid fa-receipt"></i> Foto Bukti Transfer</div>
+      <div id="listBukti"></div>
+    </div>
+
+    <div class="admin-panel" id="panel-jaspost">
+      <div class="admin-section-title"><i class="fa-solid fa-share-nodes"></i> Teks + Foto Jasa Post</div>
+      <p style="color:#888;font-size:12px;margin:-4px 0 12px;">Teks bisa disalin, foto bisa diunduh.</p>
+      <div id="listJaspost"></div>
+    </div>
+
+    <div class="admin-panel" id="panel-teksjoki">
+      <div class="admin-section-title"><i class="fa-solid fa-comment-dots"></i> Teks Joki / Format Push</div>
+      <p style="color:#888;font-size:12px;margin:-4px 0 12px;">Catatan format push kontak dari order joki. Klik salin untuk copy.</p>
+      <div id="listTeksjoki"></div>
+    </div>
+
+    <div class="admin-panel" id="panel-laporan">
+      <div class="admin-section-title"><i class="fa-solid fa-flag"></i> Laporan Transaksi</div>
+      <div id="listLaporan"></div>
+    </div>
   </div>
+
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <button class="lightbox-close" type="button" onclick="closeLightbox(event)">&times;</button>
+    <img id="lightboxImg" src="" alt="Preview">
+  </div>
+  <div class="toast-admin" id="toastAdmin"></div>
 
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
   <script src="global-orders.js"></script>
-  <script src="telegram.js"></script>
-  <script src="script.js"></script>
+  <script src="auth.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>

@@ -304,67 +304,35 @@
       const fileInput = document.getElementById("buktiBayar");
       const finalAmt = order.finalAmount || Number(String(order.total).replace(/[^\d]/g, "")) || 0;
 
-      const isJaspost = !!order.isJaspost;
-      const judul = isJaspost
-        ? "🛒 <b>ORDER JASA POST + KONFIRMASI BAYAR</b>"
-        : "🛒 <b>ORDER BARU + KONFIRMASI BAYAR</b>";
-
-      const pesan = `
-${judul}
-
-Customer sudah bayar & konfirmasi.
-
-🆔 Kode Antrian: <code>${order.kode || "-"}</code>
-👤 Nama: <b>${order.nama || "-"}</b>
-📱 WhatsApp: <b>${order.wa || "-"}</b>
-📦 Paket: ${order.paket || "Joki Kontak"}
-💰 Total: <b>${formatRupiah(finalAmt)}</b>
-
-📝 Catatan / Format:
-<pre>${order.catatan || "-"}</pre>
-
-📊 Status: <b>Menunggu Verifikasi</b> (customer konfirmasi sudah bayar)
-⏰ ${new Date().toLocaleString("id-ID")}
-      `.trim();
-
-      if (typeof kirimTelegram === "function") {
-        await kirimTelegram(pesan);
-      }
-
-      // Bukti transfer (opsional)
-      if (fileInput && fileInput.files[0] && typeof kirimFotoTelegram === "function") {
-        await kirimFotoTelegram(
-          fileInput.files[0],
-          `Bukti Bayar - ${order.kode}\nNama: ${order.nama || "-"}\nTotal: ${formatRupiah(finalAmt)}`
-        );
-      }
-
-      // Untuk Jasa Post: kirim foto akun yang disimpan di sessionStorage
-      if (isJaspost && typeof kirimFotoTelegram === "function") {
-        try {
-          const key = "voxyy_jaspost_foto_" + (order.kode || "");
-          const b64 = sessionStorage.getItem(key);
-          if (b64) {
-            // convert base64 → Blob → File
-            const arr = b64.split(",");
-            const mime = (arr[0].match(/:(.*?);/) || [])[1] || "image/jpeg";
-            const bstr = atob(arr[1]);
-            let n = bstr.length;
-            const u8 = new Uint8Array(n);
-            while (n--) u8[n] = bstr.charCodeAt(n);
-            const blob = new Blob([u8], { type: mime });
-            const file = new File([blob], "foto-akun.jpg", { type: mime });
-            await kirimFotoTelegram(
-              file,
-              `Foto Akun - ${order.kode}\n${order.nama || "-"} | ${order.wa || "-"}\n${order.paket || "Jasa Post"}`
-            );
-            // bersihkan
-            sessionStorage.removeItem(key);
-            sessionStorage.removeItem("voxyy_jaspost_pending");
+      // Simpan bukti TF ke panel admin (bukan Telegram)
+      try {
+        if (fileInput && fileInput.files[0] && window.VoxyyOrders) {
+          let photoData = null;
+          if (typeof window.VoxyyOrders.compressImageFile === "function") {
+            photoData = await window.VoxyyOrders.compressImageFile(fileInput.files[0], 900, 0.72);
+          } else {
+            photoData = await new Promise((resolve, reject) => {
+              const r = new FileReader();
+              r.onload = () => resolve(r.result);
+              r.onerror = reject;
+              r.readAsDataURL(fileInput.files[0]);
+            });
           }
-        } catch (e) {
-          console.warn("Gagal kirim foto akun dari session:", e);
+          if (photoData && typeof window.VoxyyOrders.addBukti === "function") {
+            await window.VoxyyOrders.addBukti({
+              kode: order.kode || "",
+              nama: order.nama || "",
+              wa: order.wa || "",
+              total: formatRupiah(finalAmt),
+              paket: order.paket || "",
+              photos: [photoData],
+              waktu: new Date().toLocaleString("id-ID"),
+              createdAt: Date.now()
+            });
+          }
         }
+      } catch (e) {
+        console.warn("Gagal simpan bukti TF ke admin:", e);
       }
 
       // Update status order di localStorage (opsional: tetap Belum Bayar sampai admin ubah)

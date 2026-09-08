@@ -121,6 +121,14 @@
       const harga = "Rp " + Number(item.harga).toLocaleString("id-ID");
 
       el.innerHTML = `
+        <div class="order-header" style="margin-bottom:16px;">
+          <img src="logo.png" class="order-logo" alt="Nailong">
+          <div>
+            <h3>${item.judul}</h3>
+            <p>Nailong · <span class="tag">${item.status || "Digital"}</span> · <span class="tag aman">Aman</span></p>
+          </div>
+        </div>
+
         <div class="badge">PRODUK DIGITAL</div>
         <div class="produk-detail-card" style="margin-top:12px;">
           ${item.img ? `<img src="${item.img}" alt="${item.judul}" class="produk-detail-img" onerror="this.style.display=\'none\'">` : ""}

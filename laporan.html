@@ -32,7 +32,7 @@
       <label>Deskripsi</label>
       <textarea id="deskripsiLaporan" rows="4" placeholder="Jelaskan kendala transaksi secara lengkap..."></textarea>
 
-      <label>Foto Pendukung (opsional, maksimal 3)</label>
+      <label>Foto Pendukung (opsional)</label>
       <input type="file" id="fotoLaporan" accept="image/*" multiple style="margin-bottom:10px;">
 
       <button class="btn-kirim" onclick="kirimLaporan()">
@@ -49,6 +49,10 @@
     <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
   </nav>
 
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="global-orders.js"></script>
   <script src="telegram.js"></script>
   <script src="script.js"></script>
   <script src="auth.js"></script>

@@ -3,14 +3,14 @@
  * authDomain = firebaseapp.com (stabil). Login Google pakai GIS (tanpa redirect).
  */
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyDYvXGHnYkNlkd-puzR4f8AyUtU-wrvyFk",
-  authDomain: "jualbelisewarumah-3de0b.firebaseapp.com",
-  databaseURL: "https://jualbelisewarumah-3de0b-default-rtdb.firebaseio.com",
-  projectId: "jualbelisewarumah-3de0b",
-  storageBucket: "jualbelisewarumah-3de0b.firebasestorage.app",
-  messagingSenderId: "88220462362",
-  appId: "1:88220462362:web:d2f824442c16ac9195d0a3",
-  measurementId: "G-YTCFEX2VX8"
+  apiKey: "AIzaSyDiAAbFjwGp-1YpW9IE_6Hc68pilFsoBrU",
+  authDomain: "nailongjoki.firebaseapp.com",
+  databaseURL: "https://nailongjoki-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "nailongjoki",
+  storageBucket: "nailongjoki.firebasestorage.app",
+  messagingSenderId: "1045237813",
+  appId: "1:1045237813:web:f4fde9fd6992c10762a17c",
+  measurementId: "G-TTT02Y562L"
 };
 
 /**
@@ -301,3 +301,350 @@ window.VoxyyOrders = {
   FIREBASE_CONFIG,
   GOOGLE_WEB_CLIENT_ID
 };
+
+/* ========== BUKTI TF / JASPOST / LAPORAN (Realtime) ========== */
+let _buktiListeners = [];
+let _jaspostListeners = [];
+let _laporanListeners = [];
+let _lastBukti = [];
+let _lastJaspost = [];
+let _lastLaporan = [];
+
+function _snapToList(snap) {
+  const val = snap.val() || {};
+  return Object.keys(val)
+    .map((k) => ({ ...val[k], id: k }))
+    .sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
+}
+
+function _ensureExtraListeners() {
+  if (!isGlobalConfigured()) return false;
+  initFirebase();
+  if (!_db) return false;
+  if (_ensureExtraListeners._done) return true;
+  _ensureExtraListeners._done = true;
+
+  _db.ref("bukti_tf").on(
+    "value",
+    (snap) => {
+      _lastBukti = _snapToList(snap);
+      _buktiListeners.forEach((fn) => {
+        try {
+          fn(_lastBukti);
+        } catch (e) {}
+      });
+    },
+    (err) => console.error("[Voxyy] bukti:", err)
+  );
+
+  _db.ref("jaspost").on(
+    "value",
+    (snap) => {
+      _lastJaspost = _snapToList(snap);
+      _jaspostListeners.forEach((fn) => {
+        try {
+          fn(_lastJaspost);
+        } catch (e) {}
+      });
+    },
+    (err) => console.error("[Voxyy] jaspost:", err)
+  );
+
+  _db.ref("laporan").on(
+    "value",
+    (snap) => {
+      _lastLaporan = _snapToList(snap);
+      _laporanListeners.forEach((fn) => {
+        try {
+          fn(_lastLaporan);
+        } catch (e) {}
+      });
+    },
+    (err) => console.error("[Voxyy] laporan:", err)
+  );
+
+  return true;
+}
+
+function onBuktiChange(fn) {
+  if (typeof fn === "function") _buktiListeners.push(fn);
+  _ensureExtraListeners();
+  if (_lastBukti.length) {
+    try {
+      fn(_lastBukti);
+    } catch (e) {}
+  }
+}
+function onJaspostChange(fn) {
+  if (typeof fn === "function") _jaspostListeners.push(fn);
+  _ensureExtraListeners();
+  if (_lastJaspost.length) {
+    try {
+      fn(_lastJaspost);
+    } catch (e) {}
+  }
+}
+function onLaporanChange(fn) {
+  if (typeof fn === "function") _laporanListeners.push(fn);
+  _ensureExtraListeners();
+  if (_lastLaporan.length) {
+    try {
+      fn(_lastLaporan);
+    } catch (e) {}
+  }
+}
+
+async function getBukti() {
+  _ensureExtraListeners();
+  if (_lastBukti.length) return _lastBukti;
+  if (!_db) return [];
+  try {
+    const snap = await _db.ref("bukti_tf").once("value");
+    _lastBukti = _snapToList(snap);
+    return _lastBukti;
+  } catch (e) {
+    return [];
+  }
+}
+async function getJaspost() {
+  _ensureExtraListeners();
+  if (_lastJaspost.length) return _lastJaspost;
+  if (!_db) return [];
+  try {
+    const snap = await _db.ref("jaspost").once("value");
+    _lastJaspost = _snapToList(snap);
+    return _lastJaspost;
+  } catch (e) {
+    return [];
+  }
+}
+async function getLaporan() {
+  _ensureExtraListeners();
+  if (_lastLaporan.length) return _lastLaporan;
+  if (!_db) return [];
+  try {
+    const snap = await _db.ref("laporan").once("value");
+    _lastLaporan = _snapToList(snap);
+    return _lastLaporan;
+  } catch (e) {
+    return [];
+  }
+}
+
+/**
+ * Kompres gambar ke dataURL (JPEG) agar RTDB tidak terlalu besar.
+ * maxW default 900px, quality 0.7
+ */
+function compressImageFile(file, maxW, quality) {
+  maxW = maxW || 900;
+  quality = quality || 0.7;
+  return new Promise((resolve, reject) => {
+    if (!file) {
+      resolve(null);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      const img = new Image();
+      img.onload = function () {
+        let w = img.width;
+        let h = img.height;
+        if (w > maxW) {
+          h = Math.round((h * maxW) / w);
+          w = maxW;
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        try {
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        } catch (e) {
+          resolve(ev.target.result);
+        }
+      };
+      img.onerror = function () {
+        resolve(ev.target.result);
+      };
+      img.src = ev.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function addBukti(data) {
+  if (!data) return { ok: false };
+  const payload = {
+    kode: data.kode || "",
+    nama: data.nama || "",
+    wa: data.wa || "",
+    total: data.total || "",
+    paket: data.paket || "",
+    photos: data.photos || (data.photo ? [data.photo] : []),
+    waktu: data.waktu || new Date().toLocaleString("id-ID"),
+    createdAt: data.createdAt || Date.now()
+  };
+  if (!isGlobalConfigured()) {
+    // local fallback
+    try {
+      const arr = JSON.parse(localStorage.getItem("voxyy_bukti") || "[]");
+      arr.unshift({ ...payload, id: "local_" + Date.now() });
+      localStorage.setItem("voxyy_bukti", JSON.stringify(arr));
+    } catch (e) {}
+    return { ok: true, mode: "local" };
+  }
+  initFirebase();
+  _ensureExtraListeners();
+  if (!_db) return { ok: false };
+  try {
+    const key = kodeKey(payload.kode) + "_" + Date.now();
+    await _db.ref("bukti_tf/" + key).set(payload);
+    return { ok: true, mode: "global", id: key };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+}
+
+async function addJaspost(data) {
+  if (!data) return { ok: false };
+  const payload = {
+    kode: data.kode || "",
+    nama: data.nama || "",
+    wa: data.wa || data.nomer || "",
+    nomer: data.nomer || data.wa || "",
+    item: data.item || "",
+    paket: data.paket || "Jasa Post Free by Nailong",
+    teks: data.teks || data.catatan || "",
+    catatan: data.catatan || data.teks || "",
+    photos: data.photos || (data.photo ? [data.photo] : []),
+    waktu: data.waktu || new Date().toLocaleString("id-ID"),
+    createdAt: data.createdAt || Date.now()
+  };
+  if (!isGlobalConfigured()) {
+    try {
+      const arr = JSON.parse(localStorage.getItem("voxyy_jaspost") || "[]");
+      arr.unshift({ ...payload, id: "local_" + Date.now() });
+      localStorage.setItem("voxyy_jaspost", JSON.stringify(arr));
+    } catch (e) {}
+    return { ok: true, mode: "local" };
+  }
+  initFirebase();
+  _ensureExtraListeners();
+  if (!_db) return { ok: false };
+  try {
+    const key = kodeKey(payload.kode) || "JP_" + Date.now();
+    await _db.ref("jaspost/" + key).set(payload);
+    return { ok: true, mode: "global", id: key };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+}
+
+async function addLaporan(data) {
+  if (!data) return { ok: false };
+  const payload = {
+    noPesanan: data.noPesanan || "",
+    judul: data.judul || "",
+    deskripsi: data.deskripsi || "",
+    photos: data.photos || [],
+    waktu: data.waktu || new Date().toLocaleString("id-ID"),
+    createdAt: data.createdAt || Date.now()
+  };
+  if (!isGlobalConfigured()) {
+    try {
+      const arr = JSON.parse(localStorage.getItem("voxyy_laporan") || "[]");
+      arr.unshift({ ...payload, id: "local_" + Date.now() });
+      localStorage.setItem("voxyy_laporan", JSON.stringify(arr));
+    } catch (e) {}
+    return { ok: true, mode: "local" };
+  }
+  initFirebase();
+  _ensureExtraListeners();
+  if (!_db) return { ok: false };
+  try {
+    const ref = _db.ref("laporan").push();
+    await ref.set(payload);
+    return { ok: true, mode: "global", id: ref.key };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+}
+
+async function deleteBukti(id) {
+  if (!id) return { ok: false };
+  if (!isGlobalConfigured()) {
+    try {
+      let arr = JSON.parse(localStorage.getItem("voxyy_bukti") || "[]");
+      arr = arr.filter((x) => x.id !== id && x.kode !== id);
+      localStorage.setItem("voxyy_bukti", JSON.stringify(arr));
+    } catch (e) {}
+    return { ok: true, mode: "local" };
+  }
+  initFirebase();
+  if (!_db) return { ok: false };
+  try {
+    await _db.ref("bukti_tf/" + id).remove();
+    return { ok: true, mode: "global" };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+}
+
+async function deleteJaspost(id) {
+  if (!id) return { ok: false };
+  if (!isGlobalConfigured()) {
+    try {
+      let arr = JSON.parse(localStorage.getItem("voxyy_jaspost") || "[]");
+      arr = arr.filter((x) => x.id !== id && x.kode !== id);
+      localStorage.setItem("voxyy_jaspost", JSON.stringify(arr));
+    } catch (e) {}
+    return { ok: true, mode: "local" };
+  }
+  initFirebase();
+  if (!_db) return { ok: false };
+  try {
+    await _db.ref("jaspost/" + id).remove();
+    return { ok: true, mode: "global" };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+}
+
+async function deleteLaporan(id) {
+  if (!id) return { ok: false };
+  if (!isGlobalConfigured()) {
+    try {
+      let arr = JSON.parse(localStorage.getItem("voxyy_laporan") || "[]");
+      arr = arr.filter((x) => x.id !== id);
+      localStorage.setItem("voxyy_laporan", JSON.stringify(arr));
+    } catch (e) {}
+    return { ok: true, mode: "local" };
+  }
+  initFirebase();
+  if (!_db) return { ok: false };
+  try {
+    await _db.ref("laporan/" + id).remove();
+    return { ok: true, mode: "global" };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+}
+
+// expose extra API
+Object.assign(window.VoxyyOrders, {
+  compressImageFile,
+  addBukti,
+  addJaspost,
+  addLaporan,
+  getBukti,
+  getJaspost,
+  getLaporan,
+  onBuktiChange,
+  onJaspostChange,
+  onLaporanChange,
+  deleteBukti,
+  deleteJaspost,
+  deleteLaporan
+});

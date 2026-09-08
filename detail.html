@@ -69,10 +69,19 @@
       const formatRp = (n) => "Rp " + Number(n).toLocaleString("id-ID");
 
       el.innerHTML = `
+        <div class="order-header" style="margin-bottom:16px;">
+          <img src="logo.png" class="order-logo" alt="Nailong">
+          <div>
+            <h3>${paket.judul}</h3>
+            <p>Nailong · <span class="tag">${paket.label || "Joki"}</span> · <span class="tag aman">Aman</span></p>
+          </div>
+        </div>
+
         <div class="badge">JASA JOKI KONTAK</div>
+
         <div class="paket-card" style="margin-top:12px;">
           <div class="paket-label">${paket.label}</div>
-          <h3 style="font-size:22px;">${paket.judul}</h3>
+          <h3 style="font-size:20px;">${paket.judul}</h3>
           <p>${paket.deskripsi}</p>
           <ul style="margin:14px 0;">
             ${paket.fitur.map(f => `<li><i class="fa-solid fa-circle-check"></i> ${f}</li>`).join("")}
@@ -86,7 +95,7 @@
         <div class="info-box" style="margin:16px 0 0;">
           <h4>Cara order</h4>
           <p>1. Klik <b>Pesan Sekarang</b><br>
-          2. Isi nama store & nomor WhatsApp<br>
+          2. Isi teks joki (ganti NAMA STORE & nomor WA di format)<br>
           3. Bayar via QRIS<br>
           4. Konfirmasi pembayaran<br>
           5. Pantau status di Antrian</p>

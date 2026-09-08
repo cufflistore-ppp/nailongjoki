@@ -149,28 +149,76 @@ async function buatPesanan() {
     if (!ok) return;
   }
 
-  const nama = document.getElementById("nama")?.value?.trim() || "";
-  const wa = document.getElementById("wa")?.value?.trim() || "";
   let catatan = document.getElementById("catatan")?.value || "";
+  const isJoki = !!window.isJokiOrder || (window.orderType === "Joki Kontak");
 
-  // Validasi field wajib untuk Joki Kontak
-  if (!nama || !wa) {
-    showSiteModal("Lengkapi field wajib: Nama (Store/JB) dan Nomor WhatsApp.", "warning");
-    return;
-  }
-  if (wa.replace(/\D/g, "").length < 10) {
-    showSiteModal("Nomor WhatsApp tidak valid. Masukkan minimal 10 digit.", "warning");
-    return;
+  // Pastikan durasi di teks sesuai paket (jika masih placeholder lama)
+  if (isJoki && window.jokiDurasi) {
+    catatan = catatan.replace(/\[\s*\d+\s*(jam|hari)\s*\]/gi, "[" + window.jokiDurasi + "]");
+    catatan = catatan.replace(/\[\s*permanen\s*\]/gi, "[" + window.jokiDurasi + "]");
+    if (!/\[.*?\]/.test(catatan)) {
+      // sisipkan setelah baris pertama jika belum ada
+      const lines = catatan.split("\n");
+      if (lines.length >= 1) {
+        lines.splice(1, 0, "", "[" + window.jokiDurasi + "]");
+        catatan = lines.join("\n");
+      }
+    }
   }
 
-  // Auto replace placeholder
-  if (catatan.includes("NAMA STORE")) {
-    catatan = catatan.replace(/NAMA STORE/g, nama);
+  // Ambil nama & WA dari teks joki (customer isi di format)
+  function parseNamaFromTeks(t) {
+    const m = String(t).match(/SV\s*;\s*(.+)/i);
+    if (m) {
+      const n = m[1].trim().split("\n")[0].trim();
+      if (n && !/^NAMA\s*STORE$/i.test(n)) return n;
+    }
+    return "";
   }
-  if (catatan.includes("628…") || catatan.includes("628...")) {
-    let nomor = wa.replace(/^0/, "62").replace(/\D/g, "");
-    if (nomor.length < 10) nomor = "628xxxxxxxxxx";
-    catatan = catatan.replace(/628…|628\.\.\./g, nomor);
+  function parseWaFromTeks(t) {
+    const m = String(t).match(/Wa\.me\/([0-9]+)/i) || String(t).match(/wa\.me\/([0-9]+)/i);
+    if (m && m[1] && m[1].length >= 9) return m[1];
+    const m2 = String(t).match(/(?:\+?62|0)8[0-9]{8,13}/);
+    if (m2) return m2[0].replace(/\D/g, "");
+    return "";
+  }
+
+  let nama = document.getElementById("nama")?.value?.trim() || "";
+  let wa = document.getElementById("wa")?.value?.trim() || "";
+
+  if (isJoki) {
+    // Joki: hanya teks wajib, nama/WA diambil dari format teks
+    if (!catatan.trim() || /NAMA\s*STORE/i.test(catatan)) {
+      // masih boleh lanjut, tapi warning jika placeholder belum diganti
+      if (!catatan.trim()) {
+        showSiteModal("Isi teks joki terlebih dahulu.", "warning");
+        return;
+      }
+    }
+    const parsedNama = parseNamaFromTeks(catatan);
+    const parsedWa = parseWaFromTeks(catatan);
+    if (parsedNama) nama = parsedNama;
+    if (parsedWa) wa = parsedWa;
+    if (!nama) nama = "Customer";
+    if (!wa) wa = "-";
+  } else {
+    // Produk digital / non-joki: tetap wajib nama & WA jika field tampil
+    if (!nama || !wa) {
+      showSiteModal("Lengkapi field wajib: Nama (Store/JB) dan Nomor WhatsApp.", "warning");
+      return;
+    }
+    if (wa.replace(/\D/g, "").length < 10) {
+      showSiteModal("Nomor WhatsApp tidak valid. Masukkan minimal 10 digit.", "warning");
+      return;
+    }
+    if (catatan.includes("NAMA STORE")) {
+      catatan = catatan.replace(/NAMA STORE/g, nama);
+    }
+    if (catatan.includes("628…") || catatan.includes("628...")) {
+      let nomor = wa.replace(/^0/, "62").replace(/\D/g, "");
+      if (nomor.length < 10) nomor = "628xxxxxxxxxx";
+      catatan = catatan.replace(/628…|628\.\.\./g, nomor);
+    }
   }
 
   const total = document.getElementById("totalHarga")?.textContent || "Rp 5.000";
@@ -189,11 +237,10 @@ async function buatPesanan() {
     waktu: new Date().toLocaleString("id-ID")
   };
 
-  // Simpan waktu order
   order.createdAt = Date.now();
   order.finalAmount = Number(String(total).replace(/[^\d]/g, "")) || 0;
+  if (window.jokiDurasi) order.durasi = window.jokiDurasi;
 
-  // Simpan ke global (jika setup) + localStorage
   if (window.VoxyyOrders && typeof window.VoxyyOrders.addOrder === "function") {
     await window.VoxyyOrders.addOrder(order);
   } else {
@@ -203,31 +250,70 @@ async function buatPesanan() {
   }
   if (kode) localStorage.setItem("voxyy_saved_kode", kode);
 
-  // Reset form fields
   const namaEl = document.getElementById("nama");
   const waEl = document.getElementById("wa");
   if (namaEl) namaEl.value = "";
   if (waEl) waEl.value = "";
 
-  // Redirect ke halaman pembayaran QRIS (Telegram dikirim saat customer klik "Saya Sudah Bayar")
   window.location.href = `pembayaran.html?kode=${encodeURIComponent(kode)}&total=${encodeURIComponent(total)}`;
 }
 
 // ========== LAPORAN ==========
 async function kirimLaporan() {
-  const noPesanan = document.getElementById("noPesanan")?.value || "-";
-  const judul = document.getElementById("judulLaporan")?.value || "-";
-  const deskripsi = document.getElementById("deskripsiLaporan")?.value || "-";
+  const noPesanan = document.getElementById("noPesanan")?.value?.trim() || "-";
+  const judul = document.getElementById("judulLaporan")?.value?.trim() || "-";
+  const deskripsi = document.getElementById("deskripsiLaporan")?.value?.trim() || "-";
   const fileInput = document.getElementById("fotoLaporan");
 
-  const data = { noPesanan, judul, deskripsi };
-  const files = fileInput ? Array.from(fileInput.files).slice(0, 3) : [];
-
-  if (typeof kirimLaporanKeTelegram === "function") {
-    await kirimLaporanKeTelegram(data, files);
+  if (!judul || judul === "-" || !deskripsi || deskripsi === "-") {
+    showSiteModal("Isi judul dan deskripsi laporan terlebih dahulu.", "warning");
+    return;
   }
 
-  showSiteModal("Laporan berhasil dikirim ke admin via Telegram!", "success");
+  const files = fileInput ? Array.from(fileInput.files).slice(0, 3) : [];
+  const photos = [];
+  for (const f of files) {
+    try {
+      if (window.VoxyyOrders && typeof window.VoxyyOrders.compressImageFile === "function") {
+        const d = await window.VoxyyOrders.compressImageFile(f, 900, 0.72);
+        if (d) photos.push(d);
+      } else {
+        const d = await new Promise((resolve, reject) => {
+          const r = new FileReader();
+          r.onload = () => resolve(r.result);
+          r.onerror = reject;
+          r.readAsDataURL(f);
+        });
+        if (d) photos.push(d);
+      }
+    } catch (e) {
+      console.warn("Gagal baca foto laporan:", e);
+    }
+  }
+
+  try {
+    if (window.VoxyyOrders && typeof window.VoxyyOrders.addLaporan === "function") {
+      await window.VoxyyOrders.addLaporan({
+        noPesanan,
+        judul,
+        deskripsi,
+        photos,
+        waktu: new Date().toLocaleString("id-ID"),
+        createdAt: Date.now()
+      });
+    }
+  } catch (e) {
+    console.warn("Gagal simpan laporan:", e);
+  }
+
+  showSiteModal("Laporan berhasil dikirim ke panel admin!", "success");
+  // reset form
+  try {
+    const a = document.getElementById("noPesanan"); if (a) a.value = "";
+    const b = document.getElementById("judulLaporan"); if (b) b.value = "";
+    const c = document.getElementById("deskripsiLaporan"); if (c) c.value = "";
+    const d = document.getElementById("fotoLaporan"); if (d) d.value = "";
+  } catch (e) {}
 }
 
 // ========== Custom Animated Modal ==========
