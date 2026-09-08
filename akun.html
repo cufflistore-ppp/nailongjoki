@@ -2,37 +2,279 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Akun - Nailong</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .akun-card {
-      background: #10182a;
-      border: 1px solid #1a2740;
-      border-radius: 16px;
-      padding: 24px 18px;
-      text-align: center;
+    .akun-page {
+      padding: 12px 14px 110px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .akun-page-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      margin: 4px 0 4px;
+      letter-spacing: 0.3px;
+    }
+    .akun-page-sub {
+      font-size: 13px;
+      color: #8aa0b8;
       margin-bottom: 16px;
     }
-    .akun-avatar {
+
+    /* Profile card */
+    .profil-card {
+      position: relative;
+      background: linear-gradient(135deg, #121a2e 0%, #0d1424 100%);
+      border: 1px solid #FFC10733;
+      border-radius: 18px;
+      padding: 18px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+      overflow: hidden;
+      animation: fadeUp 0.4s ease;
+    }
+    .profil-card::before {
+      content: "";
+      position: absolute;
+      top: -40%;
+      right: -20%;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(255,193,7,0.12), transparent 70%);
+      pointer-events: none;
+    }
+    .profil-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .profil-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2.5px solid #FFC107;
+      background: #0a0e18;
+      display: block;
+    }
+    .profil-avatar.ph {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 700;
+      color: #FFC107;
+      background: linear-gradient(145deg, #1a2740, #0a0e18);
+    }
+    .profil-badge-dot {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #22c55e;
+      border: 2px solid #0d1424;
+    }
+    .profil-info { flex: 1; min-width: 0; }
+    .profil-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .profil-email {
+      font-size: 12px;
+      color: #FFC107;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .profil-meta {
+      font-size: 11px;
+      color: #6b7c93;
+      line-height: 1.4;
+    }
+    .profil-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #0d3d1a;
+      color: #66bb6a;
+      margin-top: 6px;
+    }
+    .profil-status-pill.off {
+      background: #3d2a0d;
+      color: #ffb74d;
+    }
+
+    /* Stats */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+      animation: fadeUp 0.45s ease;
+    }
+    .stat-box {
+      background: #10182a;
+      border: 1px solid #1a2740;
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: #FFC107;
+      line-height: 1.2;
+    }
+    .stat-label {
+      font-size: 11px;
+      color: #8aa0b8;
+      margin-top: 4px;
+    }
+
+    /* Section */
+    .menu-section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #FFC107;
+      margin: 6px 0 10px;
+    }
+    .menu-section-title::before {
+      content: "";
+      width: 3px;
+      height: 14px;
+      border-radius: 2px;
+      background: #FFC107;
+    }
+
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+      animation: fadeUp 0.5s ease;
+    }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #10182a;
+      border: 1px solid #1a2740;
+      border-radius: 14px;
+      padding: 13px 14px;
+      text-decoration: none;
+      color: #e8eef7;
+      transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+      cursor: pointer;
+    }
+    .menu-item:active {
+      transform: scale(0.98);
+      border-color: #FFC10755;
+      background: #141e33;
+    }
+    .menu-item .mi-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      background: #1a2740;
+      color: #FFC107;
+    }
+    .menu-item.admin .mi-icon {
+      background: linear-gradient(135deg, #FFC10733, #FF8F0033);
+      color: #FFC107;
+    }
+    .menu-item .mi-text {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .menu-item .mi-arrow {
+      color: #4a5a70;
+      font-size: 12px;
+    }
+    .menu-item.admin {
+      border-color: #FFC10744;
+    }
+
+    .btn-logout {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid #3d2222;
+      color: #ef9a9a;
+      border-radius: 14px;
+      padding: 13px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.2s ease;
+    }
+    .btn-logout:active { background: #2a1515; }
+
+    /* Guest / login state */
+    .guest-card {
+      background: linear-gradient(160deg, #121a2e, #0a0e18);
+      border: 1px solid #1a2740;
+      border-radius: 18px;
+      padding: 28px 20px;
+      text-align: center;
+      margin-bottom: 16px;
+      animation: fadeUp 0.4s ease;
+    }
+    .guest-icon {
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #FFC107;
-      margin-bottom: 12px;
-      background: #0a0e18;
-    }
-    .akun-avatar.placeholder {
-      display: inline-flex;
+      margin: 0 auto 14px;
+      display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      color: #8aa0b8;
+      background: linear-gradient(145deg, #1a2740, #0a0e18);
+      border: 2px solid #FFC10755;
+      color: #FFC107;
+      font-size: 30px;
     }
-    .akun-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-    .akun-email { font-size: 13px; color: #8aa0b8; margin-bottom: 16px; word-break: break-all; }
+    .guest-card h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .guest-card p {
+      font-size: 13px;
+      color: #8aa0b8;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
     .btn-google {
       width: 100%;
       display: flex;
@@ -41,93 +283,135 @@
       gap: 12px;
       background: #fff;
       color: #3c4043;
-      border: 1px solid #dadce0;
+      border: none;
       border-radius: 12px;
-      padding: 12px 16px;
+      padding: 13px 16px;
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-    .btn-google:active { background: #f7f8f8; }
     .btn-google:disabled { opacity: 0.65; cursor: wait; }
-    .btn-google .g-icon {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-    }
-    .btn-logout {
-      width: 100%;
-      background: transparent;
-      border: 1px solid #442222;
-      color: #ef9a9a;
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .akun-hint {
+    .btn-google .g-icon { width: 20px; height: 20px; flex-shrink: 0; }
+
+    .login-hint {
       font-size: 12px;
       color: #8aa0b8;
       line-height: 1.5;
-      margin-top: 14px;
-      text-align: left;
-      background: #0a0e18;
-      border-radius: 12px;
-      padding: 12px;
+      background: #10182a;
       border: 1px solid #1a2740;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 12px;
+      text-align: left;
     }
-    .akun-status {
-      display: inline-block;
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      margin-bottom: 12px;
-      font-weight: 600;
+    .login-hint i { color: #FFC107; margin-right: 6px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .akun-status.on { background: #0d3d1a; color: #66bb6a; }
-    .akun-status.off { background: #3d2a0d; color: #ffb74d; }
+
+    #viewLoggedIn, #viewGuest { display: none; }
   </style>
 </head>
 <body>
   <header class="header">
     <div class="brand">
-      <img src="logo.png" class="logo" alt="Nailong">
+      <img src="logo.png" alt="Nailong" class="logo">
       <div>
         <h1>𝗡Λ𝗜𝗟𝗢𝗡𝗚々𝗝𝗢𝗞𝗜 𝗘𝗟𝗜𝗧𝗘 <i class="fa-solid fa-circle-check verified"></i></h1>
-        <p>Joki Kontak & Produk Digital</p>
+        <p>Akun & Profil</p>
       </div>
     </div>
   </header>
 
-  <div class="page-content">
-    <h2 style="margin-bottom:6px;">AKUN</h2>
-    <p style="color:#aaa;font-size:13px;margin-bottom:16px;">Masuk hanya dengan akun Google.</p>
+  <div class="top-notif" id="topNotif" style="display:none;"></div>
 
-    <div class="akun-card" id="akunCard">
-      <div class="akun-status off" id="akunStatus">Memuat...</div>
-      <div id="akunBody">
-        <div class="akun-avatar placeholder"><i class="fa-solid fa-user"></i></div>
-        <div class="akun-name">Belum masuk</div>
-        <div class="akun-email">Login Google untuk menyimpan profil di perangkat ini.</div>
+  <div class="akun-page">
+    <div class="akun-page-title">Akun</div>
+    <div class="akun-page-sub" id="pageSub">Kelola profil dan akses layanan Nailong.</div>
+
+    <!-- ===== GUEST ===== -->
+    <div id="viewGuest">
+      <div class="guest-card">
+        <div class="guest-icon"><i class="fa-solid fa-user-lock"></i></div>
+        <h3>Masuk ke Nailong</h3>
+        <p>Login Google untuk order, pantau antrian, dan akses fitur akun.</p>
+        <button type="button" class="btn-google" id="btnGoogle">
+          <svg class="g-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          Masuk dengan Google
+        </button>
       </div>
-      <button type="button" class="btn-google" id="btnGoogle">
-        <svg class="g-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-        Masuk dengan Google
-      </button>
-      <button type="button" class="btn-logout" id="btnLogout" style="display:none;">
-        <i class="fa-solid fa-right-from-bracket"></i> Keluar
-      </button>
-      <div class="akun-hint" id="akunHint">
-        <b>⚠️ Wajib Login</b><br>
-        Masuk dengan akun Google untuk order di <b>Nailong Joki Elite</b>. Tanpa login, pesanan tidak bisa diproses dan status antrian tidak bisa dipantau.
+      <div class="login-hint">
+        <i class="fa-solid fa-circle-info"></i>
+        Tanpa login, pesanan tidak bisa diproses dan status antrian tidak bisa dipantau.
       </div>
+    </div>
+
+    <!-- ===== LOGGED IN ===== -->
+    <div id="viewLoggedIn">
+      <div class="profil-card">
+        <div class="profil-avatar-wrap">
+          <div id="profilAvatar" class="profil-avatar ph">?</div>
+          <span class="profil-badge-dot" title="Online"></span>
+        </div>
+        <div class="profil-info">
+          <div class="profil-name" id="profilName">—</div>
+          <div class="profil-email" id="profilEmail">—</div>
+          <div class="profil-meta" id="profilMeta">Terhubung dengan Google</div>
+          <div class="profil-status-pill" id="profilPill"><i class="fa-solid fa-check"></i> Aktif</div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-num" id="statOrder">0</div>
+          <div class="stat-label">Order aktif</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="statDone">0</div>
+          <div class="stat-label">Selesai (perangkat)</div>
+        </div>
+      </div>
+
+      <div class="menu-section-title">Menu Akun</div>
+      <div class="menu-list">
+        <a class="menu-item" href="antrian.html">
+          <span class="mi-icon"><i class="fa-solid fa-clock"></i></span>
+          <span class="mi-text">Antrian saya</span>
+          <span class="mi-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+        </a>
+        <a class="menu-item" href="laporan.html">
+          <span class="mi-icon"><i class="fa-solid fa-flag"></i></span>
+          <span class="mi-text">Laporan transaksi</span>
+          <span class="mi-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+        </a>
+        <a class="menu-item" href="tentang.html">
+          <span class="mi-icon"><i class="fa-solid fa-circle-info"></i></span>
+          <span class="mi-text">Tentang Nailong</span>
+          <span class="mi-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+        </a>
+        <a class="menu-item" href="https://wa.me/6285182549509?text=Halo%20admin%20Nailong" target="_blank" rel="noopener">
+          <span class="mi-icon"><i class="fa-brands fa-whatsapp"></i></span>
+          <span class="mi-text">Hubungi Admin</span>
+          <span class="mi-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+        </a>
+        <!-- Admin only -->
+        <a class="menu-item admin" id="menuAdmin" href="admin.html" style="display:none;">
+          <span class="mi-icon"><i class="fa-solid fa-user-shield"></i></span>
+          <span class="mi-text">Panel Admin</span>
+          <span class="mi-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+        </a>
+      </div>
+
+      <button type="button" class="btn-logout" id="btnLogout">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </button>
     </div>
   </div>
 
-        <nav class="bottom-nav nav-5">
+  <nav class="bottom-nav nav-5">
     <a href="joki.html" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>Joki</span></a>
     <a href="digital.html" class="nav-item"><i class="fa-solid fa-box"></i><span>Produk Digital</span></a>
     <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
@@ -135,70 +419,17 @@
     <a href="tentang.html" class="nav-item"><i class="fa-solid fa-circle-info"></i><span>Tentang</span></a>
   </nav>
 
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
   <script src="global-orders.js"></script>
+  <script src="script.js"></script>
   <script src="auth.js"></script>
   <script src="auth-guard.js"></script>
+  <script src="account-widget.js"></script>
   <script>
-    function renderUser(user) {
-      const status = document.getElementById("akunStatus");
-      const body = document.getElementById("akunBody");
-      const btnG = document.getElementById("btnGoogle");
-      const btnL = document.getElementById("btnLogout");
-      const configured = window.VoxyyOrders && window.VoxyyOrders.isGlobalConfigured();
-
-      if (!configured) {
-        status.className = "akun-status off";
-        status.textContent = "Firebase belum di-setup";
-        body.innerHTML =
-          '<div class="akun-avatar placeholder"><i class="fa-solid fa-gear"></i></div>' +
-          '<div class="akun-name">Setup diperlukan</div>' +
-          '<div class="akun-email">Isi FIREBASE_CONFIG di global-orders.js + aktifkan Google Sign-In.</div>';
-        btnG.disabled = true;
-        btnG.style.display = "flex";
-        btnL.style.display = "none";
-        return;
-      }
-
-      if (user) {
-        status.className = "akun-status on";
-        status.textContent = "Sudah masuk";
-        const photo = user.photoURL
-          ? '<img class="akun-avatar" src="' + user.photoURL + '" alt="foto">'
-          : '<div class="akun-avatar placeholder"><i class="fa-solid fa-user"></i></div>';
-        body.innerHTML =
-          photo +
-          '<div class="akun-name">' + escapeHtml(user.displayName || "Pengguna") + "</div>" +
-          '<div class="akun-email">' + escapeHtml(user.email || "-") + "</div>";
-        btnG.style.display = "none";
-        btnL.style.display = "block";
-
-        // Setelah login dari flow order → langsung kembali ke pembayaran/order
-        try {
-          const ret = sessionStorage.getItem("nailong_return_after_login");
-          if (ret) {
-            sessionStorage.removeItem("nailong_return_after_login");
-            status.textContent = "Login berhasil · mengalihkan…";
-            setTimeout(function () {
-              window.location.href = ret;
-            }, 400);
-          }
-        } catch (e) {}
-      } else {
-        status.className = "akun-status off";
-        status.textContent = "Belum masuk";
-        body.innerHTML =
-          '<div class="akun-avatar placeholder"><i class="fa-solid fa-user"></i></div>' +
-          '<div class="akun-name">Belum masuk</div>' +
-          '<div class="akun-email">Masuk dengan akun Google saja.</div>';
-        btnG.style.display = "flex";
-        btnG.disabled = false;
-        btnL.style.display = "none";
-      }
-    }
+    const ADMIN_EMAIL = "raffliraffli649@gmail.com";
+    const G_ICON = `<svg class="g-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>`;
 
     function escapeHtml(s) {
       return String(s || "")
@@ -208,20 +439,82 @@
         .replace(/"/g, "&quot;");
     }
 
-    const G_ICON = `<svg class="g-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>`;
+    function isAdminEmail(email) {
+      return String(email || "").trim().toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    }
+
+    function showGuest() {
+      document.getElementById("viewGuest").style.display = "block";
+      document.getElementById("viewLoggedIn").style.display = "none";
+      document.getElementById("pageSub").textContent = "Masuk hanya dengan akun Google.";
+    }
+
+    function showLoggedIn(user) {
+      document.getElementById("viewGuest").style.display = "none";
+      document.getElementById("viewLoggedIn").style.display = "block";
+      document.getElementById("pageSub").textContent = "Kelola profil dan akses layanan Nailong.";
+
+      const name = user.displayName || "Pengguna";
+      const email = user.email || "-";
+      const photo = user.photoURL || "";
+
+      document.getElementById("profilName").textContent = name;
+      document.getElementById("profilEmail").textContent = email;
+      document.getElementById("profilMeta").textContent = "Login Google · Nailong Joki Elite";
+
+      const av = document.getElementById("profilAvatar");
+      if (photo) {
+        av.outerHTML = '<img id="profilAvatar" class="profil-avatar" src="' + escapeHtml(photo) + '" alt="foto" referrerpolicy="no-referrer">';
+      } else {
+        const initial = (name.charAt(0) || "?").toUpperCase();
+        av.className = "profil-avatar ph";
+        av.textContent = initial;
+      }
+
+      // Admin menu only for admin email
+      const menuAdmin = document.getElementById("menuAdmin");
+      if (menuAdmin) {
+        menuAdmin.style.display = isAdminEmail(email) ? "flex" : "none";
+      }
+
+      loadStats();
+    }
+
+    async function loadStats() {
+      let active = 0;
+      let done = 0;
+      try {
+        const saved = localStorage.getItem("voxyy_saved_kode") || "";
+        let orders = [];
+        if (window.VoxyyOrders && typeof window.VoxyyOrders.getOrders === "function") {
+          orders = await window.VoxyyOrders.getOrders();
+        } else {
+          orders = JSON.parse(localStorage.getItem("voxyy_orders") || "[]");
+        }
+        // hitung order yang masih di antrian (bukan sukses)
+        active = (orders || []).filter(function (o) {
+          const st = String(o.status || "").toLowerCase();
+          return !/sukses|selesai/.test(st);
+        }).length;
+        done = Number(localStorage.getItem("voxyy_done_count") || "0") || 0;
+      } catch (e) {}
+      const a = document.getElementById("statOrder");
+      const d = document.getElementById("statDone");
+      if (a) a.textContent = String(active);
+      if (d) d.textContent = String(done);
+    }
 
     document.getElementById("btnGoogle").addEventListener("click", async function () {
       const btn = this;
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menghubungkan...';
       try {
-        // tunggu GSI load max 5 detik
         for (let i = 0; i < 25; i++) {
           if (window.google && google.accounts && google.accounts.oauth2) break;
-          await new Promise(r => setTimeout(r, 200));
+          await new Promise(function (r) { setTimeout(r, 200); });
         }
         const user = await window.VoxyyAuth.loginGoogle();
-        if (user) renderUser(user);
+        if (user) showLoggedIn(user);
       } catch (e) {
         const msg = (e && e.message) ? e.message : String(e);
         alert(msg);
@@ -233,75 +526,44 @@
     });
 
     document.getElementById("btnLogout").addEventListener("click", async function () {
+      if (!confirm("Keluar dari akun Nailong?")) return;
       try {
         await window.VoxyyAuth.logout();
+        showGuest();
       } catch (e) {
         alert("Gagal keluar");
       }
     });
 
     async function bootAuth() {
-      const status = document.getElementById("akunStatus");
-      if (status) {
-        status.className = "akun-status off";
-        status.textContent = "Memuat...";
-      }
-
       if (!window.VoxyyAuth) {
-        renderUser(null);
+        showGuest();
         return;
       }
-
-      // 1) Proses hasil redirect Google (penting di HP)
-      let user = null;
       try {
-        user = await window.VoxyyAuth.handleRedirectResult();
+        if (window.VoxyyOrders) window.VoxyyOrders.initFirebase();
+        if (typeof window.VoxyyAuth.handleRedirectResult === "function") {
+          try { await window.VoxyyAuth.handleRedirectResult(); } catch (e) {}
+        }
+        if (typeof window.VoxyyAuth.onAuthChange === "function") {
+          window.VoxyyAuth.onAuthChange(function (user) {
+            if (user) showLoggedIn(user);
+            else showGuest();
+          });
+        } else {
+          const user = window.VoxyyAuth.currentUser && window.VoxyyAuth.currentUser();
+          if (user) showLoggedIn(user);
+          else showGuest();
+        }
       } catch (e) {
         console.error(e);
-        const msg = (e && (e.message || e.code)) || String(e);
-        if (/unauthorized-domain/i.test(msg)) {
-          alert("Domain belum diizinkan di Firebase Authorized domains.\nTambah: " + location.hostname);
-        } else if (msg && msg !== "null") {
-          alert("Login gagal: " + msg);
-        }
+        showGuest();
       }
-
-      try {
-        const err = sessionStorage.getItem("voxyy_auth_err");
-        if (err) {
-          sessionStorage.removeItem("voxyy_auth_err");
-          let hint = err;
-          if (/unauthorized-domain/i.test(err)) {
-            hint = "Domain belum diizinkan di Firebase Authorized domains.\nTambah: " + location.hostname;
-          }
-          alert("Login gagal: " + hint);
-        }
-      } catch (e) {}
-
-      // 2) Tunggu auth state siap
-      if (!user && window.VoxyyAuth.waitAuthReady) {
-        try {
-          user = await window.VoxyyAuth.waitAuthReady();
-        } catch (e) {}
-      }
-      if (!user && window.VoxyyAuth.getCurrentUser) {
-        user = window.VoxyyAuth.getCurrentUser();
-      }
-
-      renderUser(user || null);
-
-      // 3) Listen perubahan login/logout
-      window.VoxyyAuth.onAuthChange(function (u) {
-        renderUser(u || null);
-      });
     }
 
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", bootAuth);
-    } else {
-      bootAuth();
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(bootAuth, 200);
+    });
   </script>
-  <script src="account-widget.js"></script>
 </body>
 </html>
