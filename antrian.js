@@ -128,7 +128,7 @@ async function renderAntrian() {
       (orders.length || 0) + ' pesanan · sinkron antar HP</span>';
   } else {
     modeBadge.innerHTML =
-      '<span style="background:#3d2a0d;color:#ffb74d;padding:3px 8px;border-radius:6px;font-weight:600;">⚙️ Setup Firebase</span> <span>Isi FIREBASE_CONFIG di global-orders.js (gratis) agar antar-HP sinkron</span>';
+      '<span style="background:#3d2a0d;color:#ffb74d;padding:3px 8px;border-radius:6px;font-weight:600;">🌐 Mode lokal · data di perangkat ini</span>';
   }
 
   if (data.length === 0) {

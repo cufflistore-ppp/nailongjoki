@@ -103,7 +103,7 @@
       if (!auth) {
         reject(
           new Error(
-            "Firebase belum siap. Cek global-orders.js dan koneksi internet."
+            "Koneksi login belum siap. Coba refresh halaman atau cek internet."
           )
         );
         return;
