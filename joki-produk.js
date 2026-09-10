@@ -94,7 +94,7 @@ function renderPaketJoki() {
       <h3>${p.judul}</h3>
       <p>${p.deskripsi}</p>
       <ul>
-        ${p.fitur.map(f => `<li><img src="centang.gif" alt="✓" class="check-img" style="width:14px;height:14px;vertical-align:middle;margin-right:6px;"> ${f}</li>`).join("")}
+        ${p.fitur.map(f => `<li><img src="secure.gif" alt="✓" class="check-img" style="width:14px;height:14px;vertical-align:middle;margin-right:6px;"> ${f}</li>`).join("")}
       </ul>
       <div class="harga">${formatRp(p.harga)}</div>
       <a href="detail.html?id=${p.id}" class="btn-pesan" style="display:block;text-align:center;text-decoration:none;">

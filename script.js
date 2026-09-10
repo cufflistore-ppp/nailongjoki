@@ -324,7 +324,7 @@ function showSiteModal(message, type = "warning") {
 
   const icons = {
     warning: '<i class="fa-solid fa-exclamation"></i>',
-    success: '<img src="centang.gif" alt="✓" style="width:14px;height:14px;vertical-align:middle;">',
+    success: '<img src="secure.gif" alt="✓" style="width:14px;height:14px;vertical-align:middle;">',
     info: '<i class="fa-solid fa-info"></i>'
   };
   const titles = {
