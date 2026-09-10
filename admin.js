@@ -76,7 +76,7 @@ async function copyText(text, btn) {
     if (btn) {
       const old = btn.innerHTML;
       btn.classList.add("copied");
-      btn.innerHTML = '<i class="fa-solid fa-check"></i> Disalin';
+      btn.innerHTML = '<img src="centang.gif" alt="✓" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"> Disalin';
       setTimeout(() => {
         btn.classList.remove("copied");
         btn.innerHTML = old;

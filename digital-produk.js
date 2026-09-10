@@ -103,7 +103,7 @@ function renderDigitalList() {
       <h3>${p.judul}</h3>
       <p>${p.deskripsi || ""}</p>
       <ul>
-        ${(p.fitur || []).map(f => `<li><i class="fa-solid fa-check"></i> ${f}</li>`).join("")}
+        ${(p.fitur || []).map(f => `<li><img src="centang.gif" alt="✓" class="check-img" style="width:14px;height:14px;vertical-align:middle;margin-right:6px;"> ${f}</li>`).join("")}
       </ul>
       <div class="harga">${variants ? "Mulai " + formatRpDigital(p.harga) : formatRpDigital(p.harga)}</div>
       ${actions}
