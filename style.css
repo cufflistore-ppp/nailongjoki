@@ -297,6 +297,13 @@ body {
   padding: 16px;
   margin-bottom: 14px;
 }
+.paket-label-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
 .paket-label {
   display: inline-block;
   background: #FFC107;
@@ -305,7 +312,24 @@ body {
   font-weight: 700;
   padding: 3px 8px;
   border-radius: 6px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
+}
+.paket-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.paket-badge.badge-laris {
+  background: linear-gradient(135deg, #FF6F00, #FF8F00);
+  color: #fff;
+}
+.paket-badge.badge-hot {
+  background: linear-gradient(135deg, #e53935, #c62828);
+  color: #fff;
 }
 .paket-card h3 { font-size: 18px; margin-bottom: 4px; }
 .paket-card p { font-size: 13px; color: #bbb; margin-bottom: 10px; }

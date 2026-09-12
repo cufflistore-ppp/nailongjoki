@@ -166,7 +166,7 @@
       <div class="status-box" id="statusBox">
         ✅ Konfirmasi terkirim.<br>
         <b>Langkah terakhir:</b> hubungi admin WhatsApp dan kirim bukti TF + kode order.<br>
-        <a href="https://wa.me/6285196454388?text=Halo%20admin%20Nailong%2C%20saya%20sudah%20TF%20order" target="_blank" rel="noopener"
+        <a href="https://wa.me/6285124697215?text=Halo%20admin%20Nailong%2C%20saya%20sudah%20TF%20order" target="_blank" rel="noopener"
            style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;background:#25d366;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;">
           <i class="fa-brands fa-whatsapp"></i> Hubungi Admin WhatsApp
         </a>
@@ -357,7 +357,7 @@
         `Halo admin Nailong, saya sudah TF.\nKode: ${order.kode || "-"}\nPaket: ${order.paket || "-"}\nTotal: ${formatRupiah(finalAmt)}`
       );
       const waBtn = document.querySelector("#statusBox a[href*='wa.me']");
-      if (waBtn) waBtn.href = `https://wa.me/6285196454388?text=${waText}`;
+      if (waBtn) waBtn.href = `https://wa.me/6285124697215?text=${waText}`;
 
       // Auto-buka WhatsApp HANYA untuk produk digital (bukan joki)
       const paramsNow = new URLSearchParams(window.location.search);
@@ -368,7 +368,7 @@
 
       if (isDigital && !isJoki) {
         setTimeout(function() {
-          window.open(`https://wa.me/6285196454388?text=${waText}`, "_blank");
+          window.open(`https://wa.me/6285124697215?text=${waText}`, "_blank");
         }, 600);
       }
     }

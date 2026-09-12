@@ -1,13 +1,15 @@
-const JOKI_CATALOG_VER = "5";
+const JOKI_CATALOG_VER = "7";
 
 const paketJoki = [
   {
     id: 1,
-    label: "20 JAM",
-    judul: "Joki 20 Jam",
-    deskripsi: "Layanan joki kontak selama 20 jam.",
+    label: "15 JAM",
+    badge: "Paling Laris",
+    judul: "Joki 15 Jam",
+    deskripsi: "500p · 15 jam + SW + share all GB",
     harga: 500,
     fitur: [
+      "15 jam + SW + share all GB",
       "Order langsung di web",
       "Status dapat dipantau"
     ]
@@ -16,9 +18,10 @@ const paketJoki = [
     id: 2,
     label: "1 HARI",
     judul: "Joki 1 Hari",
-    deskripsi: "Layanan joki kontak selama 1 hari.",
+    deskripsi: "1.000 · 1 hari + SW + share all GB",
     harga: 1000,
     fitur: [
+      "1 hari + SW + share all GB",
       "Order langsung di web",
       "Status dapat dipantau"
     ]
@@ -27,9 +30,10 @@ const paketJoki = [
     id: 3,
     label: "2 HARI",
     judul: "Joki 2 Hari",
-    deskripsi: "Layanan joki kontak selama 2 hari.",
+    deskripsi: "2.000 · 2 hari + SW + share all GB",
     harga: 2000,
     fitur: [
+      "2 hari + SW + share all GB",
       "Order langsung di web",
       "Status dapat dipantau"
     ]
@@ -38,42 +42,76 @@ const paketJoki = [
     id: 4,
     label: "3 HARI",
     judul: "Joki 3 Hari",
-    deskripsi: "Layanan joki kontak selama 3 hari.",
+    deskripsi: "3.000 · 3 hari + SW + share all GB",
     harga: 3000,
     fitur: [
+      "3 hari + SW + share all GB",
       "Order langsung di web",
       "Status dapat dipantau"
     ]
   },
   {
     id: 5,
-    label: "4 HARI",
-    judul: "Joki 4 Hari",
-    deskripsi: "Layanan joki kontak selama 4 hari.",
-    harga: 4000,
+    label: "5 HARI",
+    judul: "Joki 5 Hari",
+    deskripsi: "5.000 · 5 hari + SW + share all GB",
+    harga: 5000,
     fitur: [
+      "5 hari + SW + share all GB",
       "Order langsung di web",
       "Status dapat dipantau"
     ]
   },
   {
     id: 6,
-    label: "5 HARI",
-    judul: "Joki 5 Hari",
-    deskripsi: "Layanan joki kontak selama 5 hari.",
-    harga: 5000,
+    label: "6 HARI",
+    judul: "Joki 6 Hari",
+    deskripsi: "6.000 · 6 hari + SW + share all GB",
+    harga: 6000,
     fitur: [
+      "6 hari + SW + share all GB",
       "Order langsung di web",
       "Status dapat dipantau"
     ]
   },
   {
     id: 7,
+    label: "1 MINGGU",
+    judul: "Joki 1 Minggu",
+    deskripsi: "7.000 · 1 minggu + SW + share all GB + tempel link website khusus buyer mingguan",
+    harga: 7000,
+    fitur: [
+      "1 minggu + SW + share all GB",
+      "Tempel link website khusus buyer mingguan",
+      "Order langsung di web",
+      "Status dapat dipantau"
+    ]
+  },
+  {
+    id: 8,
+    label: "1 BULAN",
+    badge: "Hot",
+    judul: "Joki 1 Bulan",
+    deskripsi: "15.000 · 1 bulan + SW + share all GB + tempel link website khusus buyer bulanan + story Instagram",
+    harga: 15000,
+    fitur: [
+      "1 bulan + SW + share all GB",
+      "Tempel link website khusus buyer bulanan",
+      "Story Instagram",
+      "Order langsung di web",
+      "Status dapat dipantau"
+    ]
+  },
+  {
+    id: 9,
     label: "PERMANEN",
     judul: "Joki Permanen",
-    deskripsi: "Layanan joki kontak selamanya.",
-    harga: 6000,
+    deskripsi: "30.000 · permanen + tempel link website khusus buyer permanen + story TikTok + story Instagram + SW tebar sampai pensi JB",
+    harga: 30000,
     fitur: [
+      "Permanen + tempel link website khusus buyer permanen",
+      "Story TikTok + Story Instagram",
+      "SW tebar sampai pensi JB",
       "Order langsung di web",
       "Status dapat dipantau"
     ]
@@ -88,9 +126,16 @@ function renderPaketJoki() {
   const container = document.getElementById("paketList");
   if (!container) return;
 
-  container.innerHTML = paketJoki.map(p => `
+  container.innerHTML = paketJoki.map(p => {
+    const badgeHtml = p.badge
+      ? `<span class="paket-badge ${p.badge === "Hot" ? "badge-hot" : "badge-laris"}">${p.badge}</span>`
+      : "";
+    return `
     <div class="paket-card">
-      <div class="paket-label">${p.label}</div>
+      <div class="paket-label-row">
+        <div class="paket-label">${p.label}</div>
+        ${badgeHtml}
+      </div>
       <h3>${p.judul}</h3>
       <p>${p.deskripsi}</p>
       <ul>
@@ -101,7 +146,8 @@ function renderPaketJoki() {
         Pesan Sekarang
       </a>
     </div>
-  `).join("");
+  `;
+  }).join("");
 }
 
 function tambahPaket(data) {

@@ -88,11 +88,11 @@
         <label>Teks Joki (Format Push Kontak)</label>
         <p style="font-size:12px; color:#FFC107; margin:4px 0 8px;">
           * Tinggal ganti <b>NAMA STORE</b> dan nomor di <b>Wa.me/628…</b> saja. Jangan hapus formatnya.
-          Durasi <b id="hintDurasi">[20 jam]</b> otomatis sesuai paket yang kamu pilih.
+          Durasi <b id="hintDurasi">[15 jam]</b> otomatis sesuai paket yang kamu pilih.
         </p>
         <textarea id="catatan" rows="9">SV BUYER FRESH 𝗡Λ𝗜𝗟𝗢𝗡𝗚🐣
 
-[20 jam]
+[15 jam]
 
 SV ; NAMA STORE
 Wa.me/628…
@@ -101,30 +101,45 @@ Wa.me/628…
       </div>
 
       <div class="form-section" id="addonSection" style="display:none;">
-        <h4><span class="step">2</span> Include Paket</h4>
+        <h4><span class="step">2</span> Tambahan / Prioritas</h4>
         <div class="addon" onclick="toggleAddon(this, 500)">
-          <span>+ 20jam</span>
+          <span>+ 15 jam</span>
           <span class="addon-price">+Rp 500</span>
           <button class="btn-pilih" type="button">Pilih</button>
         </div>
         <div class="addon" onclick="toggleAddon(this, 1000)">
-          <span>+ 1hari</span>
+          <span>+ 1 hari</span>
           <span class="addon-price">+Rp 1.000</span>
           <button class="btn-pilih" type="button">Pilih</button>
         </div>
         <div class="addon" onclick="toggleAddon(this, 2000)">
-          <span>+ 2hari</span>
+          <span>+ 2 hari</span>
           <span class="addon-price">+Rp 2.000</span>
           <button class="btn-pilih" type="button">Pilih</button>
         </div>
         <div class="addon" onclick="toggleAddon(this, 3000)">
-          <span>+ 3hari</span>
+          <span>+ 3 hari</span>
           <span class="addon-price">+Rp 3.000</span>
           <button class="btn-pilih" type="button">Pilih</button>
         </div>
-        <div class="addon" onclick="toggleAddon(this, 4000)">
-          <span>+ 4hari</span>
-          <span class="addon-price">+Rp 4.000</span>
+        <div class="addon" onclick="toggleAddon(this, 5000)">
+          <span>+ 5 hari</span>
+          <span class="addon-price">+Rp 5.000</span>
+          <button class="btn-pilih" type="button">Pilih</button>
+        </div>
+        <div class="addon" onclick="toggleAddon(this, 6000)">
+          <span>+ 6 hari</span>
+          <span class="addon-price">+Rp 6.000</span>
+          <button class="btn-pilih" type="button">Pilih</button>
+        </div>
+        <div class="addon" onclick="toggleAddon(this, 7000)">
+          <span>+ 1 minggu</span>
+          <span class="addon-price">+Rp 7.000</span>
+          <button class="btn-pilih" type="button">Pilih</button>
+        </div>
+        <div class="addon" onclick="toggleAddon(this, 15000)">
+          <span>+ 1 bulan</span>
+          <span class="addon-price">+Rp 15.000</span>
           <button class="btn-pilih" type="button">Pilih</button>
         </div>
         <div class="addon" onclick="toggleAddon(this, 8000)">
@@ -305,31 +320,35 @@ Wa.me/628…
           window.orderType = "Joki Kontak";
           window.isJokiOrder = true;
 
-          // Sembunyikan nama & WA, sembunyikan addon (durasi sudah di paket)
+          // Sembunyikan nama & WA; tampilkan addon (prioritas + nambah durasi, tanpa permanen)
           const fn = document.getElementById("fieldNamaWa");
           if (fn) fn.style.display = "none";
           const addon = document.getElementById("addonSection");
-          if (addon) addon.style.display = "none";
+          if (addon) addon.style.display = "block";
 
           // Durasi di teks sesuai paket
           const durasiMap = {
-            1: "20 jam",
+            1: "15 jam",
             2: "1 hari",
             3: "2 hari",
             4: "3 hari",
-            5: "4 hari",
-            6: "5 hari",
-            7: "permanen"
+            5: "5 hari",
+            6: "6 hari",
+            7: "1 minggu",
+            8: "1 bulan",
+            9: "permanen"
           };
           const label = paket.label || "";
-          let durasi = durasiMap[paket.id] || "20 jam";
+          let durasi = durasiMap[paket.id] || "15 jam";
           if (/permanen/i.test(label) || /permanen/i.test(paket.judul || "")) durasi = "permanen";
-          else if (/20\s*jam/i.test(label) || /20\s*jam/i.test(paket.judul || "")) durasi = "20 jam";
+          else if (/15\s*jam/i.test(label) || /15\s*jam/i.test(paket.judul || "")) durasi = "15 jam";
+          else if (/1\s*minggu/i.test(label) || /1\s*minggu/i.test(paket.judul || "")) durasi = "1 minggu";
+          else if (/1\s*bulan/i.test(label) || /1\s*bulan/i.test(paket.judul || "")) durasi = "1 bulan";
           else if (/1\s*hari/i.test(label)) durasi = "1 hari";
           else if (/2\s*hari/i.test(label)) durasi = "2 hari";
           else if (/3\s*hari/i.test(label)) durasi = "3 hari";
-          else if (/4\s*hari/i.test(label)) durasi = "4 hari";
           else if (/5\s*hari/i.test(label)) durasi = "5 hari";
+          else if (/6\s*hari/i.test(label)) durasi = "6 hari";
 
           window.jokiDurasi = durasi;
           const hint = document.getElementById("hintDurasi");
